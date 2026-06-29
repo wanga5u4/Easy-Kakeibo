@@ -102,6 +102,12 @@ def require_login_json():
     return None
 
 
+def require_login_page():
+    if not get_current_user_id():
+        return redirect(url_for("login"))
+    return None
+
+
 def current_month():
     return date.today().strftime("%Y-%m")
 
@@ -142,7 +148,91 @@ def get_budget_status(amount, used):
 
 @app.route("/")
 def index():
-    return send_from_directory(BASE_DIR, "index.html")
+    if get_current_user_id():
+        return redirect(url_for("dashboard"))
+    return redirect(url_for("login"))
+
+
+@app.get("/dashboard")
+def dashboard():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+    return render_template("dashboard.html", active_page="dashboard")
+
+
+@app.get("/records")
+def records_page():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+    return render_template("records.html", active_page="records")
+
+
+@app.get("/records/add")
+def add_record_page():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+    return render_template("record_form.html", active_page="records", record_id=None)
+
+
+@app.get("/records/<record_id>/edit")
+def edit_record_page(record_id):
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+
+    user_id = get_current_user_id()
+    with get_connection() as conn:
+        record = conn.execute(
+            "SELECT id FROM records WHERE id = ? AND user_id = ?",
+            (record_id, user_id),
+        ).fetchone()
+
+    if not record:
+        return render_template(
+            "message.html",
+            active_page="records",
+            title="记录不存在",
+            message="这条记录不存在，或不属于当前登录用户。",
+            action_url=url_for("records_page"),
+            action_text="返回记录列表",
+        ), 404
+
+    return render_template("record_form.html", active_page="records", record_id=record_id)
+
+
+@app.get("/statistics")
+def statistics_page():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+    return render_template("statistics.html", active_page="statistics")
+
+
+@app.get("/budgets")
+def budgets_page():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+    return render_template("budgets.html", active_page="budgets")
+
+
+@app.get("/settings")
+def settings_page():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+    return render_template("settings.html", active_page="settings")
+
+
+@app.get("/premium")
+def premium_page():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+    return render_template("premium.html", active_page="premium")
 
 
 @app.get("/api/me")
@@ -243,7 +333,7 @@ def login():
     session["user_id"] = user["id"]
     session["username"] = user["username"]
 
-    return redirect(url_for("index"))
+    return redirect(url_for("dashboard"))
 
 
 @app.get("/logout")

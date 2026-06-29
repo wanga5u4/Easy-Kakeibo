@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{% if record_id %}编辑记录{% else %}添加记录{% endif %} - 简易记账{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1" id="formTitle">{% if record_id %}编辑记录{% else %}添加记录{% endif %}</h1>
+    <p class="text-muted mb-0">填写日期、分类和金额。</p>
+  </div>
+  <a class="btn btn-outline-secondary" href="{{ url_for('records_page') }}">返回列表</a>
+</div>
+
+<section class="card border-0 shadow-sm">
+  <div class="card-body">
+    <form id="recordForm" data-record-id="{{ record_id or '' }}">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="date">日期</label>
+          <input class="form-control" type="date" id="date" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="type">类型</label>
+          <select class="form-select" id="type" required>
+            <option value="expense">支出</option>
+            <option value="income">收入</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="category">分类</label>
+          <select class="form-select" id="category" required></select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="amount">金额</label>
+          <input class="form-control" type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required>
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="note">备注</label>
+          <input class="form-control" type="text" id="note" placeholder="可选备注" maxlength="100">
+        </div>
+      </div>
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary" id="submitBtn">{% if record_id %}保存修改{% else %}添加记录{% endif %}</button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('records_page') }}">取消</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='record_form.js') }}"></script>
+{% endblock %}

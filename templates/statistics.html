@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}统计分析 - 简易记账{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">统计分析</h1>
+    <p class="text-muted mb-0">查看月度统计、分类占比和六个月趋势。</p>
+  </div>
+  <input class="form-control w-auto" type="month" id="statsMonth">
+</div>
+
+<section class="row g-3 mb-4">
+  <div class="col-md-4"><div class="card border-0 shadow-sm"><div class="card-body"><div class="text-muted small mb-1">本月收入</div><div class="fs-4 fw-bold text-success" id="totalIncome">￥0.00</div></div></div></div>
+  <div class="col-md-4"><div class="card border-0 shadow-sm"><div class="card-body"><div class="text-muted small mb-1">本月支出</div><div class="fs-4 fw-bold text-danger" id="totalExpense">￥0.00</div></div></div></div>
+  <div class="col-md-4"><div class="card border-0 shadow-sm"><div class="card-body"><div class="text-muted small mb-1">本月结余</div><div class="fs-4 fw-bold text-primary" id="balance">￥0.00</div></div></div></div>
+</section>
+
+<section class="row g-4">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5 mb-3">支出分类占比</h2>
+        <canvas class="chart-canvas" id="categoryChart" width="360" height="260"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5 mb-3">最近六个月收支趋势</h2>
+        <canvas class="chart-canvas" id="trendChart" width="360" height="260"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='statistics.js') }}"></script>
+{% endblock %}

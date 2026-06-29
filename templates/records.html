@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}记录列表 - 简易记账{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">记录列表</h1>
+    <p class="text-muted mb-0">按类型和月份筛选你的账目。</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('add_record_page') }}">添加记录</a>
+</div>
+
+<section class="card border-0 shadow-sm">
+  <div class="card-body">
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <select class="form-select w-auto" id="filterType">
+        <option value="all">全部类型</option>
+        <option value="income">仅收入</option>
+        <option value="expense">仅支出</option>
+      </select>
+      <input class="form-control w-auto" type="month" id="filterMonth">
+      <button type="button" class="btn btn-outline-secondary" id="clearFilter">清除筛选</button>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>类型</th>
+            <th>分类</th>
+            <th>金额</th>
+            <th>备注</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="recordList"></tbody>
+      </table>
+    </div>
+    <p class="text-center text-muted py-4 hidden" id="emptyTip">暂无记录。</p>
+  </div>
+</section>
+
+<div class="modal hidden" id="deleteModal">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box">
+    <h3>确认删除</h3>
+    <p>确定要删除这条记录吗？此操作无法撤销。</p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline-secondary" id="cancelDelete">取消</button>
+      <button type="button" class="btn btn-danger" id="confirmDelete">删除</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='records.js') }}"></script>
+{% endblock %}
