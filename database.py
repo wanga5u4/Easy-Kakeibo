@@ -56,12 +56,29 @@ def init_db():
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS budgets (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                month TEXT NOT NULL,
+                amount REAL NOT NULL CHECK(amount >= 0),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_id, month),
+                FOREIGN KEY(user_id) REFERENCES users(id)
+            )
+            """
+        )
         migrate_records_user_id(conn)
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_records_user_id ON records(user_id)"
         )
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_records_user_date ON records(user_id, date)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_budgets_user_month ON budgets(user_id, month)"
         )
         conn.commit()
 

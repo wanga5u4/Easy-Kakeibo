@@ -22,6 +22,7 @@
             <a class="btn btn-outline-primary btn-sm" href="#recordFormSection">添加记录</a>
             <a class="btn btn-outline-primary btn-sm" href="#recordListSection">查看记录</a>
             <a class="btn btn-outline-primary btn-sm" href="#statsSection">统计</a>
+            <a class="btn btn-outline-primary btn-sm" href="#budgetSection">预算</a>
             <a class="btn btn-outline-danger btn-sm" id="logoutLink" href="/logout">退出登录</a>
           </div>
         </div>
@@ -40,11 +41,24 @@
     </section>
 
     <main id="dashboard" class="d-none">
+      <section class="card border-0 shadow-sm mb-4">
+        <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
+          <div>
+            <h1 class="h4 mb-1">收支概览</h1>
+            <p class="text-muted mb-0">选择月份查看统计、预算和图表。</p>
+          </div>
+          <div>
+            <label class="form-label small text-muted mb-1" for="statsMonth">统计月份</label>
+            <input class="form-control" type="month" id="statsMonth">
+          </div>
+        </div>
+      </section>
+
       <section id="statsSection" class="row g-3 mb-4">
         <div class="col-md-4">
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
-              <div class="text-muted small mb-1">总收入</div>
+              <div class="text-muted small mb-1">本月收入</div>
               <div class="fs-4 fw-bold text-success" id="totalIncome">￥0.00</div>
             </div>
           </div>
@@ -52,7 +66,7 @@
         <div class="col-md-4">
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
-              <div class="text-muted small mb-1">总支出</div>
+              <div class="text-muted small mb-1">本月支出</div>
               <div class="fs-4 fw-bold text-danger" id="totalExpense">￥0.00</div>
             </div>
           </div>
@@ -60,8 +74,48 @@
         <div class="col-md-4">
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
-              <div class="text-muted small mb-1">结余</div>
+              <div class="text-muted small mb-1">本月结余</div>
               <div class="fs-4 fw-bold text-primary" id="balance">￥0.00</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="row g-4 mb-4">
+        <div id="budgetSection" class="col-lg-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <h2 class="h5 mb-3">每月预算</h2>
+              <div class="input-group mb-3">
+                <span class="input-group-text">￥</span>
+                <input class="form-control" type="number" id="budgetAmount" min="0" step="0.01" placeholder="设置本月预算">
+                <button class="btn btn-primary" type="button" id="saveBudgetBtn">保存</button>
+              </div>
+              <div class="d-flex justify-content-between small text-muted mb-1">
+                <span id="budgetUsed">已用 ￥0.00</span>
+                <span id="budgetPercent">0%</span>
+              </div>
+              <div class="progress mb-3" role="progressbar" aria-label="预算使用进度">
+                <div class="progress-bar" id="budgetProgress" style="width: 0%"></div>
+              </div>
+              <div class="alert alert-secondary mb-0 py-2" id="budgetStatus">未设置预算</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <h2 class="h5 mb-3">支出分类占比</h2>
+              <canvas class="chart-canvas" id="categoryChart" width="360" height="240"></canvas>
+              <p class="text-muted text-center small mb-0" id="categoryEmpty">暂无支出数据</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <h2 class="h5 mb-3">最近六个月趋势</h2>
+              <canvas class="chart-canvas" id="trendChart" width="360" height="240"></canvas>
             </div>
           </div>
         </div>

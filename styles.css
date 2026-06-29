@@ -437,6 +437,14 @@ tbody tr:hover {
   color: var(--primary-hover);
 }
 
+.chart-canvas {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
 @media (max-width: 860px) {
   .header-top {
     flex-direction: column;

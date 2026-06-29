@@ -1,6 +1,7 @@
 import time
 import uuid
 import os
+from datetime import date
 from pathlib import Path
 
 from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, session, url_for
@@ -99,6 +100,44 @@ def require_login_json():
     if not get_current_user_id():
         return jsonify({"error": "请先登录"}), 401
     return None
+
+
+def current_month():
+    return date.today().strftime("%Y-%m")
+
+
+def normalize_month(value):
+    month = (value or "").strip()
+    if not month:
+        return current_month()
+    if len(month) == 7 and month[4] == "-" and month[:4].isdigit() and month[5:].isdigit():
+        month_num = int(month[5:])
+        if 1 <= month_num <= 12:
+            return month
+    return None
+
+
+def month_shift(month, offset):
+    year = int(month[:4])
+    month_num = int(month[5:]) + offset
+    while month_num < 1:
+        year -= 1
+        month_num += 12
+    while month_num > 12:
+        year += 1
+        month_num -= 12
+    return f"{year:04d}-{month_num:02d}"
+
+
+def get_budget_status(amount, used):
+    if amount <= 0:
+        return "未设置预算"
+    percent = used / amount * 100
+    if percent >= 100:
+        return "已超出预算"
+    if percent >= 80:
+        return "预算即将用完"
+    return "预算正常"
 
 
 @app.route("/")
@@ -268,31 +307,173 @@ def get_summary():
         return login_error
 
     user_id = get_current_user_id()
+    month = normalize_month(request.args.get("month"))
+    if not month:
+        return jsonify({"error": "月份格式无效"}), 400
+
     with get_connection() as conn:
         income = conn.execute(
             """
             SELECT COALESCE(SUM(amount), 0)
             FROM records
-            WHERE user_id = ? AND type = 'income'
+            WHERE user_id = ? AND type = 'income' AND date LIKE ?
             """,
-            (user_id,),
+            (user_id, f"{month}%"),
         ).fetchone()[0]
         expense = conn.execute(
             """
             SELECT COALESCE(SUM(amount), 0)
             FROM records
-            WHERE user_id = ? AND type = 'expense'
+            WHERE user_id = ? AND type = 'expense' AND date LIKE ?
             """,
-            (user_id,),
+            (user_id, f"{month}%"),
         ).fetchone()[0]
 
     return jsonify(
         {
+            "month": month,
             "totalIncome": income,
             "totalExpense": expense,
             "balance": income - expense,
         }
     )
+
+
+@app.get("/api/analytics")
+def get_analytics():
+    login_error = require_login_json()
+    if login_error:
+        return login_error
+
+    user_id = get_current_user_id()
+    month = normalize_month(request.args.get("month"))
+    if not month:
+        return jsonify({"error": "月份格式无效"}), 400
+
+    trend_months = [month_shift(month, offset) for offset in range(-5, 1)]
+
+    with get_connection() as conn:
+        income = conn.execute(
+            """
+            SELECT COALESCE(SUM(amount), 0)
+            FROM records
+            WHERE user_id = ? AND type = 'income' AND date LIKE ?
+            """,
+            (user_id, f"{month}%"),
+        ).fetchone()[0]
+        expense = conn.execute(
+            """
+            SELECT COALESCE(SUM(amount), 0)
+            FROM records
+            WHERE user_id = ? AND type = 'expense' AND date LIKE ?
+            """,
+            (user_id, f"{month}%"),
+        ).fetchone()[0]
+        category_rows = conn.execute(
+            """
+            SELECT category, COALESCE(SUM(amount), 0) AS amount
+            FROM records
+            WHERE user_id = ? AND type = 'expense' AND date LIKE ?
+            GROUP BY category
+            ORDER BY amount DESC
+            """,
+            (user_id, f"{month}%"),
+        ).fetchall()
+        trend_rows = conn.execute(
+            """
+            SELECT substr(date, 1, 7) AS month, type, COALESCE(SUM(amount), 0) AS amount
+            FROM records
+            WHERE user_id = ? AND substr(date, 1, 7) BETWEEN ? AND ?
+            GROUP BY substr(date, 1, 7), type
+            """,
+            (user_id, trend_months[0], trend_months[-1]),
+        ).fetchall()
+        budget_row = conn.execute(
+            """
+            SELECT amount
+            FROM budgets
+            WHERE user_id = ? AND month = ?
+            """,
+            (user_id, month),
+        ).fetchone()
+
+    category_total = sum(row["amount"] for row in category_rows)
+    categories = [
+        {
+            "category": row["category"],
+            "amount": row["amount"],
+            "percent": round(row["amount"] / category_total * 100, 1)
+            if category_total
+            else 0,
+        }
+        for row in category_rows
+    ]
+
+    trend_map = {
+        trend_month: {"month": trend_month, "income": 0, "expense": 0, "balance": 0}
+        for trend_month in trend_months
+    }
+    for row in trend_rows:
+        trend_map[row["month"]][row["type"]] = row["amount"]
+    for item in trend_map.values():
+        item["balance"] = item["income"] - item["expense"]
+
+    budget_amount = budget_row["amount"] if budget_row else 0
+    budget_percent = round(expense / budget_amount * 100, 1) if budget_amount else 0
+    budget_remaining = budget_amount - expense if budget_amount else 0
+
+    return jsonify(
+        {
+            "month": month,
+            "totalIncome": income,
+            "totalExpense": expense,
+            "balance": income - expense,
+            "categories": categories,
+            "trend": list(trend_map.values()),
+            "budget": {
+                "amount": budget_amount,
+                "used": expense,
+                "remaining": budget_remaining,
+                "percent": budget_percent,
+                "status": get_budget_status(budget_amount, expense),
+            },
+        }
+    )
+
+
+@app.post("/api/budget")
+def save_budget():
+    login_error = require_login_json()
+    if login_error:
+        return login_error
+
+    user_id = get_current_user_id()
+    data = request.get_json(silent=True) or {}
+    month = normalize_month(data.get("month"))
+    if not month:
+        return jsonify({"error": "月份格式无效"}), 400
+
+    try:
+        amount = float(data.get("amount", 0))
+    except (TypeError, ValueError):
+        return jsonify({"error": "预算金额格式无效"}), 400
+
+    if amount < 0:
+        return jsonify({"error": "预算金额不能小于 0"}), 400
+
+    with get_connection() as conn:
+        conn.execute(
+            """
+            INSERT INTO budgets (user_id, month, amount)
+            VALUES (?, ?, ?)
+            ON CONFLICT(user_id, month)
+            DO UPDATE SET amount = excluded.amount, updated_at = CURRENT_TIMESTAMP
+            """,
+            (user_id, month, amount),
+        )
+        conn.commit()
+
+    return jsonify({"month": month, "amount": amount})
 
 
 @app.post("/api/records")
