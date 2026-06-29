@@ -3,10 +3,102 @@
 {% block title %}用户设置 - 简易记账{% endblock %}
 
 {% block content %}
-<section class="card border-0 shadow-sm">
-  <div class="card-body">
-    <h1 class="h3 mb-2">用户设置</h1>
-    <p class="text-muted mb-0">这里将用于管理个人资料、自定义分类和偏好设置。</p>
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">用户设置</h1>
+    <p class="text-muted mb-0">管理个人资料、显示偏好和登录密码。</p>
   </div>
-</section>
+  <a class="btn btn-outline-primary" href="{{ url_for('premium_page') }}">查看会员权益</a>
+</div>
+
+{% if errors %}
+  <div class="alert alert-danger">
+    {% for error in errors %}
+      <div>{{ error }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<form method="post" action="{{ url_for('settings_page') }}">
+  <div class="row g-4">
+    <section class="col-lg-7">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h5 mb-3">个人资料</h2>
+          <div class="mb-3">
+            <label class="form-label" for="username">用户名</label>
+            <input class="form-control" id="username" value="{{ user['username'] }}" disabled>
+            <div class="form-text">用户名暂不支持修改，后续可在账号安全中扩展。</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="nickname">昵称</label>
+            <input class="form-control" id="nickname" name="nickname" maxlength="30" value="{{ user['nickname'] or '' }}" placeholder="例如：小明的账本">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="email">邮箱</label>
+            <input class="form-control" type="email" id="email" name="email" value="{{ user['email'] }}" required>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label" for="language">语言</label>
+              <select class="form-select" id="language" name="language">
+                {% for value, label in language_options.items() %}
+                  <option value="{{ value }}" {% if user['language'] == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="currency">默认货币</label>
+              <select class="form-select" id="currency" name="currency">
+                {% for value, label in currency_options.items() %}
+                  <option value="{{ value }}" {% if user['currency'] == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="col-lg-5">
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">当前套餐</h2>
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="fw-semibold">{{ "Premium" if user["plan"] == "premium" else "免费版" }}</div>
+              <div class="text-muted small">会员权限字段已预留，当前不接入支付。</div>
+            </div>
+            <span class="badge text-bg-{{ 'warning' if user['plan'] == 'premium' else 'secondary' }}">
+              {{ user["plan"] }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5 mb-3">修改密码</h2>
+          <div class="mb-3">
+            <label class="form-label" for="current_password">当前密码</label>
+            <input class="form-control" type="password" id="current_password" name="current_password" autocomplete="current-password">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="new_password">新密码</label>
+            <input class="form-control" type="password" id="new_password" name="new_password" minlength="8" autocomplete="new-password">
+          </div>
+          <div>
+            <label class="form-label" for="confirm_password">确认新密码</label>
+            <input class="form-control" type="password" id="confirm_password" name="confirm_password" minlength="8" autocomplete="new-password">
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="mt-4">
+    <button class="btn btn-primary" type="submit">保存设置</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('dashboard') }}">返回仪表盘</a>
+  </div>
+</form>
 {% endblock %}

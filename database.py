@@ -6,6 +6,13 @@ DEFAULT_USER_ID = 1
 DEFAULT_USERNAME = "default_user"
 DEFAULT_EMAIL = "default@example.com"
 DEFAULT_PASSWORD_HASH = "temporary_password_hash"
+USER_PROFILE_COLUMNS = {
+    "nickname": "TEXT NOT NULL DEFAULT ''",
+    "language": "TEXT NOT NULL DEFAULT 'zh-CN'",
+    "currency": "TEXT NOT NULL DEFAULT 'CNY'",
+    "plan": "TEXT NOT NULL DEFAULT 'free'",
+    "premium_until": "TIMESTAMP",
+}
 
 
 def get_connection():
@@ -29,6 +36,7 @@ def init_db():
             )
             """
         )
+        migrate_users_profile_columns(conn)
         conn.execute(
             """
             INSERT OR IGNORE INTO users (id, username, email, password_hash)
@@ -81,6 +89,17 @@ def init_db():
             "CREATE INDEX IF NOT EXISTS idx_budgets_user_month ON budgets(user_id, month)"
         )
         conn.commit()
+
+
+def migrate_users_profile_columns(conn):
+    columns = conn.execute("PRAGMA table_info(users)").fetchall()
+    existing_columns = {column["name"] for column in columns}
+
+    for column_name, column_definition in USER_PROFILE_COLUMNS.items():
+        if column_name not in existing_columns:
+            conn.execute(
+                f"ALTER TABLE users ADD COLUMN {column_name} {column_definition}"
+            )
 
 
 def migrate_records_user_id(conn):

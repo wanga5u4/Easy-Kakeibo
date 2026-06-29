@@ -24,7 +24,12 @@
           <li class="nav-item"><a class="nav-link {% if active_page == 'premium' %}active{% endif %}" href="{{ url_for('premium_page') }}">Premium</a></li>
         </ul>
         <div class="d-flex align-items-center gap-2">
-          <span class="text-muted small">欢迎，{{ session.get("username") }}</span>
+          {% if current_user_profile %}
+            <span class="text-muted small">欢迎，{{ current_user_profile["nickname"] or current_user_profile["username"] }}</span>
+            <span class="badge text-bg-{% if current_user_profile['plan'] == 'premium' %}warning{% else %}secondary{% endif %}">
+              {{ "Premium" if current_user_profile["plan"] == "premium" else "免费版" }}
+            </span>
+          {% endif %}
           <a class="btn btn-outline-danger btn-sm" href="{{ url_for('logout') }}">退出登录</a>
         </div>
       </div>
@@ -32,6 +37,15 @@
   </nav>
 
   <main class="container py-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-3">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} mb-2">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
     {% block content %}{% endblock %}
   </main>
 

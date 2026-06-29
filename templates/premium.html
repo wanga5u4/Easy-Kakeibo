@@ -3,10 +3,77 @@
 {% block title %}Premium - 简易记账{% endblock %}
 
 {% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">Premium</h1>
+    <p class="text-muted mb-0">会员能力展示页，为后续高级功能和权限判断预留结构。</p>
+  </div>
+  <span class="badge text-bg-{{ 'warning' if user['plan'] == 'premium' else 'secondary' }} fs-6">
+    当前套餐：{{ plans[user["plan"]]["name"] if user["plan"] in plans else user["plan"] }}
+  </span>
+</div>
+
+<section class="row g-4 mb-4">
+  {% for plan_key, plan in plans.items() %}
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm h-100 {% if user['plan'] == plan_key %}border border-primary{% endif %}">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <h2 class="h4 mb-1">{{ plan.name }}</h2>
+              <div class="text-muted">{{ plan.price }}</div>
+            </div>
+            {% if user["plan"] == plan_key %}
+              <span class="badge text-bg-primary">当前使用</span>
+            {% endif %}
+          </div>
+
+          <ul class="list-group list-group-flush mb-3">
+            {% for feature in plan.features %}
+              <li class="list-group-item px-0">✓ {{ feature }}</li>
+            {% endfor %}
+          </ul>
+
+          {% if plan.limits %}
+            <div class="alert alert-light border mt-auto mb-0">
+              {% for limit in plan.limits %}
+                <div class="small text-muted">{{ limit }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</section>
+
 <section class="card border-0 shadow-sm">
   <div class="card-body">
-    <h1 class="h3 mb-2">Premium</h1>
-    <p class="text-muted mb-0">这里将用于承载 VIP 功能、高级统计、数据导出和 AI 分析。</p>
+    <h2 class="h5 mb-3">权限结构预留</h2>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="border rounded-3 p-3 h-100">
+          <div class="fw-semibold mb-1">套餐字段</div>
+          <div class="text-muted small">用户表已预留 `plan` 和 `premium_until`，后续可接入订单系统。</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="border rounded-3 p-3 h-100">
+          <div class="fw-semibold mb-1">权限判断</div>
+          <div class="text-muted small">后端已准备会员能力判断函数，可用于高级统计、导出和 AI 分析。</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="border rounded-3 p-3 h-100">
+          <div class="fw-semibold mb-1">支付状态</div>
+          <div class="text-muted small">本版本不接入真实支付，不实现订单、续费或支付回调。</div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4">
+      <button class="btn btn-primary" type="button" disabled>升级 Premium（暂未开放）</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('settings_page') }}">返回设置</a>
+    </div>
   </div>
 </section>
 {% endblock %}

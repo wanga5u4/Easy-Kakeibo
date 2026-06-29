@@ -4,7 +4,7 @@ import os
 from datetime import date
 from pathlib import Path
 
-from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, session, url_for
+from flask import Flask, flash, jsonify, redirect, render_template, request, send_from_directory, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database import get_connection, init_db, row_to_dict
@@ -13,6 +13,31 @@ BASE_DIR = Path(__file__).parent
 
 app = Flask(__name__, static_folder=str(BASE_DIR), static_url_path="")
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key-change-me")
+
+LANGUAGE_OPTIONS = {
+    "zh-CN": "简体中文",
+    "en-US": "English",
+}
+CURRENCY_OPTIONS = {
+    "CNY": "人民币 CNY",
+    "USD": "美元 USD",
+    "JPY": "日元 JPY",
+    "EUR": "欧元 EUR",
+}
+MEMBERSHIP_PLANS = {
+    "free": {
+        "name": "免费版",
+        "price": "￥0",
+        "features": ["多用户记账", "基础收支统计", "每月预算", "分类占比图"],
+        "limits": ["高级统计、导出和 AI 分析暂未开放"],
+    },
+    "premium": {
+        "name": "Premium",
+        "price": "敬请期待",
+        "features": ["高级统计", "数据导出", "自定义分类", "多账本", "AI 财务分析"],
+        "limits": ["当前版本仅展示能力，不接入真实支付"],
+    },
+}
 
 
 def validate_record_payload(data):
@@ -92,8 +117,75 @@ def validate_login_payload(form):
     }, errors
 
 
+def validate_settings_payload(form):
+    errors = []
+    nickname = (form.get("nickname") or "").strip()
+    email = (form.get("email") or "").strip()
+    language = (form.get("language") or "zh-CN").strip()
+    currency = (form.get("currency") or "CNY").strip()
+    current_password = form.get("current_password") or ""
+    new_password = form.get("new_password") or ""
+    confirm_password = form.get("confirm_password") or ""
+
+    if len(nickname) > 30:
+        errors.append("昵称不能超过 30 个字符")
+
+    if not email:
+        errors.append("邮箱不能为空")
+
+    if language not in LANGUAGE_OPTIONS:
+        errors.append("语言选项无效")
+
+    if currency not in CURRENCY_OPTIONS:
+        errors.append("货币选项无效")
+
+    wants_password_change = any([current_password, new_password, confirm_password])
+    if wants_password_change:
+        if not current_password:
+            errors.append("请输入当前密码")
+        if len(new_password) < 8:
+            errors.append("新密码至少需要 8 位")
+        if new_password != confirm_password:
+            errors.append("两次输入的新密码不一致")
+
+    return {
+        "nickname": nickname,
+        "email": email,
+        "language": language,
+        "currency": currency,
+        "current_password": current_password,
+        "new_password": new_password,
+        "wants_password_change": wants_password_change,
+    }, errors
+
+
 def get_current_user_id():
     return session.get("user_id")
+
+
+def get_current_user():
+    user_id = get_current_user_id()
+    if not user_id:
+        return None
+
+    with get_connection() as conn:
+        return conn.execute(
+            """
+            SELECT id, username, email, password_hash, nickname, language,
+                   currency, plan, premium_until, created_at
+            FROM users
+            WHERE id = ?
+            """,
+            (user_id,),
+        ).fetchone()
+
+
+def user_has_feature(user, feature):
+    if not user:
+        return False
+    if user["plan"] == "premium":
+        return True
+    return feature in {"basic_accounting", "basic_statistics", "monthly_budget"}
 
 
 def require_login_json():
@@ -144,6 +236,11 @@ def get_budget_status(amount, used):
     if percent >= 80:
         return "预算即将用完"
     return "预算正常"
+
+
+@app.context_processor
+def inject_user_context():
+    return {"current_user_profile": get_current_user()}
 
 
 @app.route("/")
@@ -219,12 +316,94 @@ def budgets_page():
     return render_template("budgets.html", active_page="budgets")
 
 
-@app.get("/settings")
+@app.route("/settings", methods=["GET", "POST"])
 def settings_page():
     login_redirect = require_login_page()
     if login_redirect:
         return login_redirect
-    return render_template("settings.html", active_page="settings")
+
+    user = get_current_user()
+    if request.method == "GET":
+        return render_template(
+            "settings.html",
+            active_page="settings",
+            user=user,
+            language_options=LANGUAGE_OPTIONS,
+            currency_options=CURRENCY_OPTIONS,
+            errors=[],
+        )
+
+    form_data, errors = validate_settings_payload(request.form)
+
+    with get_connection() as conn:
+        existing_email = conn.execute(
+            "SELECT id FROM users WHERE email = ? AND id != ?",
+            (form_data["email"], user["id"]),
+        ).fetchone()
+        if existing_email:
+            errors.append("邮箱已被其他用户使用")
+
+        if form_data["wants_password_change"] and not check_password_hash(
+            user["password_hash"],
+            form_data["current_password"],
+        ):
+            errors.append("当前密码不正确")
+
+        if errors:
+            updated_user = dict(user)
+            updated_user.update(
+                {
+                    "nickname": form_data["nickname"],
+                    "email": form_data["email"],
+                    "language": form_data["language"],
+                    "currency": form_data["currency"],
+                }
+            )
+            return render_template(
+                "settings.html",
+                active_page="settings",
+                user=updated_user,
+                language_options=LANGUAGE_OPTIONS,
+                currency_options=CURRENCY_OPTIONS,
+                errors=errors,
+            ), 400
+
+        if form_data["wants_password_change"]:
+            conn.execute(
+                """
+                UPDATE users
+                SET nickname = ?, email = ?, language = ?, currency = ?,
+                    password_hash = ?
+                WHERE id = ?
+                """,
+                (
+                    form_data["nickname"],
+                    form_data["email"],
+                    form_data["language"],
+                    form_data["currency"],
+                    generate_password_hash(form_data["new_password"]),
+                    user["id"],
+                ),
+            )
+        else:
+            conn.execute(
+                """
+                UPDATE users
+                SET nickname = ?, email = ?, language = ?, currency = ?
+                WHERE id = ?
+                """,
+                (
+                    form_data["nickname"],
+                    form_data["email"],
+                    form_data["language"],
+                    form_data["currency"],
+                    user["id"],
+                ),
+            )
+        conn.commit()
+
+    flash("设置已保存", "success")
+    return redirect(url_for("settings_page"))
 
 
 @app.get("/premium")
@@ -232,7 +411,15 @@ def premium_page():
     login_redirect = require_login_page()
     if login_redirect:
         return login_redirect
-    return render_template("premium.html", active_page="premium")
+
+    user = get_current_user()
+    return render_template(
+        "premium.html",
+        active_page="premium",
+        user=user,
+        plans=MEMBERSHIP_PLANS,
+        has_premium_features=user_has_feature(user, "advanced_statistics"),
+    )
 
 
 @app.get("/api/me")
