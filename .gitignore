@@ -4,3 +4,9 @@ __pycache__/
 venv/
 data/
 *.db
+.env
+*.sqlite
+*.sqlite3
+*.backup.db
+data/*.db
+data/*.backup.db

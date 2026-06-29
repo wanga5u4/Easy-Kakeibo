@@ -1,7 +1,10 @@
 import time
 import uuid
 import os
-from datetime import date
+import secrets
+import math
+import re
+from datetime import date, datetime
 from pathlib import Path
 
 from flask import Flask, flash, jsonify, redirect, render_template, request, send_from_directory, session, url_for
@@ -11,8 +14,30 @@ from database import get_connection, init_db, row_to_dict
 
 BASE_DIR = Path(__file__).parent
 
-app = Flask(__name__, static_folder=str(BASE_DIR), static_url_path="")
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key-change-me")
+app = Flask(__name__, static_folder="static", static_url_path="/static")
+APP_ENV = os.environ.get("APP_ENV", "development").lower()
+secret_key = os.environ.get("SECRET_KEY")
+
+if APP_ENV == "production" and not secret_key:
+    raise RuntimeError(
+        "SECRET_KEY is required in production. "
+        "Set it as an environment variable before starting the application."
+    )
+
+if not secret_key:
+    secret_key = "development-only-secret-key-change-me"
+    print(
+        "WARNING: Using a development SECRET_KEY. "
+        "Set SECRET_KEY before deploying this application."
+    )
+
+app.config["SECRET_KEY"] = secret_key
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=APP_ENV == "production",
+)
+init_db()
 
 LANGUAGE_OPTIONS = {
     "zh-CN": "简体中文",
@@ -24,6 +49,11 @@ CURRENCY_OPTIONS = {
     "JPY": "日元 JPY",
     "EUR": "欧元 EUR",
 }
+
+UNSAFE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
+EMAIL_RE = re.compile(r"^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$")
+ALLOWED_PER_PAGE = {10, 20, 50}
+DEFAULT_PER_PAGE = 10
 MEMBERSHIP_PLANS = {
     "free": {
         "name": "免费版",
@@ -40,11 +70,63 @@ MEMBERSHIP_PLANS = {
 }
 
 
+def normalize_email(value):
+    return (value or "").strip().lower()
+
+
+def is_valid_email(value):
+    email = normalize_email(value)
+    if not email or " " in email:
+        return False
+    if len(email) > 254:
+        return False
+    return bool(EMAIL_RE.match(email))
+
+
+def parse_record_date(value):
+    if not isinstance(value, str):
+        return None
+    try:
+        return datetime.strptime(value.strip(), "%Y-%m-%d").date()
+    except ValueError:
+        return None
+
+
+def parse_positive_amount(value, max_value=1_000_000_000):
+    try:
+        amount = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(amount):
+        return None
+    if amount <= 0 or amount > max_value:
+        return None
+    return round(amount, 2)
+
+
+def parse_pagination_args():
+    try:
+        page = int(request.args.get("page", 1))
+    except (TypeError, ValueError):
+        page = 1
+    if page < 1:
+        page = 1
+
+    try:
+        per_page = int(request.args.get("per_page", DEFAULT_PER_PAGE))
+    except (TypeError, ValueError):
+        per_page = DEFAULT_PER_PAGE
+    if per_page not in ALLOWED_PER_PAGE:
+        per_page = DEFAULT_PER_PAGE
+
+    return page, per_page
+
+
 def validate_record_payload(data):
     errors = []
 
-    date = data.get("date", "")
-    if not date or len(date) != 10:
+    parsed_date = parse_record_date(data.get("date", ""))
+    if not parsed_date:
         errors.append("日期格式无效")
 
     record_type = data.get("type", "")
@@ -55,18 +137,15 @@ def validate_record_payload(data):
     if not category:
         errors.append("分类不能为空")
 
-    try:
-        amount = float(data.get("amount", 0))
-        if amount <= 0:
-            errors.append("金额必须大于 0")
-    except (TypeError, ValueError):
+    amount = parse_positive_amount(data.get("amount"))
+    if amount is None:
         errors.append("金额格式无效")
 
     if errors:
         return None, errors
 
     return {
-        "date": date,
+        "date": parsed_date.isoformat(),
         "type": record_type,
         "category": category,
         "amount": amount,
@@ -77,7 +156,7 @@ def validate_record_payload(data):
 def validate_register_payload(form):
     errors = []
     username = (form.get("username") or "").strip()
-    email = (form.get("email") or "").strip()
+    email = normalize_email(form.get("email"))
     password = form.get("password") or ""
     confirm_password = form.get("confirm_password") or ""
 
@@ -86,6 +165,8 @@ def validate_register_payload(form):
 
     if not email:
         errors.append("邮箱不能为空")
+    elif not is_valid_email(email):
+        errors.append("邮箱格式无效")
 
     if len(password) < 8:
         errors.append("密码至少需要 8 位")
@@ -120,7 +201,6 @@ def validate_login_payload(form):
 def validate_settings_payload(form):
     errors = []
     nickname = (form.get("nickname") or "").strip()
-    email = (form.get("email") or "").strip()
     language = (form.get("language") or "zh-CN").strip()
     currency = (form.get("currency") or "CNY").strip()
     current_password = form.get("current_password") or ""
@@ -129,9 +209,6 @@ def validate_settings_payload(form):
 
     if len(nickname) > 30:
         errors.append("昵称不能超过 30 个字符")
-
-    if not email:
-        errors.append("邮箱不能为空")
 
     if language not in LANGUAGE_OPTIONS:
         errors.append("语言选项无效")
@@ -150,13 +227,86 @@ def validate_settings_payload(form):
 
     return {
         "nickname": nickname,
-        "email": email,
         "language": language,
         "currency": currency,
         "current_password": current_password,
         "new_password": new_password,
         "wants_password_change": wants_password_change,
     }, errors
+
+
+def wants_json_response():
+    return request.path.startswith("/api/") or request.accept_mimetypes.best == "application/json"
+
+
+def get_csrf_token():
+    token = session.get("_csrf_token")
+    if not token:
+        token = secrets.token_urlsafe(32)
+        session["_csrf_token"] = token
+    return token
+
+
+def validate_csrf_token():
+    expected_token = session.get("_csrf_token")
+    provided_token = request.form.get("csrf_token") or request.headers.get("X-CSRFToken")
+    return bool(expected_token and provided_token and secrets.compare_digest(expected_token, provided_token))
+
+
+@app.context_processor
+def inject_csrf_token():
+    return {"csrf_token": get_csrf_token}
+
+
+@app.before_request
+def protect_csrf():
+    if request.method not in UNSAFE_METHODS:
+        return None
+    if validate_csrf_token():
+        return None
+    if wants_json_response():
+        return jsonify({"ok": False, "error": "CSRF validation failed"}), 400
+    return render_template(
+        "message.html",
+        active_page="",
+        title="安全验证失败",
+        message="请求已过期或安全验证失败，请刷新页面后重试。",
+        action_url=url_for("index"),
+        action_text="返回首页",
+    ), 400
+
+
+def render_error_response(status_code, message):
+    if wants_json_response():
+        return jsonify({"ok": False, "error": message}), status_code
+    return render_template(
+        "message.html",
+        active_page="",
+        title=f"{status_code} 错误",
+        message=message,
+        action_url=url_for("index"),
+        action_text="返回首页",
+    ), status_code
+
+
+@app.errorhandler(400)
+def handle_bad_request(error):
+    return render_error_response(400, "请求无效，请检查输入后重试。")
+
+
+@app.errorhandler(403)
+def handle_forbidden(error):
+    return render_error_response(403, "没有权限执行此操作。")
+
+
+@app.errorhandler(404)
+def handle_not_found(error):
+    return render_error_response(404, "页面或资源不存在。")
+
+
+@app.errorhandler(500)
+def handle_server_error(error):
+    return render_error_response(500, "服务器暂时无法处理请求，请稍后重试。")
 
 
 def get_current_user_id():
@@ -336,13 +486,6 @@ def settings_page():
     form_data, errors = validate_settings_payload(request.form)
 
     with get_connection() as conn:
-        existing_email = conn.execute(
-            "SELECT id FROM users WHERE email = ? AND id != ?",
-            (form_data["email"], user["id"]),
-        ).fetchone()
-        if existing_email:
-            errors.append("邮箱已被其他用户使用")
-
         if form_data["wants_password_change"] and not check_password_hash(
             user["password_hash"],
             form_data["current_password"],
@@ -354,7 +497,6 @@ def settings_page():
             updated_user.update(
                 {
                     "nickname": form_data["nickname"],
-                    "email": form_data["email"],
                     "language": form_data["language"],
                     "currency": form_data["currency"],
                 }
@@ -372,13 +514,11 @@ def settings_page():
             conn.execute(
                 """
                 UPDATE users
-                SET nickname = ?, email = ?, language = ?, currency = ?,
-                    password_hash = ?
+                SET nickname = ?, language = ?, currency = ?, password_hash = ?
                 WHERE id = ?
                 """,
                 (
                     form_data["nickname"],
-                    form_data["email"],
                     form_data["language"],
                     form_data["currency"],
                     generate_password_hash(form_data["new_password"]),
@@ -389,12 +529,11 @@ def settings_page():
             conn.execute(
                 """
                 UPDATE users
-                SET nickname = ?, email = ?, language = ?, currency = ?
+                SET nickname = ?, language = ?, currency = ?
                 WHERE id = ?
                 """,
                 (
                     form_data["nickname"],
-                    form_data["email"],
                     form_data["language"],
                     form_data["currency"],
                     user["id"],
@@ -454,7 +593,7 @@ def register():
 
         if form_data["email"]:
             existing_email = conn.execute(
-                "SELECT id FROM users WHERE email = ?",
+                "SELECT id FROM users WHERE lower(email) = lower(?)",
                 (form_data["email"],),
             ).fetchone()
             if existing_email:
@@ -523,7 +662,7 @@ def login():
     return redirect(url_for("dashboard"))
 
 
-@app.get("/logout")
+@app.post("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
@@ -538,24 +677,55 @@ def list_records():
     user_id = get_current_user_id()
     record_type = request.args.get("type", "all")
     month = request.args.get("month", "").strip()
+    page, per_page = parse_pagination_args()
 
-    query = "SELECT * FROM records WHERE user_id = ?"
+    where_parts = ["user_id = ?"]
     params = [user_id]
 
     if record_type in ("income", "expense"):
-        query += " AND type = ?"
+        where_parts.append("type = ?")
         params.append(record_type)
 
     if month:
-        query += " AND date LIKE ?"
+        where_parts.append("date LIKE ?")
         params.append(f"{month}%")
 
-    query += " ORDER BY date DESC, created_at DESC"
+    where_sql = " AND ".join(where_parts)
 
     with get_connection() as conn:
-        rows = conn.execute(query, params).fetchall()
+        total = conn.execute(
+            f"SELECT COUNT(*) FROM records WHERE {where_sql}",
+            params,
+        ).fetchone()[0]
+        total_pages = max(math.ceil(total / per_page), 1)
+        if page > total_pages:
+            page = total_pages
 
-    return jsonify([row_to_dict(row) for row in rows])
+        offset = (page - 1) * per_page
+        rows = conn.execute(
+            f"""
+            SELECT *
+            FROM records
+            WHERE {where_sql}
+            ORDER BY date DESC, created_at DESC, id DESC
+            LIMIT ? OFFSET ?
+            """,
+            params + [per_page, offset],
+        ).fetchall()
+
+    return jsonify(
+        {
+            "items": [row_to_dict(row) for row in rows],
+            "pagination": {
+                "page": page,
+                "per_page": per_page,
+                "total": total,
+                "total_pages": total_pages if total else 0,
+                "has_prev": page > 1,
+                "has_next": total > page * per_page,
+            },
+        }
+    )
 
 
 @app.get("/api/records/<record_id>")
@@ -730,13 +900,9 @@ def save_budget():
     if not month:
         return jsonify({"error": "月份格式无效"}), 400
 
-    try:
-        amount = float(data.get("amount", 0))
-    except (TypeError, ValueError):
+    amount = parse_positive_amount(data.get("amount"))
+    if amount is None:
         return jsonify({"error": "预算金额格式无效"}), 400
-
-    if amount < 0:
-        return jsonify({"error": "预算金额不能小于 0"}), 400
 
     with get_connection() as conn:
         conn.execute(
@@ -868,5 +1034,8 @@ def delete_record(record_id):
 
 
 if __name__ == "__main__":
-    init_db()
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(
+        host="127.0.0.1",
+        port=5000,
+        debug=APP_ENV == "development",
+    )

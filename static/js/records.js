@@ -1,9 +1,14 @@
 const recordsEls = {
   type: document.getElementById('filterType'),
   month: document.getElementById('filterMonth'),
+  perPage: document.getElementById('perPage'),
   clear: document.getElementById('clearFilter'),
   list: document.getElementById('recordList'),
   empty: document.getElementById('emptyTip'),
+  paginationBar: document.getElementById('paginationBar'),
+  paginationInfo: document.getElementById('paginationInfo'),
+  prevPage: document.getElementById('prevPage'),
+  nextPage: document.getElementById('nextPage'),
   modal: document.getElementById('deleteModal'),
   cancelDelete: document.getElementById('cancelDelete'),
   confirmDelete: document.getElementById('confirmDelete'),
@@ -11,9 +16,12 @@ const recordsEls = {
 
 let records = [];
 let deletingId = null;
+let pagination = { page: 1, per_page: 10, total: 0, total_pages: 0 };
 
 function buildRecordsQuery() {
   const params = new URLSearchParams();
+  params.set('page', pagination.page);
+  params.set('per_page', recordsEls.perPage.value);
   if (recordsEls.type.value !== 'all') params.set('type', recordsEls.type.value);
   if (recordsEls.month.value) params.set('month', recordsEls.month.value);
   const query = params.toString();
@@ -24,10 +32,12 @@ function renderRecords() {
   if (records.length === 0) {
     recordsEls.list.innerHTML = '';
     recordsEls.empty.classList.remove('hidden');
+    recordsEls.paginationBar.classList.add('hidden');
     return;
   }
 
   recordsEls.empty.classList.add('hidden');
+  recordsEls.paginationBar.classList.remove('hidden');
   recordsEls.list.innerHTML = records.map((record) => `
     <tr>
       <td>${formatDate(record.date)}</td>
@@ -43,12 +53,18 @@ function renderRecords() {
       </td>
     </tr>
   `).join('');
+
+  recordsEls.paginationInfo.textContent = `第 ${pagination.page} / ${pagination.total_pages} 页，共 ${pagination.total} 条`;
+  recordsEls.prevPage.disabled = !pagination.has_prev;
+  recordsEls.nextPage.disabled = !pagination.has_next;
 }
 
 async function loadRecords() {
   setLoading(true);
   try {
-    records = await api(`/records${buildRecordsQuery()}`);
+    const data = await api(`/records${buildRecordsQuery()}`);
+    records = data.items || [];
+    pagination = data.pagination || pagination;
     renderRecords();
   } catch (err) {
     showToast(err.message);
@@ -62,11 +78,27 @@ function closeDeleteModal() {
   recordsEls.modal.classList.add('hidden');
 }
 
-recordsEls.type.addEventListener('change', loadRecords);
-recordsEls.month.addEventListener('change', loadRecords);
+function reloadFromFirstPage() {
+  pagination.page = 1;
+  loadRecords();
+}
+
+recordsEls.type.addEventListener('change', reloadFromFirstPage);
+recordsEls.month.addEventListener('change', reloadFromFirstPage);
+recordsEls.perPage.addEventListener('change', reloadFromFirstPage);
 recordsEls.clear.addEventListener('click', () => {
   recordsEls.type.value = 'all';
   recordsEls.month.value = '';
+  reloadFromFirstPage();
+});
+recordsEls.prevPage.addEventListener('click', () => {
+  if (!pagination.has_prev) return;
+  pagination.page -= 1;
+  loadRecords();
+});
+recordsEls.nextPage.addEventListener('click', () => {
+  if (!pagination.has_next) return;
+  pagination.page += 1;
   loadRecords();
 });
 recordsEls.list.addEventListener('click', (event) => {
@@ -85,6 +117,10 @@ recordsEls.confirmDelete.addEventListener('click', async () => {
     closeDeleteModal();
     showToast('记录已删除', 'success');
     await loadRecords();
+    if (records.length === 0 && pagination.page > 1) {
+      pagination.page -= 1;
+      await loadRecords();
+    }
   } catch (err) {
     showToast(err.message);
   } finally {

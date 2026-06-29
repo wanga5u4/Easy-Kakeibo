@@ -20,6 +20,11 @@
         <option value="expense">仅支出</option>
       </select>
       <input class="form-control w-auto" type="month" id="filterMonth">
+      <select class="form-select w-auto" id="perPage">
+        <option value="10">每页 10 条</option>
+        <option value="20">每页 20 条</option>
+        <option value="50">每页 50 条</option>
+      </select>
       <button type="button" class="btn btn-outline-secondary" id="clearFilter">清除筛选</button>
     </div>
     <div class="table-responsive">
@@ -38,6 +43,13 @@
       </table>
     </div>
     <p class="text-center text-muted py-4 hidden" id="emptyTip">暂无记录。</p>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3" id="paginationBar">
+      <div class="text-muted small" id="paginationInfo"></div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="prevPage">上一页</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="nextPage">下一页</button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -55,5 +67,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='records.js') }}"></script>
+<script src="{{ url_for('static', filename='js/records.js') }}"></script>
 {% endblock %}

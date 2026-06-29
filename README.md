@@ -1,75 +1,87 @@
 # 简易记账系统
 
-网页版个人记账工具，前后端分离架构，数据持久化到 SQLite 数据库。
+Flask 多用户记账系统，使用原生 SQLite 持久化数据。
 
-## 功能
+## 本地启动
 
-- 添加、查看、编辑、删除收支记录
-- 按类型、月份筛选记录
-- 顶部汇总：总收入、总支出、结余
-- REST API 后端，数据存入 SQLite
-
-## 快速启动
-
-### 1. 安装依赖
+Windows PowerShell:
 
 ```powershell
 cd D:\accounting-system
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-```
-
-### 2. 启动服务
-
-```powershell
+$env:APP_ENV="development"
+$env:SECRET_KEY="dev-only-local-secret"
 python server.py
 ```
 
-### 3. 打开浏览器
+Linux/macOS:
 
-访问 http://127.0.0.1:5000
-
-> 请通过 Flask 服务访问页面，不要直接双击 `index.html`，否则无法调用后端 API。
-
-## API 接口
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/records` | 获取记录列表，支持 `?type=income\|expense&month=2026-06` |
-| GET | `/api/records/:id` | 获取单条记录 |
-| POST | `/api/records` | 新增记录 |
-| PUT | `/api/records/:id` | 更新记录 |
-| DELETE | `/api/records/:id` | 删除记录 |
-| GET | `/api/summary` | 获取汇总数据 |
-
-### 请求体示例（POST / PUT）
-
-```json
-{
-  "date": "2026-06-29",
-  "type": "expense",
-  "category": "餐饮",
-  "amount": 35.5,
-  "note": "午餐"
-}
+```bash
+cd /path/to/accounting-system
+python -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+export APP_ENV=development
+export SECRET_KEY=dev-only-local-secret
+python server.py
 ```
 
-## 项目结构
+访问：http://127.0.0.1:5000
 
+## SECRET_KEY
+
+生产环境必须设置随机 `SECRET_KEY`，不要使用示例值。
+
+生成方式：
+
+```bash
+python -c "import secrets; print(secrets.token_hex(32))"
 ```
-accounting-system/
-├── server.py          # Flask 后端入口
-├── database.py        # SQLite 数据库
-├── requirements.txt   # Python 依赖
-├── index.html         # 前端页面
-├── styles.css         # 样式
-├── app.js             # 前端逻辑（调用 API）
-└── data/              # 数据库文件（自动生成）
+
+环境变量示例见 `.env.example`。不要提交真实 `.env`。
+
+## 数据库初始化
+
+应用启动时会执行幂等 `init_db()`，会创建缺失的表和字段，不会清空已有用户、账目或预算。
+
+也可以手动检查初始化：
+
+```bash
+python -c "from database import init_db; init_db(); print('ok')"
 ```
 
-## 技术栈
+## 生产启动
 
-- 前端：HTML + CSS + JavaScript
-- 后端：Python Flask
-- 数据库：SQLite
+生产环境请关闭 Debug，并通过 WSGI 服务器运行：
+
+```bash
+export APP_ENV=production
+export SECRET_KEY=replace-with-a-long-random-secret
+gunicorn --workers 2 --bind 127.0.0.1:8000 server:app
+```
+
+生产环境建议放在 Nginx/Caddy 等反向代理之后，并启用 HTTPS。
+
+## 安全提醒
+
+- 不提交 `.env`
+- 不提交数据库文件或备份
+- 不在公网使用 Debug
+- 生产环境必须设置随机 `SECRET_KEY`
+- 生产环境建议启用 HTTPS
+- 部署前备份 `data/accounting.db`
+
+## 主要功能
+
+- 用户注册、登录、POST 退出登录
+- 用户数据隔离
+- 添加、查看、编辑、删除账目
+- 类型和月份筛选
+- 服务器端分页
+- 本月收入、本月支出、本月结余
+- 每月预算、预算进度条和状态提示
+- 支出分类占比图
+- 最近六个月收支趋势图
+- 用户设置和会员展示页
