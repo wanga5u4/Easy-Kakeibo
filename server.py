@@ -7,7 +7,7 @@ import re
 from datetime import date, datetime
 from pathlib import Path
 
-from flask import Flask, flash, jsonify, redirect, render_template, request, send_from_directory, session, url_for
+from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database import get_connection, init_db, row_to_dict
@@ -637,7 +637,7 @@ def login():
                 """
                 SELECT id, username, password_hash
                 FROM users
-                WHERE username = ? OR email = ?
+                WHERE username = ? OR lower(email) = lower(?)
                 """,
                 (form_data["account"], form_data["account"]),
             ).fetchone()

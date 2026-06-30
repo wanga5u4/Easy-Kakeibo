@@ -1,5 +1,6 @@
 __pycache__/
 *.py[cod]
+.pytest_cache/
 .venv/
 venv/
 data/
@@ -10,3 +11,6 @@ data/
 *.backup.db
 data/*.db
 data/*.backup.db
+coverage.xml
+htmlcov/
+.coverage

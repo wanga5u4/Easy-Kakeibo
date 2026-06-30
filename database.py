@@ -1,7 +1,9 @@
 import sqlite3
+import os
 from pathlib import Path
 
-DB_PATH = Path(__file__).parent / "data" / "accounting.db"
+DEFAULT_DB_PATH = Path(__file__).parent / "data" / "accounting.db"
+DB_PATH = Path(os.environ.get("DATABASE_PATH", DEFAULT_DB_PATH))
 DEFAULT_USER_ID = 1
 DEFAULT_USERNAME = "default_user"
 DEFAULT_EMAIL = "default@example.com"

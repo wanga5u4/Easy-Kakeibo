@@ -2,6 +2,21 @@
 
 Flask 多用户记账系统，使用原生 SQLite 持久化数据。
 
+## 项目结构
+
+```text
+server.py              Flask 应用入口和路由
+database.py            SQLite 初始化、迁移和连接
+templates/             Jinja2 页面模板
+static/css/            样式文件
+static/js/             页面 JavaScript
+tests/                 pytest 自动化测试
+data/                  默认 SQLite 数据库目录，不提交 Git
+requirements.txt       生产依赖
+requirements-dev.txt   测试/开发依赖
+.env.example           环境变量示例
+```
+
 ## 本地启动
 
 Windows PowerShell:
@@ -42,6 +57,12 @@ python -c "import secrets; print(secrets.token_hex(32))"
 
 环境变量示例见 `.env.example`。不要提交真实 `.env`。
 
+## 数据库路径
+
+默认数据库路径为 `data/accounting.db`。不设置 `DATABASE_PATH` 时，开发和生产环境都会继续使用这个默认路径。
+
+自动化测试通过临时 `DATABASE_PATH` 使用 pytest 临时数据库，不读取、不修改、也不删除正式 `data/accounting.db`。
+
 ## 数据库初始化
 
 应用启动时会执行幂等 `init_db()`，会创建缺失的表和字段，不会清空已有用户、账目或预算。
@@ -63,6 +84,28 @@ gunicorn --workers 2 --bind 127.0.0.1:8000 server:app
 ```
 
 生产环境建议放在 Nginx/Caddy 等反向代理之后，并启用 HTTPS。
+
+## 运行测试
+
+Windows PowerShell:
+
+```powershell
+.venv\Scripts\activate
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+pytest
+```
+
+Linux/macOS:
+
+```bash
+. .venv/bin/activate
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+pytest
+```
+
+测试会为每个用例创建临时 SQLite 数据库，并通过真实 CSRF Token 提交表单和 API 请求。
 
 ## 安全提醒
 
