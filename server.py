@@ -5,9 +5,11 @@ import secrets
 import math
 import re
 import logging
+import hashlib
 from datetime import date, datetime
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from urllib.parse import urlparse, urljoin
 
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_babel import Babel, gettext as _
@@ -207,6 +209,32 @@ babel = Babel(app, locale_selector=get_locale)
 
 def normalize_email(value):
     return (value or "").strip().lower()
+
+
+def anonymize_account(value):
+    normalized = (value or "").strip().lower().encode("utf-8")
+    return hashlib.sha256(normalized).hexdigest()[:16]
+
+
+def is_safe_redirect_target(target):
+    if not target:
+        return False
+    try:
+        host_url = urlparse(request.host_url)
+        resolved = urlparse(urljoin(request.host_url, target))
+    except ValueError:
+        return False
+    return (
+        resolved.scheme in {"http", "https"}
+        and resolved.scheme == host_url.scheme
+        and resolved.netloc == host_url.netloc
+    )
+
+
+def default_language_redirect():
+    if get_current_user_id():
+        return url_for("dashboard")
+    return url_for("login")
 
 
 def is_valid_email(value):
@@ -597,7 +625,9 @@ def set_language(language):
     selected_language = normalize_locale(language)
     if selected_language:
         session["lang"] = selected_language
-    return redirect(request.referrer or url_for("dashboard"))
+    if is_safe_redirect_target(request.referrer):
+        return redirect(request.referrer)
+    return redirect(default_language_redirect())
 
 
 @app.route("/")
@@ -871,7 +901,11 @@ def login():
             errors.append(_("用户名/邮箱或密码错误"))
 
     if errors:
-        app.logger.warning("Login failed: account=%s", form_data["account"])
+        app.logger.warning(
+            "Login failed: account_hash=%s remote_addr=%s",
+            anonymize_account(form_data["account"]),
+            get_remote_address(),
+        )
         return render_template(
             "login.html",
             errors=errors,

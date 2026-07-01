@@ -1,4 +1,6 @@
 import importlib
+import hashlib
+import logging
 import sys
 
 import pytest
@@ -105,3 +107,74 @@ def test_production_and_development_cookie_config(tmp_path, monkeypatch):
     assert dev.app.config["SESSION_COOKIE_SECURE"] is False
     assert dev.app.config["SESSION_COOKIE_HTTPONLY"] is True
     assert dev.app.config["SESSION_COOKIE_SAMESITE"] == "Lax"
+
+
+def test_language_switch_allows_same_origin_referrer(client):
+    response = client.get(
+        "/set-language/ja",
+        headers={"Referer": "http://localhost/dashboard?month=2026-06"},
+    )
+
+    assert response.status_code == 302
+    assert response.headers["Location"] == "http://localhost/dashboard?month=2026-06"
+
+
+def test_language_switch_rejects_external_referrer(client):
+    response = client.get(
+        "/set-language/ja",
+        headers={"Referer": "https://evil.example/phish"},
+    )
+
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/login"
+
+
+def test_language_switch_uses_safe_default_without_referrer(client):
+    response = client.get("/set-language/ja")
+
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/login"
+
+
+def test_language_switch_invalid_language_does_not_change_session_and_redirects_safely(client):
+    with client.session_transaction() as sess:
+        sess["lang"] = "zh_CN"
+
+    response = client.get(
+        "/set-language/not-a-locale",
+        headers={"Referer": "//evil.example/phish"},
+    )
+
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/login"
+    with client.session_transaction() as sess:
+        assert sess["lang"] == "zh_CN"
+
+
+def test_language_switch_without_referrer_returns_dashboard_when_logged_in(client):
+    login_as_new_user(client, "alice", "alice@example.com")
+
+    response = client.get("/set-language/ja")
+
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/dashboard"
+
+
+def test_login_failure_log_masks_account_and_password(client, caplog):
+    register_user(client, username="alice", email="alice@example.com", password="password123")
+    token = csrf_token(client, "/login")
+    account = " Alice@Example.com "
+    password = "wrong-password"
+    expected_hash = hashlib.sha256(account.strip().lower().encode("utf-8")).hexdigest()[:16]
+
+    with caplog.at_level(logging.WARNING):
+        response = client.post(
+            "/login",
+            data={"csrf_token": token, "account": account, "password": password},
+        )
+
+    assert response.status_code == 400
+    assert expected_hash in caplog.text
+    assert "Alice@Example.com" not in caplog.text
+    assert "alice@example.com" not in caplog.text
+    assert password not in caplog.text

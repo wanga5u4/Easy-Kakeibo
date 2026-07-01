@@ -13,6 +13,12 @@ def test_health_ok(client):
     assert response.get_json() == {"status": "ok", "database": "ok"}
 
 
+def test_sqlite_connection_uses_busy_timeout(app_module):
+    with app_module.get_connection() as conn:
+        assert conn.execute("PRAGMA foreign_keys").fetchone()[0] == 1
+        assert conn.execute("PRAGMA busy_timeout").fetchone()[0] == 5000
+
+
 def test_health_database_failure_hides_sensitive_details(app_module, client, monkeypatch):
     def broken_connection():
         raise RuntimeError("boom /tmp/secret/accounting.db traceback")

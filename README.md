@@ -134,11 +134,12 @@ LOG_LEVEL=INFO
 BACKUP_DIR=backups
 BACKUP_RETENTION_DAYS=14
 GUNICORN_BIND=127.0.0.1:8000
-GUNICORN_WORKERS=2
+GUNICORN_WORKERS=1
 GUNICORN_TIMEOUT=30
 ```
 
 生产环境必须使用随机且足够长的 `SECRET_KEY`，不要提交真实 `.env`。如果有 Redis，建议把 `RATELIMIT_STORAGE_URI` 改成类似 `redis://127.0.0.1:6379/0`。
+当前 SQLite 小范围朋友测试阶段推荐使用 1 个 Gunicorn worker，降低并发写入锁冲突和进程内限流不一致的风险。未来迁移 PostgreSQL，或接入 Redis 等共享限流存储并完成并发验证后，再按服务器资源增加 worker 数。
 
 5. 初始化数据库
 
