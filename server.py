@@ -139,13 +139,13 @@ def get_membership_plans():
             "name": _("免费版"),
             "price": _("￥0"),
             "features": [_("多用户记账"), _("基础收支统计"), _("每月预算"), _("分类占比图")],
-            "limits": [_("高级统计、导出和 AI 分析暂未开放")],
+            "limits": [_("包含日常记账、统计与预算管理")],
         },
         "premium": {
             "name": "Premium",
-            "price": _("敬请期待"),
-            "features": [_("高级统计"), _("数据导出"), _("自定义分类"), _("多账本"), _("AI 财务分析")],
-            "limits": [_("当前版本仅展示能力，不接入真实支付")],
+            "price": _("联系管理员开通"),
+            "features": [_("高级统计"), _("数据导出"), _("自定义分类"), _("多账本"), _("智能财务分析")],
+            "limits": [_("适合需要更完整数据管理能力的用户")],
         },
     }
 
@@ -461,7 +461,7 @@ def protect_csrf():
     if validate_csrf_token():
         return None
     if wants_json_response():
-        return jsonify({"ok": False, "error": _("CSRF validation failed")}), 400
+        return jsonify({"ok": False, "error": _("安全验证失败，请刷新页面后重试。")}), 400
     return render_template(
         "message.html",
         active_page="",

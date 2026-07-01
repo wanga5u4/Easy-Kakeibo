@@ -6,7 +6,7 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
   <div>
     <h1 class="h3 mb-1">Premium</h1>
-    <p class="text-muted mb-0">{{ _('会员能力展示页，为后续高级功能和权限判断预留结构。') }}</p>
+    <p class="text-muted mb-0">{{ _('查看当前套餐和可用权益。') }}</p>
   </div>
   <span class="badge text-bg-{{ 'warning' if user['plan'] == 'premium' else 'secondary' }} fs-6">
     {{ _('当前套餐：%(plan)s', plan=plans[user["plan"]]["name"] if user["plan"] in plans else user["plan"]) }}
@@ -49,29 +49,29 @@
 
 <section class="card border-0 shadow-sm">
   <div class="card-body">
-    <h2 class="h5 mb-3">{{ _('权限结构预留') }}</h2>
+    <h2 class="h5 mb-3">{{ _('会员权益') }}</h2>
     <div class="row g-3">
       <div class="col-md-4">
         <div class="border rounded-3 p-3 h-100">
-          <div class="fw-semibold mb-1">{{ _('套餐字段') }}</div>
-          <div class="text-muted small">{{ _('用户表已预留 `plan` 和 `premium_until`，后续可接入订单系统。') }}</div>
+          <div class="fw-semibold mb-1">{{ _('套餐状态') }}</div>
+          <div class="text-muted small">{{ _('显示当前账号的套餐与有效期信息。') }}</div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="border rounded-3 p-3 h-100">
-          <div class="fw-semibold mb-1">{{ _('权限判断') }}</div>
-          <div class="text-muted small">{{ _('后端已准备会员能力判断函数，可用于高级统计、导出和 AI 分析。') }}</div>
+          <div class="fw-semibold mb-1">{{ _('权益范围') }}</div>
+          <div class="text-muted small">{{ _('高级权益覆盖统计、导出与智能分析等能力。') }}</div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="border rounded-3 p-3 h-100">
-          <div class="fw-semibold mb-1">{{ _('支付状态') }}</div>
-          <div class="text-muted small">{{ _('本版本不接入真实支付，不实现订单、续费或支付回调。') }}</div>
+          <div class="fw-semibold mb-1">{{ _('升级方式') }}</div>
+          <div class="text-muted small">{{ _('如需开通或调整套餐，请联系服务管理员。') }}</div>
         </div>
       </div>
     </div>
     <div class="mt-4">
-      <button class="btn btn-primary" type="button" disabled>{{ _('升级 Premium（暂未开放）') }}</button>
+      <button class="btn btn-primary" type="button" disabled>{{ _('请联系管理员开通') }}</button>
       <a class="btn btn-outline-secondary" href="{{ url_for('settings_page') }}">{{ _('返回设置') }}</a>
     </div>
   </div>
