@@ -3,7 +3,6 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
-data/
 *.db
 .env
 *.sqlite
@@ -11,6 +10,10 @@ data/
 *.backup.db
 data/*.db
 data/*.backup.db
+data/*.db.bak
+backups/
+logs/
+*.log
 coverage.xml
 htmlcov/
 .coverage

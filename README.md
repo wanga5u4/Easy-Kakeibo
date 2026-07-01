@@ -80,10 +80,186 @@ python -c "from database import init_db; init_db(); print('ok')"
 ```bash
 export APP_ENV=production
 export SECRET_KEY=replace-with-a-long-random-secret
-gunicorn --workers 2 --bind 127.0.0.1:8000 server:app
+gunicorn -c gunicorn.conf.py server:app
 ```
 
 生产环境建议放在 Nginx/Caddy 等反向代理之后，并启用 HTTPS。
+
+## Ubuntu 部署
+
+以下示例使用占位域名、用户和路径。请将 `example.com`、`your-user`、`/opt/accounting-system` 替换为实际值。域名需要提前解析到服务器公网 IP。
+
+1. 安装系统依赖
+
+```bash
+sudo apt update
+sudo apt install -y git python3 python3-venv caddy ufw
+```
+
+2. 克隆仓库
+
+```bash
+sudo mkdir -p /opt/accounting-system
+sudo chown your-user:your-user /opt/accounting-system
+git clone https://example.com/your/accounting-system.git /opt/accounting-system
+cd /opt/accounting-system
+```
+
+3. 创建虚拟环境并安装依赖
+
+```bash
+python3 -m venv venv
+. venv/bin/activate
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
+
+4. 创建 `.env`
+
+```bash
+cp .env.example .env
+python -c "import secrets; print(secrets.token_urlsafe(48))"
+```
+
+编辑 `.env`，至少设置：
+
+```env
+APP_ENV=production
+SECRET_KEY=replace-with-generated-random-value
+DATABASE_PATH=data/accounting.db
+SESSION_COOKIE_SECURE=true
+RATELIMIT_STORAGE_URI=memory://
+LOG_DIR=logs
+LOG_LEVEL=INFO
+BACKUP_DIR=backups
+BACKUP_RETENTION_DAYS=14
+GUNICORN_BIND=127.0.0.1:8000
+GUNICORN_WORKERS=2
+GUNICORN_TIMEOUT=30
+```
+
+生产环境必须使用随机且足够长的 `SECRET_KEY`，不要提交真实 `.env`。如果有 Redis，建议把 `RATELIMIT_STORAGE_URI` 改成类似 `redis://127.0.0.1:6379/0`。
+
+5. 初始化数据库
+
+```bash
+mkdir -p data logs backups
+python -c "from database import init_db; init_db(); print('ok')"
+```
+
+6. 运行测试
+
+```bash
+pytest
+```
+
+7. 测试 Gunicorn
+
+```bash
+gunicorn -c gunicorn.conf.py server:app
+curl http://127.0.0.1:8000/health
+```
+
+确认返回 `{"database":"ok","status":"ok"}` 后停止前台进程。
+
+8. 安装 systemd 服务
+
+```bash
+sudo cp deploy/accounting.service.example /etc/systemd/system/accounting.service
+sudo editor /etc/systemd/system/accounting.service
+sudo systemctl daemon-reload
+sudo systemctl enable accounting
+sudo systemctl start accounting
+sudo systemctl status accounting
+```
+
+服务示例默认使用普通用户运行，并只给 `data`、`logs`、`backups` 写权限。不要使用 root 运行应用。
+
+9. 配置 Caddy
+
+```bash
+sudo cp deploy/Caddyfile.example /etc/caddy/Caddyfile
+sudo editor /etc/caddy/Caddyfile
+sudo systemctl reload caddy
+```
+
+Caddy 会自动申请和续期 HTTPS 证书。Flask/Gunicorn 只监听 `127.0.0.1`，公网只开放 `80` 和 `443`，不要把 Flask 开发服务器直接暴露到互联网。
+
+10. 配置 UFW
+
+```bash
+sudo ufw allow OpenSSH
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable
+sudo ufw status
+```
+
+11. 检查健康状态
+
+```bash
+curl https://example.com/health
+```
+
+12. 配置每日数据库备份
+
+先手动运行一次：
+
+```bash
+cd /opt/accounting-system
+. venv/bin/activate
+python scripts/backup_database.py
+```
+
+再添加 cron：
+
+```bash
+crontab -e
+```
+
+示例每天 03:00 执行：
+
+```cron
+0 3 * * * cd /opt/accounting-system && . /opt/accounting-system/venv/bin/activate && python scripts/backup_database.py >> /opt/accounting-system/logs/backup.log 2>&1
+```
+
+13. 查看日志
+
+```bash
+sudo journalctl -u accounting -f
+tail -f /opt/accounting-system/logs/accounting.log
+tail -f /opt/accounting-system/logs/backup.log
+```
+
+14. 更新项目标准流程
+
+```bash
+cd /opt/accounting-system
+git fetch --all
+git checkout main
+git pull --ff-only
+. venv/bin/activate
+pip install -r requirements.txt
+python -c "from database import init_db; init_db(); print('ok')"
+pytest
+sudo systemctl restart accounting
+curl https://example.com/health
+```
+
+15. 数据库恢复方法
+
+恢复前先停止服务并保留当前数据库副本：
+
+```bash
+sudo systemctl stop accounting
+cp data/accounting.db data/accounting.before-restore.db
+cp backups/accounting-YYYY-MM-DD-HHMMSS.db data/accounting.db
+python -c "import sqlite3; conn=sqlite3.connect('data/accounting.db'); conn.execute('PRAGMA integrity_check'); print('ok')"
+sudo systemctl start accounting
+curl https://example.com/health
+```
+
+确认恢复正常后，再按备份策略清理旧文件。
 
 ## 运行测试
 

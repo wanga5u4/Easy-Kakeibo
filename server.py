@@ -4,11 +4,16 @@ import os
 import secrets
 import math
 import re
+import logging
 from datetime import date, datetime
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_babel import Babel, gettext as _
+from flask_limiter import Limiter
+from flask_limiter.errors import RateLimitExceeded
+from flask_limiter.util import get_remote_address
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database import get_connection, init_db, row_to_dict
@@ -17,9 +22,10 @@ BASE_DIR = Path(__file__).parent
 
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 APP_ENV = os.environ.get("APP_ENV", "development").lower()
+IS_PRODUCTION = APP_ENV == "production"
 secret_key = os.environ.get("SECRET_KEY")
 
-if APP_ENV == "production" and not secret_key:
+if IS_PRODUCTION and not secret_key:
     raise RuntimeError(
         "SECRET_KEY is required in production. "
         "Set it as an environment variable before starting the application."
@@ -36,11 +42,70 @@ app.config["SECRET_KEY"] = secret_key
 app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax",
-    SESSION_COOKIE_SECURE=APP_ENV == "production",
+    SESSION_COOKIE_SECURE=os.environ.get("SESSION_COOKIE_SECURE", str(IS_PRODUCTION)).lower()
+    in {"1", "true", "yes", "on"},
     BABEL_DEFAULT_LOCALE="zh_CN",
     BABEL_TRANSLATION_DIRECTORIES=str(BASE_DIR / "translations"),
 )
-init_db()
+
+
+def setup_logging():
+    log_level_name = os.environ.get("LOG_LEVEL", "INFO").upper()
+    log_level = getattr(logging, log_level_name, logging.INFO)
+    formatter = logging.Formatter(
+        "%(asctime)s %(levelname)s [%(name)s] %(message)s"
+    )
+
+    root_logger = logging.getLogger()
+    root_logger.setLevel(log_level)
+    root_logger.handlers.clear()
+
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    root_logger.addHandler(console_handler)
+
+    if IS_PRODUCTION:
+        log_dir = Path(os.environ.get("LOG_DIR", "logs"))
+        if not log_dir.is_absolute():
+            log_dir = BASE_DIR / log_dir
+        log_dir.mkdir(parents=True, exist_ok=True)
+        file_handler = RotatingFileHandler(
+            log_dir / "accounting.log",
+            maxBytes=5 * 1024 * 1024,
+            backupCount=5,
+            encoding="utf-8",
+        )
+        file_handler.setFormatter(formatter)
+        root_logger.addHandler(file_handler)
+
+    app.logger.handlers.clear()
+    app.logger.propagate = True
+    app.logger.setLevel(log_level)
+
+
+setup_logging()
+app.logger.info("Application starting")
+app.logger.info("Runtime environment: %s", APP_ENV)
+
+try:
+    init_db()
+    app.logger.info("Database initialized successfully")
+except Exception:
+    app.logger.exception("Database initialization failed")
+    raise
+
+RATELIMIT_STORAGE_URI = os.environ.get("RATELIMIT_STORAGE_URI", "memory://")
+if IS_PRODUCTION and RATELIMIT_STORAGE_URI == "memory://":
+    app.logger.warning(
+        "RATELIMIT_STORAGE_URI is memory:// in production; use Redis for multi-process deployments."
+    )
+
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app,
+    default_limits=[],
+    storage_uri=RATELIMIT_STORAGE_URI,
+)
 
 LANGUAGE_OPTIONS = {
     "zh_CN": "简体中文",
@@ -309,6 +374,39 @@ def wants_json_response():
     return request.path.startswith("/api/") or request.accept_mimetypes.best == "application/json"
 
 
+def is_secure_request():
+    return request.is_secure or request.headers.get("X-Forwarded-Proto", "").lower() == "https"
+
+
+@app.after_request
+def add_security_headers(response):
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+    response.headers.setdefault(
+        "Permissions-Policy",
+        "camera=(), microphone=(), geolocation=(), payment=()",
+    )
+    response.headers.setdefault(
+        "Content-Security-Policy",
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "img-src 'self' data:; "
+        "font-src 'self' data: https://cdn.jsdelivr.net; "
+        "connect-src 'self'; "
+        "frame-ancestors 'self'; "
+        "base-uri 'self'; "
+        "form-action 'self'",
+    )
+    if IS_PRODUCTION and is_secure_request():
+        response.headers.setdefault(
+            "Strict-Transport-Security",
+            "max-age=31536000; includeSubDomains",
+        )
+    return response
+
+
 def get_csrf_token():
     token = session.get("_csrf_token")
     if not token:
@@ -376,7 +474,32 @@ def handle_not_found(error):
 
 @app.errorhandler(500)
 def handle_server_error(error):
+    app.logger.error(
+        "Unhandled exception",
+        exc_info=getattr(error, "original_exception", error),
+    )
     return render_error_response(500, _("服务器暂时无法处理请求，请稍后重试。"))
+
+
+@app.errorhandler(RateLimitExceeded)
+def handle_rate_limit(error):
+    app.logger.warning(
+        "Rate limit triggered: path=%s method=%s remote_addr=%s",
+        request.path,
+        request.method,
+        get_remote_address(),
+    )
+    message = _("请求过于频繁，请稍后再试。")
+    if wants_json_response():
+        return jsonify({"ok": False, "error": message}), 429
+    return render_template(
+        "message.html",
+        active_page="",
+        title=_("请求过于频繁"),
+        message=message,
+        action_url=url_for("login") if request.path == "/login" else url_for("register"),
+        action_text=_("返回后重试"),
+    ), 429
 
 
 def user_has_feature(user, feature):
@@ -482,6 +605,17 @@ def index():
     if get_current_user_id():
         return redirect(url_for("dashboard"))
     return redirect(url_for("login"))
+
+
+@app.get("/health")
+def health():
+    try:
+        with get_connection() as conn:
+            conn.execute("SELECT 1").fetchone()
+    except Exception:
+        app.logger.exception("Health check database failed")
+        return jsonify({"status": "error", "database": "unavailable"}), 503
+    return jsonify({"status": "ok", "database": "ok"})
 
 
 @app.get("/dashboard")
@@ -661,6 +795,7 @@ def current_user():
 
 
 @app.route("/register", methods=["GET", "POST"])
+@limiter.limit("5 per hour", methods=["POST"])
 def register():
     if request.method == "GET":
         return render_template("register.html", errors=[], form={})
@@ -705,10 +840,12 @@ def register():
         )
         conn.commit()
 
+    app.logger.info("Registration succeeded: username=%s", form_data["username"])
     return redirect(url_for("login"))
 
 
 @app.route("/login", methods=["GET", "POST"])
+@limiter.limit("5 per minute; 30 per hour", methods=["POST"])
 def login():
     if request.method == "GET":
         return render_template("login.html", errors=[], form={})
@@ -734,6 +871,7 @@ def login():
             errors.append(_("用户名/邮箱或密码错误"))
 
     if errors:
+        app.logger.warning("Login failed: account=%s", form_data["account"])
         return render_template(
             "login.html",
             errors=errors,
@@ -744,6 +882,7 @@ def login():
     session["user_id"] = user["id"]
     session["username"] = user["username"]
 
+    app.logger.info("Login succeeded: user_id=%s username=%s", user["id"], user["username"])
     return redirect(url_for("dashboard"))
 
 

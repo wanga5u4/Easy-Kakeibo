@@ -778,3 +778,14 @@ msgstr "支出カテゴリ比率"
 msgid "最近六个月收支趋势"
 msgstr "直近6か月の収支推移"
 
+#: server.py
+msgid "请求过于频繁，请稍后再试。"
+msgstr "リクエストが多すぎます。しばらくしてからもう一度お試しください。"
+
+#: server.py
+msgid "请求过于频繁"
+msgstr "リクエストが多すぎます"
+
+#: server.py
+msgid "返回后重试"
+msgstr "戻ってから再試行"
