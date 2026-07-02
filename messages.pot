@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 00:33+0900\n"
+"POT-Creation-Date: 2026-07-02 16:16+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,386 +17,330 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: server.py:139 templates/base.html:41 templates/settings.html:71
-msgid "免费版"
-msgstr ""
-
-#: server.py:140
-msgid "￥0"
-msgstr ""
-
-#: server.py:141
-msgid "多用户记账"
-msgstr ""
-
-#: server.py:141
-msgid "基础收支统计"
-msgstr ""
-
-#: server.py:141
-msgid "每月预算"
-msgstr ""
-
-#: server.py:141
-msgid "分类占比图"
-msgstr ""
-
-#: server.py:142
-msgid "包含日常记账、统计与预算管理"
-msgstr ""
-
-#: server.py:146
-msgid "联系管理员开通"
-msgstr ""
-
-#: server.py:147
-msgid "高级统计"
-msgstr ""
-
-#: server.py:147
-msgid "数据导出"
-msgstr ""
-
-#: server.py:147
-msgid "自定义分类"
-msgstr ""
-
-#: server.py:147
-msgid "多账本"
-msgstr ""
-
-#: server.py:147
-msgid "智能财务分析"
-msgstr ""
-
-#: server.py:148
-msgid "适合需要更完整数据管理能力的用户"
-msgstr ""
-
-#: server.py:154
+#: server.py:137
 msgid "简体中文"
 msgstr ""
 
-#: server.py:154
+#: server.py:137
 msgid "日本語"
 msgstr ""
 
-#: server.py:159
+#: server.py:142
 msgid "人民币 CNY"
 msgstr ""
 
-#: server.py:160
+#: server.py:143
 msgid "美元 USD"
 msgstr ""
 
-#: server.py:161
+#: server.py:144
 msgid "日元 JPY"
 msgstr ""
 
-#: server.py:162
+#: server.py:145
 msgid "欧元 EUR"
 msgstr ""
 
-#: server.py:293
+#: server.py:276
 msgid "日期格式无效"
 msgstr ""
 
-#: server.py:297
+#: server.py:280
 msgid "类型必须是 income 或 expense"
 msgstr ""
 
-#: server.py:301
+#: server.py:284
 msgid "分类不能为空"
 msgstr ""
 
-#: server.py:305
+#: server.py:288
 msgid "金额格式无效"
 msgstr ""
 
-#: server.py:327
+#: server.py:310
 msgid "用户名不能为空"
 msgstr ""
 
-#: server.py:330
+#: server.py:313
 msgid "邮箱不能为空"
 msgstr ""
 
-#: server.py:332
+#: server.py:315
 msgid "邮箱格式无效"
 msgstr ""
 
-#: server.py:335
+#: server.py:318
 msgid "密码至少需要 8 位"
 msgstr ""
 
-#: server.py:338
+#: server.py:321
 msgid "两次输入的密码不一致"
 msgstr ""
 
-#: server.py:353
+#: server.py:336
 msgid "用户名或邮箱不能为空"
 msgstr ""
 
-#: server.py:356
+#: server.py:339
 msgid "密码不能为空"
 msgstr ""
 
-#: server.py:374
+#: server.py:357
 msgid "昵称不能超过 30 个字符"
 msgstr ""
 
-#: server.py:377
+#: server.py:360
 msgid "语言选项无效"
 msgstr ""
 
-#: server.py:380
+#: server.py:363
 msgid "货币选项无效"
 msgstr ""
 
-#: server.py:385
+#: server.py:368
 msgid "请输入当前密码"
 msgstr ""
 
-#: server.py:387
+#: server.py:370
 msgid "新密码至少需要 8 位"
 msgstr ""
 
-#: server.py:389
+#: server.py:372
 msgid "两次输入的新密码不一致"
 msgstr ""
 
-#: server.py:464
+#: server.py:447
 msgid "安全验证失败，请刷新页面后重试。"
 msgstr ""
 
-#: server.py:468
+#: server.py:451
 msgid "安全验证失败"
 msgstr ""
 
-#: server.py:469
+#: server.py:452
 msgid "请求已过期或安全验证失败，请刷新页面后重试。"
 msgstr ""
 
-#: server.py:471 server.py:484 templates/login.html:62
+#: server.py:454 server.py:467 templates/login.html:62
 #: templates/register.html:87
 msgid "返回首页"
 msgstr ""
 
-#: server.py:481
+#: server.py:464
 #, python-format
 msgid "%(status_code)s 错误"
 msgstr ""
 
-#: server.py:490
+#: server.py:473
 msgid "请求无效，请检查输入后重试。"
 msgstr ""
 
-#: server.py:495
+#: server.py:478
 msgid "没有权限执行此操作。"
 msgstr ""
 
-#: server.py:500
+#: server.py:483
 msgid "页面或资源不存在。"
 msgstr ""
 
-#: server.py:509
+#: server.py:492
 msgid "服务器暂时无法处理请求，请稍后重试。"
 msgstr ""
 
-#: server.py:520
+#: server.py:503
 msgid "请求过于频繁，请稍后再试。"
 msgstr ""
 
-#: server.py:526
+#: server.py:509
 msgid "请求过于频繁"
 msgstr ""
 
-#: server.py:529
+#: server.py:512
 msgid "返回后重试"
 msgstr ""
 
-#: server.py:543
+#: server.py:518
 msgid "请先登录"
 msgstr ""
 
-#: server.py:582 templates/budgets.html:28 templates/dashboard.html:53
+#: server.py:557 templates/budgets.html:28 templates/dashboard.html:53
 msgid "未设置预算"
 msgstr ""
 
-#: server.py:585
+#: server.py:560
 msgid "已超出预算"
 msgstr ""
 
-#: server.py:587
+#: server.py:562
 msgid "预算即将用完"
 msgstr ""
 
-#: server.py:588
+#: server.py:563
 msgid "预算正常"
 msgstr ""
 
-#: server.py:599
+#: server.py:574
 msgid "请求失败，请稍后重试"
 msgstr ""
 
-#: server.py:601
+#: server.py:576
 msgid "工资"
 msgstr ""
 
-#: server.py:601
+#: server.py:576
 msgid "奖金"
 msgstr ""
 
-#: server.py:601
+#: server.py:576
 msgid "理财"
 msgstr ""
 
-#: server.py:601
+#: server.py:576
 msgid "兼职"
 msgstr ""
 
-#: server.py:601
+#: server.py:576
 msgid "其他收入"
 msgstr ""
 
-#: server.py:602
+#: server.py:577
 msgid "餐饮"
 msgstr ""
 
-#: server.py:602
+#: server.py:577
 msgid "交通"
 msgstr ""
 
-#: server.py:602
+#: server.py:577
 msgid "购物"
 msgstr ""
 
-#: server.py:602
+#: server.py:577
 msgid "住房"
 msgstr ""
 
-#: server.py:602
+#: server.py:577
 msgid "娱乐"
 msgstr ""
 
-#: server.py:602
+#: server.py:577
 msgid "医疗"
 msgstr ""
 
-#: server.py:602
+#: server.py:577
 msgid "教育"
 msgstr ""
 
-#: server.py:602
+#: server.py:577
 msgid "其他支出"
 msgstr ""
 
-#: server.py:604 server.py:617 templates/record_form.html:26
+#: server.py:579 server.py:592 templates/record_form.html:26
 msgid "收入"
 msgstr ""
 
-#: server.py:604 server.py:618 templates/record_form.html:25
+#: server.py:579 server.py:593 templates/record_form.html:25
 msgid "支出"
 msgstr ""
 
-#: server.py:605
+#: server.py:580
 #, python-format
 msgid "%(year)s年%(month)s月%(day)s日"
 msgstr ""
 
-#: server.py:606 templates/budgets.html:22 templates/dashboard.html:47
+#: server.py:581 templates/budgets.html:22 templates/dashboard.html:47
 #, python-format
 msgid "已用 %(amount)s"
 msgstr ""
 
-#: server.py:607
+#: server.py:582
 #, python-format
 msgid "%(status)s，剩余 %(amount)s"
 msgstr ""
 
-#: server.py:608
+#: server.py:583
 msgid "编辑"
 msgstr ""
 
-#: server.py:609 templates/records.html:68
+#: server.py:584 templates/records.html:68
 msgid "删除"
 msgstr ""
 
-#: server.py:610
+#: server.py:585
 msgid "—"
 msgstr ""
 
-#: server.py:611
+#: server.py:586
 #, python-format
 msgid "第 %(page)s / %(total_pages)s 页，共 %(total)s 条"
 msgstr ""
 
-#: server.py:612
+#: server.py:587
 msgid "记录已删除"
 msgstr ""
 
-#: server.py:613
+#: server.py:588
 #, python-format
 msgid "删除失败：%(message)s"
 msgstr ""
 
-#: server.py:614
+#: server.py:589
 msgid "记录已更新"
 msgstr ""
 
-#: server.py:615
+#: server.py:590
 msgid "记录已添加"
 msgstr ""
 
-#: server.py:616
+#: server.py:591
 msgid "预算已保存"
 msgstr ""
 
-#: server.py:692 server.py:1003 server.py:1236 server.py:1283
+#: server.py:667 server.py:973 server.py:1206 server.py:1253
 msgid "记录不存在"
 msgstr ""
 
-#: server.py:693
+#: server.py:668
 msgid "这条记录不存在，或不属于当前登录用户。"
 msgstr ""
 
-#: server.py:695
+#: server.py:670
 msgid "返回记录列表"
 msgstr ""
 
-#: server.py:741
+#: server.py:716
 msgid "当前密码不正确"
 msgstr ""
 
-#: server.py:793
+#: server.py:768
 msgid "设置已保存"
 msgstr ""
 
-#: server.py:842
+#: server.py:812
 msgid "用户名已存在"
 msgstr ""
 
-#: server.py:850
+#: server.py:820
 msgid "邮箱已存在"
 msgstr ""
 
-#: server.py:901
+#: server.py:871
 msgid "用户名/邮箱或密码错误"
 msgstr ""
 
-#: server.py:1017 server.py:1056 server.py:1159
+#: server.py:987 server.py:1026 server.py:1129
 msgid "月份格式无效"
 msgstr ""
 
-#: server.py:1163
+#: server.py:1133
 msgid "预算金额格式无效"
 msgstr ""
 
 #: templates/base.html:6 templates/base.html:14 templates/budgets.html:3
 #: templates/dashboard.html:3 templates/login.html:6 templates/message.html:3
-#: templates/premium.html:3 templates/record_form.html:3
-#: templates/records.html:3 templates/register.html:6 templates/settings.html:3
-#: templates/statistics.html:3
+#: templates/record_form.html:3 templates/records.html:3
+#: templates/register.html:6 templates/settings.html:3
+#: templates/statistics.html:3 templates/support.html:3
 msgid "简易记账"
 msgstr ""
 
@@ -424,9 +368,17 @@ msgstr ""
 msgid "设置"
 msgstr ""
 
+#: templates/base.html:25 templates/settings.html:11 templates/support.html:3
+msgid "支持与计划"
+msgstr ""
+
 #: templates/base.html:39
 #, python-format
 msgid "欢迎，%(name)s"
+msgstr ""
+
+#: templates/base.html:41 templates/settings.html:71
+msgid "免费版"
 msgstr ""
 
 #: templates/base.html:45
@@ -521,55 +473,6 @@ msgstr ""
 
 #: templates/login.html:57
 msgid "注册账号"
-msgstr ""
-
-#: templates/premium.html:9
-msgid "查看当前套餐和可用权益。"
-msgstr ""
-
-#: templates/premium.html:12
-#, python-format
-msgid "当前套餐：%(plan)s"
-msgstr ""
-
-#: templates/premium.html:27
-msgid "当前使用"
-msgstr ""
-
-#: templates/premium.html:52
-msgid "会员权益"
-msgstr ""
-
-#: templates/premium.html:56
-msgid "套餐状态"
-msgstr ""
-
-#: templates/premium.html:57
-msgid "显示当前账号的套餐与有效期信息。"
-msgstr ""
-
-#: templates/premium.html:62
-msgid "权益范围"
-msgstr ""
-
-#: templates/premium.html:63
-msgid "高级权益覆盖统计、导出与智能分析等能力。"
-msgstr ""
-
-#: templates/premium.html:68
-msgid "升级方式"
-msgstr ""
-
-#: templates/premium.html:69
-msgid "如需开通或调整套餐，请联系服务管理员。"
-msgstr ""
-
-#: templates/premium.html:74
-msgid "请联系管理员开通"
-msgstr ""
-
-#: templates/premium.html:75
-msgid "返回设置"
 msgstr ""
 
 #: templates/record_form.html:3 templates/record_form.html:8
@@ -712,10 +615,6 @@ msgstr ""
 msgid "管理个人资料、显示偏好和登录密码。"
 msgstr ""
 
-#: templates/settings.html:11
-msgid "查看会员权益"
-msgstr ""
-
 #: templates/settings.html:28
 msgid "个人资料"
 msgstr ""
@@ -790,5 +689,149 @@ msgstr ""
 
 #: templates/statistics.html:32
 msgid "最近六个月收支趋势"
+msgstr ""
+
+#: templates/support.html:8
+msgid "支持 Easy Kakeibo"
+msgstr ""
+
+#: templates/support.html:9
+msgid "Easy Kakeibo 是一个持续开发中的个人记账项目。你可以通过反馈、分享和自愿赞助支持项目继续改进。"
+msgstr ""
+
+#: templates/support.html:17
+msgid "支持方式"
+msgstr ""
+
+#: templates/support.html:19
+msgid "提交反馈"
+msgstr ""
+
+#: templates/support.html:20
+msgid "分享给朋友"
+msgstr ""
+
+#: templates/support.html:21
+msgid "自愿赞助"
+msgstr ""
+
+#: templates/support.html:24
+msgid "赞助完全自愿，不会影响任何现有功能的使用。"
+msgstr ""
+
+#: templates/support.html:32
+msgid "赞助预留区域"
+msgstr ""
+
+#: templates/support.html:34
+msgid "后续可在这里放置赞赏二维码或赞助链接。"
+msgstr ""
+
+#: templates/support.html:35
+msgid "当前暂未接入真实支付接口，也不会显示虚假的支付按钮或支付状态。"
+msgstr ""
+
+#: templates/support.html:44
+msgid "后续更新计划"
+msgstr ""
+
+#: templates/support.html:48
+msgid "正在开发"
+msgstr ""
+
+#: templates/support.html:50
+msgid "手机端体验优化"
+msgstr ""
+
+#: templates/support.html:51
+msgid "中日双语完善"
+msgstr ""
+
+#: templates/support.html:52
+msgid "数据导出功能"
+msgstr ""
+
+#: templates/support.html:53
+msgid "记账分类和图表优化"
+msgstr ""
+
+#: templates/support.html:59
+msgid "计划开发"
+msgstr ""
+
+#: templates/support.html:61
+msgid "预算提醒"
+msgstr ""
+
+#: templates/support.html:62
+msgid "周报和月报"
+msgstr ""
+
+#: templates/support.html:63
+msgid "数据备份与恢复"
+msgstr ""
+
+#: templates/support.html:64
+msgid "PWA 或小程序版本"
+msgstr ""
+
+#: templates/support.html:65
+msgid "更快捷的手机记账方式"
+msgstr ""
+
+#: templates/support.html:71
+msgid "正在考虑"
+msgstr ""
+
+#: templates/support.html:73
+msgid "自动记账"
+msgstr ""
+
+#: templates/support.html:74
+msgid "家庭共享账本"
+msgstr ""
+
+#: templates/support.html:75
+msgid "AI 消费分析"
+msgstr ""
+
+#: templates/support.html:76
+msgid "高级自定义功能"
+msgstr ""
+
+#: templates/support.html:81
+msgid "以上计划会根据项目进展和用户反馈调整，暂不展示无法保证的具体上线日期。"
+msgstr ""
+
+#: templates/support.html:87
+msgid "更新记录"
+msgstr ""
+
+#: templates/support.html:88
+msgid "以下记录来自当前仓库 Git 提交记录和 README 中已有功能描述。"
+msgstr ""
+
+#: templates/support.html:91
+msgid "v0.5.2"
+msgstr ""
+
+#: templates/support.html:92
+msgid "网页文字修改"
+msgstr ""
+
+#: templates/support.html:95
+msgid "v0.5.1"
+msgstr ""
+
+#: templates/support.html:98
+msgid "v0.5.0"
+msgstr ""
+
+#: templates/support.html:101
+msgid "v0.4.0"
+msgstr ""
+
+#: templates/support.html:102
+msgid "用户设置与会员展示版"
 msgstr ""
 

@@ -133,23 +133,6 @@ def normalize_locale(value):
     return locale if locale in LANGUAGE_OPTIONS else None
 
 
-def get_membership_plans():
-    return {
-        "free": {
-            "name": _("免费版"),
-            "price": _("￥0"),
-            "features": [_("多用户记账"), _("基础收支统计"), _("每月预算"), _("分类占比图")],
-            "limits": [_("包含日常记账、统计与预算管理")],
-        },
-        "premium": {
-            "name": "Premium",
-            "price": _("联系管理员开通"),
-            "features": [_("高级统计"), _("数据导出"), _("自定义分类"), _("多账本"), _("智能财务分析")],
-            "limits": [_("适合需要更完整数据管理能力的用户")],
-        },
-    }
-
-
 def get_language_options():
     return {"zh_CN": _("简体中文"), "ja": _("日本語")}
 
@@ -530,14 +513,6 @@ def handle_rate_limit(error):
     ), 429
 
 
-def user_has_feature(user, feature):
-    if not user:
-        return False
-    if user["plan"] == "premium":
-        return True
-    return feature in {"basic_accounting", "basic_statistics", "monthly_budget"}
-
-
 def require_login_json():
     if not get_current_user_id():
         return jsonify({"error": _("请先登录")}), 401
@@ -794,20 +769,15 @@ def settings_page():
     return redirect(url_for("settings_page"))
 
 
-@app.get("/premium")
-def premium_page():
-    login_redirect = require_login_page()
-    if login_redirect:
-        return login_redirect
+@app.get("/support")
+def support_page():
+    return render_template("support.html", active_page="support")
 
-    user = get_current_user()
-    return render_template(
-        "premium.html",
-        active_page="premium",
-        user=user,
-        plans=get_membership_plans(),
-        has_premium_features=user_has_feature(user, "advanced_statistics"),
-    )
+
+@app.get("/premium")
+@app.get("/vip")
+def legacy_support_redirect():
+    return redirect(url_for("support_page"), code=302)
 
 
 @app.get("/api/me")

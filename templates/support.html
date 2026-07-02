@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('支持与计划') }} - {{ _('简易记账') }}{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">{{ _('支持 Easy Kakeibo') }}</h1>
+    <p class="text-muted mb-0">{{ _('Easy Kakeibo 是一个持续开发中的个人记账项目。你可以通过反馈、分享和自愿赞助支持项目继续改进。') }}</p>
+  </div>
+</div>
+
+<section class="row g-4 mb-4">
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5 mb-3">{{ _('支持方式') }}</h2>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item px-0">{{ _('提交反馈') }}</li>
+          <li class="list-group-item px-0">{{ _('分享给朋友') }}</li>
+          <li class="list-group-item px-0">{{ _('自愿赞助') }}</li>
+        </ul>
+        <div class="alert alert-light border mt-3 mb-0">
+          {{ _('赞助完全自愿，不会影响任何现有功能的使用。') }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5 mb-3">{{ _('赞助预留区域') }}</h2>
+        <div class="support-placeholder">
+          <div class="fw-semibold mb-1">{{ _('后续可在这里放置赞赏二维码或赞助链接。') }}</div>
+          <div class="text-muted small">{{ _('当前暂未接入真实支付接口，也不会显示虚假的支付按钮或支付状态。') }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card border-0 shadow-sm mb-4">
+  <div class="card-body">
+    <h2 class="h5 mb-3">{{ _('后续更新计划') }}</h2>
+    <div class="row g-3">
+      <div class="col-lg-4">
+        <div class="roadmap-group h-100">
+          <span class="badge text-bg-primary mb-3">{{ _('正在开发') }}</span>
+          <ul class="roadmap-list">
+            <li>{{ _('手机端体验优化') }}</li>
+            <li>{{ _('中日双语完善') }}</li>
+            <li>{{ _('数据导出功能') }}</li>
+            <li>{{ _('记账分类和图表优化') }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="roadmap-group h-100">
+          <span class="badge text-bg-success mb-3">{{ _('计划开发') }}</span>
+          <ul class="roadmap-list">
+            <li>{{ _('预算提醒') }}</li>
+            <li>{{ _('周报和月报') }}</li>
+            <li>{{ _('数据备份与恢复') }}</li>
+            <li>{{ _('PWA 或小程序版本') }}</li>
+            <li>{{ _('更快捷的手机记账方式') }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="roadmap-group h-100">
+          <span class="badge text-bg-secondary mb-3">{{ _('正在考虑') }}</span>
+          <ul class="roadmap-list">
+            <li>{{ _('自动记账') }}</li>
+            <li>{{ _('家庭共享账本') }}</li>
+            <li>{{ _('AI 消费分析') }}</li>
+            <li>{{ _('高级自定义功能') }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p class="text-muted small mt-3 mb-0">{{ _('以上计划会根据项目进展和用户反馈调整，暂不展示无法保证的具体上线日期。') }}</p>
+  </div>
+</section>
+
+<section class="card border-0 shadow-sm">
+  <div class="card-body">
+    <h2 class="h5 mb-3">{{ _('更新记录') }}</h2>
+    <p class="text-muted small">{{ _('以下记录来自当前仓库 Git 提交记录和 README 中已有功能描述。') }}</p>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item px-0">
+        <span class="fw-semibold">{{ _('v0.5.2') }}</span>
+        <span class="text-muted">{{ _('网页文字修改') }}</span>
+      </li>
+      <li class="list-group-item px-0">
+        <span class="fw-semibold">{{ _('v0.5.1') }}</span>
+      </li>
+      <li class="list-group-item px-0">
+        <span class="fw-semibold">{{ _('v0.5.0') }}</span>
+      </li>
+      <li class="list-group-item px-0">
+        <span class="fw-semibold">{{ _('v0.4.0') }}</span>
+        <span class="text-muted">{{ _('用户设置与会员展示版') }}</span>
+      </li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

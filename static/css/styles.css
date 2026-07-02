@@ -406,6 +406,35 @@ tbody tr:hover {
   margin: 0 auto;
 }
 
+.support-placeholder {
+  min-height: 180px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.65);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.roadmap-group {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.roadmap-list {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.roadmap-list li + li {
+  margin-top: 8px;
+}
+
 @media (max-width: 860px) {
   .header-top {
     flex-direction: column;
