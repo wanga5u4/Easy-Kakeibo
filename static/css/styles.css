@@ -579,7 +579,7 @@ tbody tr:hover {
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root[data-theme="dark"] {
     --bg: #101827;
     --surface: #172033;
     --surface-secondary: #1d2940;
@@ -593,21 +593,21 @@ tbody tr:hover {
     --shadow: 0 4px 24px rgba(0, 0, 0, 0.28);
   }
 
-  body {
+  :root[data-theme="dark"] body {
     background: #101827;
     color: var(--text-secondary);
   }
 
-  .navbar,
-  .card,
-  .panel,
-  .dropdown-menu,
-  .preview-card {
+  :root[data-theme="dark"] .navbar,
+  :root[data-theme="dark"] .card,
+  :root[data-theme="dark"] .panel,
+  :root[data-theme="dark"] .dropdown-menu,
+  :root[data-theme="dark"] .preview-card {
     background-color: var(--surface) !important;
     color: var(--text);
   }
 
-  .navbar {
+  :root[data-theme="dark"] .navbar {
     border-color: var(--border-color) !important;
     position: relative;
     top: auto;
@@ -615,80 +615,80 @@ tbody tr:hover {
     z-index: auto;
   }
 
-  .nav-link,
-  .navbar-brand,
-  .dropdown-item {
+  :root[data-theme="dark"] .nav-link,
+  :root[data-theme="dark"] .navbar-brand,
+  :root[data-theme="dark"] .dropdown-item {
     color: var(--text-secondary);
   }
 
-  .nav-link.active,
-  .navbar-brand,
-  h1,
-  h2,
-  h3,
-  .h4,
-  .h5,
-  .h6,
-  .fw-semibold {
+  :root[data-theme="dark"] .nav-link.active,
+  :root[data-theme="dark"] .navbar-brand,
+  :root[data-theme="dark"] h1,
+  :root[data-theme="dark"] h2,
+  :root[data-theme="dark"] h3,
+  :root[data-theme="dark"] .h4,
+  :root[data-theme="dark"] .h5,
+  :root[data-theme="dark"] .h6,
+  :root[data-theme="dark"] .fw-semibold {
     color: var(--text-primary);
   }
 
-  .text-muted,
-  .card-text {
+  :root[data-theme="dark"] .text-muted,
+  :root[data-theme="dark"] .card-text {
     color: var(--text-muted) !important;
   }
 
-  input,
-  select {
+  :root[data-theme="dark"] input,
+  :root[data-theme="dark"] select {
     background: #0f172a;
     color: var(--text-primary);
     border-color: var(--border-color);
   }
 
-  .landing-preview,
-  .landing-screenshot-placeholder,
-  .landing-cta,
-  .roadmap-group,
-  .support-placeholder {
+  :root[data-theme="dark"] .landing-preview,
+  :root[data-theme="dark"] .landing-screenshot-placeholder,
+  :root[data-theme="dark"] .landing-cta,
+  :root[data-theme="dark"] .roadmap-group,
+  :root[data-theme="dark"] .support-placeholder {
     background: var(--surface-secondary);
     border-color: var(--border-color);
     color: var(--text-secondary);
   }
 
-  .landing-hero .lead,
-  .landing-feature-card p,
-  .landing-screenshot-placeholder .small,
-  .landing-preview .small {
+  :root[data-theme="dark"] .landing-hero .lead,
+  :root[data-theme="dark"] .landing-feature-card p,
+  :root[data-theme="dark"] .landing-screenshot-placeholder .small,
+  :root[data-theme="dark"] .landing-preview .small {
     color: var(--text-secondary) !important;
   }
 
-  .preview-card {
+  :root[data-theme="dark"] .preview-card {
     background: var(--surface);
     border-color: var(--border-color);
     color: var(--text-secondary);
   }
 
-  .preview-label {
+  :root[data-theme="dark"] .preview-label {
     color: var(--text-muted);
   }
 
-  .landing-trust-list {
+  :root[data-theme="dark"] .landing-trust-list {
     color: var(--text-secondary);
   }
 
-  .btn-outline-secondary {
+  :root[data-theme="dark"] .btn-outline-secondary {
     color: var(--text-secondary);
     border-color: var(--border-color);
     background: transparent;
   }
 
-  .btn-outline-secondary:hover {
+  :root[data-theme="dark"] .btn-outline-secondary:hover {
     color: var(--text-primary);
     border-color: var(--text-muted);
     background: var(--surface);
   }
 
-  .preview-bar {
+  :root[data-theme="dark"] .preview-bar {
     background: var(--border-color);
   }
 }

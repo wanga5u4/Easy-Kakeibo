@@ -135,3 +135,42 @@ def test_landing_dark_mode_theme_styles_are_present(client):
     assert "--border-color: #34445e" in stylesheet
     assert ".text-muted" in stylesheet
     assert "color: var(--text-muted) !important" in stylesheet
+
+
+def test_theme_is_temporarily_forced_to_light(client):
+    response = client.get("/")
+    css = client.get("/static/css/styles.css").get_data(as_text=True)
+    js = client.get("/static/js/common.js").get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert 'data-theme="light"'.encode("utf-8") in response.data
+    assert b"theme-toggle" not in response.data
+    assert b"dark-mode" not in response.data
+    assert '@media (prefers-color-scheme: dark)' in css
+    assert ':root[data-theme="dark"]' in css
+    assert 'document.documentElement.dataset.theme = \'light\'' in js
+    assert "localStorage.getItem(key) === 'dark'" in js
+    assert "localStorage.removeItem(key)" in js
+
+
+def test_primary_pages_render_light_theme_without_theme_toggle(client):
+    login_as_new_user(client, "themeuser", "themeuser@example.com")
+    for path in (
+        "/",
+        "/dashboard",
+        "/records",
+        "/statistics",
+        "/budgets",
+        "/settings",
+        "/support",
+    ):
+        response = client.get(path)
+        assert response.status_code == 200
+        assert 'data-theme="light"'.encode("utf-8") in response.data
+        assert b"theme-toggle" not in response.data
+
+    for path in ("/login", "/register"):
+        response = client.get(path)
+        assert response.status_code == 200
+        assert 'data-theme="light"'.encode("utf-8") in response.data
+        assert b"theme-toggle" not in response.data

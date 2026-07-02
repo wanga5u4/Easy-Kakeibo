@@ -1,6 +1,21 @@
 const API_BASE = '/api';
 const T = window.I18N || {};
 
+function disableSavedDarkTheme() {
+  try {
+    ['theme', 'color-theme', 'easy-kakeibo-theme'].forEach((key) => {
+      if (localStorage.getItem(key) === 'dark') {
+        localStorage.removeItem(key);
+      }
+    });
+  } catch (error) {
+    // Storage can be unavailable in private or restricted browser contexts.
+  }
+  document.documentElement.dataset.theme = 'light';
+}
+
+disableSavedDarkTheme();
+
 const CATEGORIES = {
   income: T.categories?.income || [],
   expense: T.categories?.expense || [],
