@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 16:16+0900\n"
+"POT-Creation-Date: 2026-07-02 17:44+0900\n"
 "PO-Revision-Date: 2026-06-30 22:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -42,302 +42,301 @@ msgstr "日元 JPY"
 msgid "欧元 EUR"
 msgstr "欧元 EUR"
 
-#: server.py:276
+#: server.py:283
 msgid "日期格式无效"
 msgstr "日期格式无效"
 
-#: server.py:280
+#: server.py:287
 msgid "类型必须是 income 或 expense"
 msgstr "类型必须是 income 或 expense"
 
-#: server.py:284
+#: server.py:291
 msgid "分类不能为空"
 msgstr "分类不能为空"
 
-#: server.py:288
+#: server.py:295
 msgid "金额格式无效"
 msgstr "金额格式无效"
 
-#: server.py:310
+#: server.py:317
 msgid "用户名不能为空"
 msgstr "用户名不能为空"
 
-#: server.py:313
+#: server.py:320
 msgid "邮箱不能为空"
 msgstr "邮箱不能为空"
 
-#: server.py:315
+#: server.py:322
 msgid "邮箱格式无效"
 msgstr "邮箱格式无效"
 
-#: server.py:318
+#: server.py:325
 msgid "密码至少需要 8 位"
 msgstr "密码至少需要 8 位"
 
-#: server.py:321
+#: server.py:328
 msgid "两次输入的密码不一致"
 msgstr "两次输入的密码不一致"
 
-#: server.py:336
+#: server.py:343
 msgid "用户名或邮箱不能为空"
 msgstr "用户名或邮箱不能为空"
 
-#: server.py:339
+#: server.py:346
 msgid "密码不能为空"
 msgstr "密码不能为空"
 
-#: server.py:357
+#: server.py:364
 msgid "昵称不能超过 30 个字符"
 msgstr "昵称不能超过 30 个字符"
 
-#: server.py:360
+#: server.py:367
 msgid "语言选项无效"
 msgstr "语言选项无效"
 
-#: server.py:363
+#: server.py:370
 msgid "货币选项无效"
 msgstr "货币选项无效"
 
-#: server.py:368
+#: server.py:375
 msgid "请输入当前密码"
 msgstr "请输入当前密码"
 
-#: server.py:370
+#: server.py:377
 msgid "新密码至少需要 8 位"
 msgstr "新密码至少需要 8 位"
 
-#: server.py:372
+#: server.py:379
 msgid "两次输入的新密码不一致"
 msgstr "两次输入的新密码不一致"
 
-#: server.py:447
+#: server.py:454
 msgid "安全验证失败，请刷新页面后重试。"
 msgstr "安全验证失败，请刷新页面后重试。"
 
-#: server.py:451
+#: server.py:458
 msgid "安全验证失败"
 msgstr "安全验证失败"
 
-#: server.py:452
+#: server.py:459
 msgid "请求已过期或安全验证失败，请刷新页面后重试。"
 msgstr "请求已过期或安全验证失败，请刷新页面后重试。"
 
-#: server.py:454 server.py:467 templates/login.html:62
-#: templates/register.html:87
+#: server.py:461 server.py:474
 msgid "返回首页"
 msgstr "返回首页"
 
-#: server.py:464
+#: server.py:471
 #, python-format
 msgid "%(status_code)s 错误"
 msgstr "%(status_code)s 错误"
 
-#: server.py:473
+#: server.py:480
 msgid "请求无效，请检查输入后重试。"
 msgstr "请求无效，请检查输入后重试。"
 
-#: server.py:478
+#: server.py:485
 msgid "没有权限执行此操作。"
 msgstr "没有权限执行此操作。"
 
-#: server.py:483
+#: server.py:490
 msgid "页面或资源不存在。"
 msgstr "页面或资源不存在。"
 
-#: server.py:492
+#: server.py:499
 msgid "服务器暂时无法处理请求，请稍后重试。"
 msgstr "服务器暂时无法处理请求，请稍后重试。"
 
-#: server.py:503
+#: server.py:510
 msgid "请求过于频繁，请稍后再试。"
 msgstr "请求过于频繁，请稍后再试。"
 
-#: server.py:509
+#: server.py:516
 msgid "请求过于频繁"
 msgstr "请求过于频繁"
 
-#: server.py:512
+#: server.py:519
 msgid "返回后重试"
 msgstr "返回后重试"
 
-#: server.py:518
+#: server.py:525
 msgid "请先登录"
 msgstr "请先登录"
 
-#: server.py:557 templates/budgets.html:28 templates/dashboard.html:53
+#: server.py:565 templates/budgets.html:28 templates/dashboard.html:53
 msgid "未设置预算"
 msgstr "未设置预算"
 
-#: server.py:560
+#: server.py:568
 msgid "已超出预算"
 msgstr "已超出预算"
 
-#: server.py:562
+#: server.py:570
 msgid "预算即将用完"
 msgstr "预算即将用完"
 
-#: server.py:563
+#: server.py:571
 msgid "预算正常"
 msgstr "预算正常"
 
-#: server.py:574
+#: server.py:582
 msgid "请求失败，请稍后重试"
 msgstr "请求失败，请稍后重试"
 
-#: server.py:576
+#: server.py:584
 msgid "工资"
 msgstr "工资"
 
-#: server.py:576
+#: server.py:584
 msgid "奖金"
 msgstr "奖金"
 
-#: server.py:576
+#: server.py:584
 msgid "理财"
 msgstr "理财"
 
-#: server.py:576
+#: server.py:584
 msgid "兼职"
 msgstr "兼职"
 
-#: server.py:576
+#: server.py:584
 msgid "其他收入"
 msgstr "其他收入"
 
-#: server.py:577
+#: server.py:585
 msgid "餐饮"
 msgstr "餐饮"
 
-#: server.py:577
+#: server.py:585
 msgid "交通"
 msgstr "交通"
 
-#: server.py:577
+#: server.py:585
 msgid "购物"
 msgstr "购物"
 
-#: server.py:577
+#: server.py:585
 msgid "住房"
 msgstr "住房"
 
-#: server.py:577
+#: server.py:585
 msgid "娱乐"
 msgstr "娱乐"
 
-#: server.py:577
+#: server.py:585
 msgid "医疗"
 msgstr "医疗"
 
-#: server.py:577
+#: server.py:585
 msgid "教育"
 msgstr "教育"
 
-#: server.py:577
+#: server.py:585
 msgid "其他支出"
 msgstr "其他支出"
 
-#: server.py:579 server.py:592 templates/record_form.html:26
+#: server.py:587 server.py:600 templates/record_form.html:26
 msgid "收入"
 msgstr "收入"
 
-#: server.py:579 server.py:593 templates/record_form.html:25
+#: server.py:587 server.py:601 templates/record_form.html:25
 msgid "支出"
 msgstr "支出"
 
-#: server.py:580
+#: server.py:588
 #, python-format
 msgid "%(year)s年%(month)s月%(day)s日"
 msgstr "%(year)s年%(month)s月%(day)s日"
 
-#: server.py:581 templates/budgets.html:22 templates/dashboard.html:47
+#: server.py:589 templates/budgets.html:22 templates/dashboard.html:47
 #, python-format
 msgid "已用 %(amount)s"
 msgstr "已用 %(amount)s"
 
-#: server.py:582
+#: server.py:590
 #, python-format
 msgid "%(status)s，剩余 %(amount)s"
 msgstr "%(status)s，剩余 %(amount)s"
 
-#: server.py:583
+#: server.py:591
 msgid "编辑"
 msgstr "编辑"
 
-#: server.py:584 templates/records.html:68
+#: server.py:592 templates/records.html:68
 msgid "删除"
 msgstr "删除"
 
-#: server.py:585
+#: server.py:593
 msgid "—"
 msgstr "—"
 
-#: server.py:586
+#: server.py:594
 #, python-format
 msgid "第 %(page)s / %(total_pages)s 页，共 %(total)s 条"
 msgstr "第 %(page)s / %(total_pages)s 页，共 %(total)s 条"
 
-#: server.py:587
+#: server.py:595
 msgid "记录已删除"
 msgstr "记录已删除"
 
-#: server.py:588
+#: server.py:596
 #, python-format
 msgid "删除失败：%(message)s"
 msgstr "删除失败：%(message)s"
 
-#: server.py:589
+#: server.py:597
 msgid "记录已更新"
 msgstr "记录已更新"
 
-#: server.py:590
+#: server.py:598
 msgid "记录已添加"
 msgstr "记录已添加"
 
-#: server.py:591
+#: server.py:599
 msgid "预算已保存"
 msgstr "预算已保存"
 
-#: server.py:667 server.py:973 server.py:1206 server.py:1253
+#: server.py:673 server.py:983 server.py:1216 server.py:1263
 msgid "记录不存在"
 msgstr "记录不存在"
 
-#: server.py:668
+#: server.py:674
 msgid "这条记录不存在，或不属于当前登录用户。"
 msgstr "这条记录不存在，或不属于当前登录用户。"
 
-#: server.py:670
+#: server.py:676
 msgid "返回记录列表"
 msgstr "返回记录列表"
 
-#: server.py:716
+#: server.py:722
 msgid "当前密码不正确"
 msgstr "当前密码不正确"
 
-#: server.py:768
+#: server.py:774
 msgid "设置已保存"
 msgstr "设置已保存"
 
-#: server.py:812
+#: server.py:818
 msgid "用户名已存在"
 msgstr "用户名已存在"
 
-#: server.py:820
+#: server.py:826
 msgid "邮箱已存在"
 msgstr "邮箱已存在"
 
-#: server.py:871
+#: server.py:878
 msgid "用户名/邮箱或密码错误"
 msgstr "用户名/邮箱或密码错误"
 
-#: server.py:987 server.py:1026 server.py:1129
+#: server.py:997 server.py:1036 server.py:1139
 msgid "月份格式无效"
 msgstr "月份格式无效"
 
-#: server.py:1133
+#: server.py:1143
 msgid "预算金额格式无效"
 msgstr "预算金额格式无效"
 
-#: templates/base.html:6 templates/base.html:14 templates/budgets.html:3
+#: templates/base.html:6 templates/base.html:15 templates/budgets.html:3
 #: templates/dashboard.html:3 templates/login.html:6 templates/message.html:3
 #: templates/record_form.html:3 templates/records.html:3
 #: templates/register.html:6 templates/settings.html:3
@@ -345,56 +344,66 @@ msgstr "预算金额格式无效"
 msgid "简易记账"
 msgstr "简易记账"
 
-#: templates/base.html:15
+#: templates/base.html:7 templates/index.html:4
+msgid "Easy Kakeibo 是一个支持收入、支出、预算和统计功能的中日双语个人记账工具。"
+msgstr "Easy Kakeibo 是一个支持收入、支出、预算和统计功能的中日双语个人记账工具。"
+
+#: templates/base.html:16
 msgid "切换导航"
 msgstr "切换导航"
 
-#: templates/base.html:20 templates/dashboard.html:3 templates/dashboard.html:8
+#: templates/base.html:22 templates/dashboard.html:3 templates/dashboard.html:8
 msgid "仪表盘"
 msgstr "仪表盘"
 
-#: templates/base.html:21
+#: templates/base.html:23
 msgid "记录"
 msgstr "记录"
 
-#: templates/base.html:22
+#: templates/base.html:24
 msgid "统计"
 msgstr "统计"
 
-#: templates/base.html:23
+#: templates/base.html:25
 msgid "预算"
 msgstr "预算"
 
-#: templates/base.html:24
-msgid "设置"
-msgstr "设置"
+#: templates/base.html:27
+msgid "首页"
+msgstr "首页"
 
-#: templates/base.html:25 templates/settings.html:11 templates/support.html:3
+#: templates/base.html:29 templates/index.html:110 templates/index.html:114
+#: templates/settings.html:11 templates/support.html:3
 msgid "支持与计划"
 msgstr "支持与计划"
 
-#: templates/base.html:39
+#: templates/base.html:31
+msgid "设置"
+msgstr "设置"
+
+#: templates/base.html:46
 #, python-format
 msgid "欢迎，%(name)s"
 msgstr "欢迎，%(name)s"
 
-#: templates/base.html:41 templates/settings.html:71
+#: templates/base.html:48 templates/settings.html:71
 msgid "免费版"
 msgstr "免费版"
 
-#: templates/base.html:45
+#: templates/base.html:52
 msgid "退出登录"
 msgstr "退出登录"
 
-#: templates/base.html:48 templates/login.html:56
+#: templates/base.html:55 templates/index.html:19 templates/index.html:113
+#: templates/login.html:59
 msgid "登录"
 msgstr "登录"
 
-#: templates/base.html:49 templates/register.html:81
+#: templates/base.html:56 templates/register.html:81
 msgid "注册"
 msgstr "注册"
 
-#: templates/budgets.html:3 templates/budgets.html:8
+#: templates/budgets.html:3 templates/budgets.html:8 templates/index.html:62
 msgid "预算管理"
 msgstr "预算管理"
 
@@ -414,11 +423,13 @@ msgstr "保存预算"
 msgid "查看本月概览，快速进入常用功能。"
 msgstr "查看本月概览，快速进入常用功能。"
 
-#: templates/dashboard.html:18 templates/statistics.html:15
+#: templates/dashboard.html:18 templates/index.html:32
+#: templates/statistics.html:15
 msgid "本月收入"
 msgstr "本月收入"
 
-#: templates/dashboard.html:26 templates/statistics.html:16
+#: templates/dashboard.html:26 templates/index.html:36
+#: templates/statistics.html:16
 msgid "本月支出"
 msgstr "本月支出"
 
@@ -426,7 +437,7 @@ msgstr "本月支出"
 msgid "本月结余"
 msgstr "本月结余"
 
-#: templates/dashboard.html:45
+#: templates/dashboard.html:45 templates/index.html:40
 msgid "预算状态"
 msgstr "预算状态"
 
@@ -444,7 +455,7 @@ msgstr "快捷入口"
 msgid "添加记录"
 msgstr "添加记录"
 
-#: templates/dashboard.html:64
+#: templates/dashboard.html:64 templates/index.html:16
 msgid "查看记录"
 msgstr "查看记录"
 
@@ -456,25 +467,153 @@ msgstr "查看统计"
 msgid "设置预算"
 msgstr "设置预算"
 
+#: templates/index.html:3
+msgid "Easy Kakeibo - 简洁的中日双语记账工具"
+msgstr "Easy Kakeibo - 简洁的中日双语记账工具"
+
+#: templates/index.html:10
+msgid "Easy Kakeibo"
+msgstr "Easy Kakeibo"
+
+#: templates/index.html:11
+msgid "轻松记录每一笔收支"
+msgstr "轻松记录每一笔收支"
+
+#: templates/index.html:12
+msgid "简洁清晰的中日双语个人记账工具，帮助你管理收入、支出、预算和消费趋势。"
+msgstr "简洁清晰的中日双语个人记账工具，帮助你管理收入、支出、预算和消费趋势。"
+
+#: templates/index.html:15 templates/index.html:109
+msgid "进入仪表盘"
+msgstr "进入仪表盘"
+
+#: templates/index.html:18
+msgid "免费开始使用"
+msgstr "免费开始使用"
+
+#: templates/index.html:24
+msgid "仪表盘预览占位图"
+msgstr "仪表盘预览占位图"
+
+#: templates/index.html:33 templates/index.html:37
+msgid "示例数据"
+msgstr "示例数据"
+
+#: templates/index.html:44
+msgid "产品截图预留区域，后续可替换为不含真实用户数据的仪表盘截图。"
+msgstr "产品截图预留区域，后续可替换为不含真实用户数据的仪表盘截图。"
+
+#: templates/index.html:53
+msgid "主要功能"
+msgstr "主要功能"
+
+#: templates/index.html:54
+msgid "从日常记账到趋势查看，把个人财务整理得更清楚。"
+msgstr "从日常记账到趋势查看，把个人财务整理得更清楚。"
+
+#: templates/index.html:59
+msgid "收入与支出记录"
+msgstr "收入与支出记录"
+
+#: templates/index.html:59
+msgid "快速记录收入和支出，保留日期、分类、金额和备注。"
+msgstr "快速记录收入和支出，保留日期、分类、金额和备注。"
+
+#: templates/index.html:60
+msgid "分类与搜索"
+msgstr "分类与搜索"
+
+#: templates/index.html:60
+msgid "按类型、月份和分类整理账目，回看消费更轻松。"
+msgstr "按类型、月份和分类整理账目，回看消费更轻松。"
+
+#: templates/index.html:61
+msgid "数据统计与图表"
+msgstr "数据统计与图表"
+
+#: templates/index.html:61
+msgid "用清晰图表查看收入、支出和分类占比。"
+msgstr "用清晰图表查看收入、支出和分类占比。"
+
+#: templates/index.html:62
+msgid "为每月支出设置预算，并查看使用进度。"
+msgstr "为每月支出设置预算，并查看使用进度。"
+
+#: templates/index.html:63
+msgid "中日双语"
+msgstr "中日双语"
+
+#: templates/index.html:63
+msgid "支持简体中文和日语界面，适合跨语言日常使用。"
+msgstr "支持简体中文和日语界面，适合跨语言日常使用。"
+
+#: templates/index.html:64
+msgid "手机端适配"
+msgstr "手机端适配"
+
+#: templates/index.html:64
+msgid "页面在手机、平板和电脑上都能顺畅使用。"
+msgstr "页面在手机、平板和电脑上都能顺畅使用。"
+
+#: templates/index.html:83
+msgid "产品预览"
+msgstr "产品预览"
+
+#: templates/index.html:85
+msgid "这里将展示仪表盘截图"
+msgstr "这里将展示仪表盘截图"
+
+#: templates/index.html:86
+msgid "本次使用静态占位区域，避免展示真实用户数据或依赖外部图片。"
+msgstr "本次使用静态占位区域，避免展示真实用户数据或依赖外部图片。"
+
+#: templates/index.html:94
+msgid "使用说明"
+msgstr "使用说明"
+
+#: templates/index.html:96
+msgid "当前可免费使用。"
+msgstr "当前可免费使用。"
+
+#: templates/index.html:97
+msgid "数据按账号隔离，登录后只能查看自己的记录。"
+msgstr "数据按账号隔离，登录后只能查看自己的记录。"
+
+#: templates/index.html:98
+msgid "项目仍在持续更新，功能会根据反馈逐步改进。"
+msgstr "项目仍在持续更新，功能会根据反馈逐步改进。"
+
+#: templates/index.html:106
+msgid "开始整理你的个人账本"
+msgstr "开始整理你的个人账本"
+
+#: templates/index.html:112
+msgid "免费注册"
+msgstr "免费注册"
+
 #: templates/login.html:6 templates/login.html:13
 msgid "用户登录"
 msgstr "用户登录"
 
 #: templates/login.html:14
-msgid "登录后继续管理你的账本"
-msgstr "登录后继续管理你的账本"
+msgid "简单、清晰的中日双语个人记账工具。"
+msgstr "简单、清晰的中日双语个人记账工具。"
 
-#: templates/login.html:33
+#: templates/login.html:36
 msgid "用户名或邮箱"
 msgstr "用户名或邮箱"
 
-#: templates/login.html:45 templates/register.html:57
+#: templates/login.html:48 templates/register.html:57
 msgid "密码"
 msgstr "密码"
 
-#: templates/login.html:57
-msgid "注册账号"
-msgstr "注册账号"
+#: templates/login.html:60
+msgid "还没有账号？免费注册"
+msgstr "还没有账号？免费注册"
+
+#: templates/login.html:65
+msgid "先了解 Easy Kakeibo"
+msgstr "先了解 Easy Kakeibo"
 
 #: templates/record_form.html:3 templates/record_form.html:8
 msgid "编辑记录"
@@ -589,8 +728,8 @@ msgid "用户注册"
 msgstr "用户注册"
 
 #: templates/register.html:14
-msgid "创建账号后即可开始管理个人账本"
-msgstr "创建账号后即可开始管理个人账本"
+msgid "创建账号后即可开始管理收入、支出、预算和消费趋势。"
+msgstr "创建账号后即可开始管理收入、支出、预算和消费趋势。"
 
 #: templates/register.html:33 templates/settings.html:30
 msgid "用户名"
@@ -605,8 +744,12 @@ msgid "确认密码"
 msgstr "确认密码"
 
 #: templates/register.html:82
-msgid "去登录"
-msgstr "去登录"
+msgid "已有账号？登录"
+msgstr "已有账号？登录"
+
+#: templates/register.html:87
+msgid "返回产品首页"
+msgstr "返回产品首页"
 
 #: templates/settings.html:3 templates/settings.html:8
 msgid "用户设置"
@@ -836,3 +979,14 @@ msgstr "v0.4.0"
 msgid "用户设置与会员展示版"
 msgstr "用户设置与会员展示版"
 
+#~ msgid "登录后继续管理你的账本"
+#~ msgstr "登录后继续管理你的账本"
+
+#~ msgid "注册账号"
+#~ msgstr "注册账号"
+
+#~ msgid "创建账号后即可开始管理个人账本"
+#~ msgstr "创建账号后即可开始管理个人账本"
+
+#~ msgid "去登录"
+#~ msgstr "去登录"

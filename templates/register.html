@@ -11,7 +11,7 @@
     <main class="panel auth-panel">
       <div class="auth-header">
         <h1>{{ _('用户注册') }}</h1>
-        <p>{{ _('创建账号后即可开始管理个人账本') }}</p>
+        <p>{{ _('创建账号后即可开始管理收入、支出、预算和消费趋势。') }}</p>
       </div>
       <div class="d-flex gap-2 mb-3">
         {% for code, label in language_options.items() %}
@@ -79,12 +79,12 @@
 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">{{ _('注册') }}</button>
-          <a class="btn btn-secondary auth-link" href="{{ url_for('login') }}">{{ _('去登录') }}</a>
+          <a class="btn btn-secondary auth-link" href="{{ url_for('login') }}">{{ _('已有账号？登录') }}</a>
         </div>
       </form>
 
       <p class="auth-switch">
-        <a href="{{ url_for('index') }}">{{ _('返回首页') }}</a>
+        <a href="{{ url_for('index') }}">{{ _('返回产品首页') }}</a>
       </p>
     </main>
   </div>
