@@ -117,3 +117,21 @@ def test_landing_template_static_assets_resolve(client):
     assert 'href="/static/css/styles.css"'.encode("utf-8") in response.data
     assert 'src="/static/js/common.js"'.encode("utf-8") in response.data
     assert b"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" in response.data
+
+
+def test_landing_dark_mode_theme_styles_are_present(client):
+    page = client.get("/")
+    css = client.get("/static/css/styles.css")
+
+    assert page.status_code == 200
+    assert b"sticky-top" not in page.data
+    assert css.status_code == 200
+    stylesheet = css.get_data(as_text=True)
+    assert "--text-primary: #f4f7fc" in stylesheet
+    assert "--text-secondary: #c4cede" in stylesheet
+    assert "--text-muted: #94a3b8" in stylesheet
+    assert "--surface: #172033" in stylesheet
+    assert "--surface-secondary: #1d2940" in stylesheet
+    assert "--border-color: #34445e" in stylesheet
+    assert ".text-muted" in stylesheet
+    assert "color: var(--text-muted) !important" in stylesheet

@@ -9,9 +9,14 @@
 :root {
   --bg: #f4f6fb;
   --surface: #ffffff;
-  --text: #1a1d26;
-  --muted: #6b7280;
-  --border: #e5e7eb;
+  --surface-secondary: #f8fafc;
+  --text-primary: #1a1d26;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+  --text: var(--text-primary);
+  --muted: var(--text-muted);
+  --border: var(--border-color);
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
   --income: #059669;
@@ -452,9 +457,10 @@ tbody tr:hover {
 
 .landing-preview,
 .landing-screenshot-placeholder {
-  border: 1px dashed var(--border);
+  border: 1px dashed var(--border-color);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
   padding: 24px;
 }
 
@@ -484,13 +490,14 @@ tbody tr:hover {
 
 .preview-card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 14px;
+  color: var(--text-secondary);
 }
 
 .preview-label {
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 0.8rem;
   margin-bottom: 8px;
 }
@@ -503,7 +510,7 @@ tbody tr:hover {
   height: 10px;
   overflow: hidden;
   border-radius: 999px;
-  background: #e5e7eb;
+  background: var(--border-color);
 }
 
 .preview-bar span {
@@ -514,6 +521,7 @@ tbody tr:hover {
 }
 
 .landing-feature-card p {
+  color: var(--text-muted);
   font-size: 0.95rem;
 }
 
@@ -527,6 +535,7 @@ tbody tr:hover {
 }
 
 .landing-trust-list {
+  color: var(--text-secondary);
   margin: 0;
   padding-left: 1.1rem;
 }
@@ -537,9 +546,10 @@ tbody tr:hover {
 
 .landing-cta {
   padding: 28px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.65);
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
 }
 
 @media (max-width: 860px) {
@@ -572,14 +582,20 @@ tbody tr:hover {
   :root {
     --bg: #101827;
     --surface: #172033;
-    --text: #f8fafc;
-    --muted: #cbd5e1;
-    --border: #334155;
+    --surface-secondary: #1d2940;
+    --text-primary: #f4f7fc;
+    --text-secondary: #c4cede;
+    --text-muted: #94a3b8;
+    --border-color: #34445e;
+    --text: var(--text-primary);
+    --muted: var(--text-muted);
+    --border: var(--border-color);
     --shadow: 0 4px 24px rgba(0, 0, 0, 0.28);
   }
 
   body {
     background: #101827;
+    color: var(--text-secondary);
   }
 
   .navbar,
@@ -592,20 +608,41 @@ tbody tr:hover {
   }
 
   .navbar {
-    border-color: var(--border) !important;
+    border-color: var(--border-color) !important;
+    position: relative;
+    top: auto;
+    bottom: auto;
+    z-index: auto;
   }
 
   .nav-link,
   .navbar-brand,
   .dropdown-item {
-    color: var(--text);
+    color: var(--text-secondary);
+  }
+
+  .nav-link.active,
+  .navbar-brand,
+  h1,
+  h2,
+  h3,
+  .h4,
+  .h5,
+  .h6,
+  .fw-semibold {
+    color: var(--text-primary);
+  }
+
+  .text-muted,
+  .card-text {
+    color: var(--text-muted) !important;
   }
 
   input,
   select {
     background: #0f172a;
-    color: var(--text);
-    border-color: var(--border);
+    color: var(--text-primary);
+    border-color: var(--border-color);
   }
 
   .landing-preview,
@@ -613,10 +650,45 @@ tbody tr:hover {
   .landing-cta,
   .roadmap-group,
   .support-placeholder {
-    background: rgba(23, 32, 51, 0.82);
+    background: var(--surface-secondary);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+  }
+
+  .landing-hero .lead,
+  .landing-feature-card p,
+  .landing-screenshot-placeholder .small,
+  .landing-preview .small {
+    color: var(--text-secondary) !important;
+  }
+
+  .preview-card {
+    background: var(--surface);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+  }
+
+  .preview-label {
+    color: var(--text-muted);
+  }
+
+  .landing-trust-list {
+    color: var(--text-secondary);
+  }
+
+  .btn-outline-secondary {
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+    background: transparent;
+  }
+
+  .btn-outline-secondary:hover {
+    color: var(--text-primary);
+    border-color: var(--text-muted);
+    background: var(--surface);
   }
 
   .preview-bar {
-    background: #334155;
+    background: var(--border-color);
   }
 }
