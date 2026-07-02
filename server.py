@@ -217,7 +217,14 @@ def is_safe_redirect_target(target):
 def default_language_redirect():
     if get_current_user_id():
         return url_for("dashboard")
-    return url_for("login")
+    return url_for("index")
+
+
+def get_safe_next_url():
+    target = request.values.get("next", "").strip()
+    if not is_safe_redirect_target(target):
+        return ""
+    return target
 
 
 def is_valid_email(value):
@@ -521,7 +528,8 @@ def require_login_json():
 
 def require_login_page():
     if not get_current_user_id():
-        return redirect(url_for("login"))
+        next_url = request.full_path.rstrip("?")
+        return redirect(url_for("login", next=next_url))
     return None
 
 
@@ -607,9 +615,7 @@ def set_language(language):
 
 @app.route("/")
 def index():
-    if get_current_user_id():
-        return redirect(url_for("dashboard"))
-    return redirect(url_for("login"))
+    return render_template("index.html", active_page="home")
 
 
 @app.get("/health")
@@ -847,8 +853,9 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 @limiter.limit("5 per minute; 30 per hour", methods=["POST"])
 def login():
+    next_url = get_safe_next_url()
     if request.method == "GET":
-        return render_template("login.html", errors=[], form={})
+        return render_template("login.html", errors=[], form={}, next_url=next_url)
 
     form_data, errors = validate_login_payload(request.form)
 
@@ -880,6 +887,7 @@ def login():
             "login.html",
             errors=errors,
             form=form_data,
+            next_url=next_url,
         ), 400
 
     session.clear()
@@ -887,13 +895,15 @@ def login():
     session["username"] = user["username"]
 
     app.logger.info("Login succeeded: user_id=%s username=%s", user["id"], user["username"])
+    if next_url:
+        return redirect(next_url)
     return redirect(url_for("dashboard"))
 
 
 @app.post("/logout")
 def logout():
     session.clear()
-    return redirect(url_for("login"))
+    return redirect(url_for("index"))
 
 
 @app.get("/api/records")

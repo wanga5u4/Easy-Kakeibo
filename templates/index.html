@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Easy Kakeibo - 简洁的中日双语记账工具') }}{% endblock %}
+{% block meta_description %}{{ _('Easy Kakeibo 是一个支持收入、支出、预算和统计功能的中日双语个人记账工具。') }}{% endblock %}
+
+{% block content %}
+<section class="landing-hero mb-5">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-6">
+      <p class="text-primary fw-semibold mb-2">{{ _('Easy Kakeibo') }}</p>
+      <h1 class="display-5 fw-bold mb-3">{{ _('轻松记录每一笔收支') }}</h1>
+      <p class="lead text-muted mb-4">{{ _('简洁清晰的中日双语个人记账工具，帮助你管理收入、支出、预算和消费趋势。') }}</p>
+      <div class="landing-actions">
+        {% if current_user_profile %}
+          <a class="btn btn-primary" href="{{ url_for('dashboard') }}">{{ _('进入仪表盘') }}</a>
+          <a class="btn btn-outline-primary" href="{{ url_for('records_page') }}">{{ _('查看记录') }}</a>
+        {% else %}
+          <a class="btn btn-primary" href="{{ url_for('register') }}">{{ _('免费开始使用') }}</a>
+          <a class="btn btn-outline-primary" href="{{ url_for('login') }}">{{ _('登录') }}</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="landing-preview" role="img" aria-label="{{ _('仪表盘预览占位图') }}">
+        <div class="preview-toolbar">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="preview-grid">
+          <div class="preview-card">
+            <div class="preview-label">{{ _('本月收入') }}</div>
+            <div class="preview-value text-success">{{ _('示例数据') }}</div>
+          </div>
+          <div class="preview-card">
+            <div class="preview-label">{{ _('本月支出') }}</div>
+            <div class="preview-value text-danger">{{ _('示例数据') }}</div>
+          </div>
+          <div class="preview-card">
+            <div class="preview-label">{{ _('预算状态') }}</div>
+            <div class="preview-bar"><span></span></div>
+          </div>
+        </div>
+        <p class="text-muted small mb-0">{{ _('产品截图预留区域，后续可替换为不含真实用户数据的仪表盘截图。') }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-5">
+  <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+    <div>
+      <h2 class="h4 mb-1">{{ _('主要功能') }}</h2>
+      <p class="text-muted mb-0">{{ _('从日常记账到趋势查看，把个人财务整理得更清楚。') }}</p>
+    </div>
+  </div>
+  <div class="row g-3">
+    {% set features = [
+      (_('收入与支出记录'), _('快速记录收入和支出，保留日期、分类、金额和备注。')),
+      (_('分类与搜索'), _('按类型、月份和分类整理账目，回看消费更轻松。')),
+      (_('数据统计与图表'), _('用清晰图表查看收入、支出和分类占比。')),
+      (_('预算管理'), _('为每月支出设置预算，并查看使用进度。')),
+      (_('中日双语'), _('支持简体中文和日语界面，适合跨语言日常使用。')),
+      (_('手机端适配'), _('页面在手机、平板和电脑上都能顺畅使用。'))
+    ] %}
+    {% for title, description in features %}
+      <div class="col-md-6 col-xl-4">
+        <div class="card border-0 shadow-sm h-100 landing-feature-card">
+          <div class="card-body">
+            <h3 class="h6 mb-2">{{ title }}</h3>
+            <p class="text-muted mb-0">{{ description }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="row g-4 align-items-stretch mb-5">
+  <div class="col-lg-7">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h4 mb-3">{{ _('产品预览') }}</h2>
+        <div class="landing-screenshot-placeholder">
+          <div class="fw-semibold mb-1">{{ _('这里将展示仪表盘截图') }}</div>
+          <div class="text-muted small">{{ _('本次使用静态占位区域，避免展示真实用户数据或依赖外部图片。') }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h4 mb-3">{{ _('使用说明') }}</h2>
+        <ul class="landing-trust-list">
+          <li>{{ _('当前可免费使用。') }}</li>
+          <li>{{ _('数据按账号隔离，登录后只能查看自己的记录。') }}</li>
+          <li>{{ _('项目仍在持续更新，功能会根据反馈逐步改进。') }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="landing-cta text-center">
+  <h2 class="h4 mb-3">{{ _('开始整理你的个人账本') }}</h2>
+  <div class="landing-actions justify-content-center">
+    {% if current_user_profile %}
+      <a class="btn btn-primary" href="{{ url_for('dashboard') }}">{{ _('进入仪表盘') }}</a>
+      <a class="btn btn-outline-primary" href="{{ url_for('support_page') }}">{{ _('支持与计划') }}</a>
+    {% else %}
+      <a class="btn btn-primary" href="{{ url_for('register') }}">{{ _('免费注册') }}</a>
+      <a class="btn btn-outline-primary" href="{{ url_for('login') }}">{{ _('登录') }}</a>
+      <a class="btn btn-outline-secondary" href="{{ url_for('support_page') }}">{{ _('支持与计划') }}</a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

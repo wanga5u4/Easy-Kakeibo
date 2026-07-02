@@ -126,14 +126,14 @@ def test_language_switch_rejects_external_referrer(client):
     )
 
     assert response.status_code == 302
-    assert response.headers["Location"] == "/login"
+    assert response.headers["Location"] == "/"
 
 
 def test_language_switch_uses_safe_default_without_referrer(client):
     response = client.get("/set-language/ja")
 
     assert response.status_code == 302
-    assert response.headers["Location"] == "/login"
+    assert response.headers["Location"] == "/"
 
 
 def test_language_switch_invalid_language_does_not_change_session_and_redirects_safely(client):
@@ -146,7 +146,7 @@ def test_language_switch_invalid_language_does_not_change_session_and_redirects_
     )
 
     assert response.status_code == 302
-    assert response.headers["Location"] == "/login"
+    assert response.headers["Location"] == "/"
     with client.session_transaction() as sess:
         assert sess["lang"] == "zh_CN"
 

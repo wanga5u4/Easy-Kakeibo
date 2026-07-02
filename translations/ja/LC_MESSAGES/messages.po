@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 16:16+0900\n"
+"POT-Creation-Date: 2026-07-02 17:44+0900\n"
 "PO-Revision-Date: 2026-06-30 22:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -42,302 +42,301 @@ msgstr "日本円 JPY"
 msgid "欧元 EUR"
 msgstr "ユーロ EUR"
 
-#: server.py:276
+#: server.py:283
 msgid "日期格式无效"
 msgstr "日付形式が無効です"
 
-#: server.py:280
+#: server.py:287
 msgid "类型必须是 income 或 expense"
 msgstr "タイプは income または expense である必要があります"
 
-#: server.py:284
+#: server.py:291
 msgid "分类不能为空"
 msgstr "カテゴリは空にできません"
 
-#: server.py:288
+#: server.py:295
 msgid "金额格式无效"
 msgstr "金額形式が無効です"
 
-#: server.py:310
+#: server.py:317
 msgid "用户名不能为空"
 msgstr "ユーザー名は空にできません"
 
-#: server.py:313
+#: server.py:320
 msgid "邮箱不能为空"
 msgstr "メールアドレスは空にできません"
 
-#: server.py:315
+#: server.py:322
 msgid "邮箱格式无效"
 msgstr "メールアドレスの形式が無効です"
 
-#: server.py:318
+#: server.py:325
 msgid "密码至少需要 8 位"
 msgstr "パスワードは8文字以上必要です"
 
-#: server.py:321
+#: server.py:328
 msgid "两次输入的密码不一致"
 msgstr "入力したパスワードが一致しません"
 
-#: server.py:336
+#: server.py:343
 msgid "用户名或邮箱不能为空"
 msgstr "ユーザー名またはメールアドレスは空にできません"
 
-#: server.py:339
+#: server.py:346
 msgid "密码不能为空"
 msgstr "パスワードは空にできません"
 
-#: server.py:357
+#: server.py:364
 msgid "昵称不能超过 30 个字符"
 msgstr "ニックネームは30文字以内にしてください"
 
-#: server.py:360
+#: server.py:367
 msgid "语言选项无效"
 msgstr "言語オプションが無効です"
 
-#: server.py:363
+#: server.py:370
 msgid "货币选项无效"
 msgstr "通貨オプションが無効です"
 
-#: server.py:368
+#: server.py:375
 msgid "请输入当前密码"
 msgstr "現在のパスワードを入力してください"
 
-#: server.py:370
+#: server.py:377
 msgid "新密码至少需要 8 位"
 msgstr "新しいパスワードは8文字以上必要です"
 
-#: server.py:372
+#: server.py:379
 msgid "两次输入的新密码不一致"
 msgstr "入力した新しいパスワードが一致しません"
 
-#: server.py:447
+#: server.py:454
 msgid "安全验证失败，请刷新页面后重试。"
 msgstr "リクエストの期限切れ、またはセキュリティ検証に失敗しました。ページを更新して再試行してください。"
 
-#: server.py:451
+#: server.py:458
 msgid "安全验证失败"
 msgstr "セキュリティ検証に失敗しました"
 
-#: server.py:452
+#: server.py:459
 msgid "请求已过期或安全验证失败，请刷新页面后重试。"
 msgstr "リクエストの期限切れ、またはセキュリティ検証に失敗しました。ページを更新して再試行してください。"
 
-#: server.py:454 server.py:467 templates/login.html:62
-#: templates/register.html:87
+#: server.py:461 server.py:474
 msgid "返回首页"
 msgstr "ホームへ戻る"
 
-#: server.py:464
+#: server.py:471
 #, python-format
 msgid "%(status_code)s 错误"
 msgstr "%(status_code)s エラー"
 
-#: server.py:473
+#: server.py:480
 msgid "请求无效，请检查输入后重试。"
 msgstr "リクエストが無効です。入力内容を確認して再試行してください。"
 
-#: server.py:478
+#: server.py:485
 msgid "没有权限执行此操作。"
 msgstr "この操作を実行する権限がありません。"
 
-#: server.py:483
+#: server.py:490
 msgid "页面或资源不存在。"
 msgstr "ページまたはリソースが存在しません。"
 
-#: server.py:492
+#: server.py:499
 msgid "服务器暂时无法处理请求，请稍后重试。"
 msgstr "サーバーは現在リクエストを処理できません。後でもう一度お試しください。"
 
-#: server.py:503
+#: server.py:510
 msgid "请求过于频繁，请稍后再试。"
 msgstr "リクエストが多すぎます。しばらくしてからもう一度お試しください。"
 
-#: server.py:509
+#: server.py:516
 msgid "请求过于频繁"
 msgstr "リクエストが多すぎます"
 
-#: server.py:512
+#: server.py:519
 msgid "返回后重试"
 msgstr "戻ってから再試行"
 
-#: server.py:518
+#: server.py:525
 msgid "请先登录"
 msgstr "先にログインしてください"
 
-#: server.py:557 templates/budgets.html:28 templates/dashboard.html:53
+#: server.py:565 templates/budgets.html:28 templates/dashboard.html:53
 msgid "未设置预算"
 msgstr "予算未設定"
 
-#: server.py:560
+#: server.py:568
 msgid "已超出预算"
 msgstr "予算を超過しました"
 
-#: server.py:562
+#: server.py:570
 msgid "预算即将用完"
 msgstr "予算が残り少なくなっています"
 
-#: server.py:563
+#: server.py:571
 msgid "预算正常"
 msgstr "予算は正常です"
 
-#: server.py:574
+#: server.py:582
 msgid "请求失败，请稍后重试"
 msgstr "リクエストに失敗しました。後でもう一度お試しください"
 
-#: server.py:576
+#: server.py:584
 msgid "工资"
 msgstr "給与"
 
-#: server.py:576
+#: server.py:584
 msgid "奖金"
 msgstr "ボーナス"
 
-#: server.py:576
+#: server.py:584
 msgid "理财"
 msgstr "資産運用"
 
-#: server.py:576
+#: server.py:584
 msgid "兼职"
 msgstr "副業"
 
-#: server.py:576
+#: server.py:584
 msgid "其他收入"
 msgstr "その他収入"
 
-#: server.py:577
+#: server.py:585
 msgid "餐饮"
 msgstr "飲食"
 
-#: server.py:577
+#: server.py:585
 msgid "交通"
 msgstr "交通"
 
-#: server.py:577
+#: server.py:585
 msgid "购物"
 msgstr "買い物"
 
-#: server.py:577
+#: server.py:585
 msgid "住房"
 msgstr "住居"
 
-#: server.py:577
+#: server.py:585
 msgid "娱乐"
 msgstr "娯楽"
 
-#: server.py:577
+#: server.py:585
 msgid "医疗"
 msgstr "医療"
 
-#: server.py:577
+#: server.py:585
 msgid "教育"
 msgstr "教育"
 
-#: server.py:577
+#: server.py:585
 msgid "其他支出"
 msgstr "その他支出"
 
-#: server.py:579 server.py:592 templates/record_form.html:26
+#: server.py:587 server.py:600 templates/record_form.html:26
 msgid "收入"
 msgstr "収入"
 
-#: server.py:579 server.py:593 templates/record_form.html:25
+#: server.py:587 server.py:601 templates/record_form.html:25
 msgid "支出"
 msgstr "支出"
 
-#: server.py:580
+#: server.py:588
 #, python-format
 msgid "%(year)s年%(month)s月%(day)s日"
 msgstr "%(year)s年%(month)s月%(day)s日"
 
-#: server.py:581 templates/budgets.html:22 templates/dashboard.html:47
+#: server.py:589 templates/budgets.html:22 templates/dashboard.html:47
 #, python-format
 msgid "已用 %(amount)s"
 msgstr "使用済み %(amount)s"
 
-#: server.py:582
+#: server.py:590
 #, python-format
 msgid "%(status)s，剩余 %(amount)s"
 msgstr "%(status)s、残り %(amount)s"
 
-#: server.py:583
+#: server.py:591
 msgid "编辑"
 msgstr "編集"
 
-#: server.py:584 templates/records.html:68
+#: server.py:592 templates/records.html:68
 msgid "删除"
 msgstr "削除"
 
-#: server.py:585
+#: server.py:593
 msgid "—"
 msgstr "—"
 
-#: server.py:586
+#: server.py:594
 #, python-format
 msgid "第 %(page)s / %(total_pages)s 页，共 %(total)s 条"
 msgstr "%(page)s / %(total_pages)s ページ、全 %(total)s 件"
 
-#: server.py:587
+#: server.py:595
 msgid "记录已删除"
 msgstr "記録を削除しました"
 
-#: server.py:588
+#: server.py:596
 #, python-format
 msgid "删除失败：%(message)s"
 msgstr "削除に失敗しました：%(message)s"
 
-#: server.py:589
+#: server.py:597
 msgid "记录已更新"
 msgstr "記録を更新しました"
 
-#: server.py:590
+#: server.py:598
 msgid "记录已添加"
 msgstr "記録を追加しました"
 
-#: server.py:591
+#: server.py:599
 msgid "预算已保存"
 msgstr "予算を保存しました"
 
-#: server.py:667 server.py:973 server.py:1206 server.py:1253
+#: server.py:673 server.py:983 server.py:1216 server.py:1263
 msgid "记录不存在"
 msgstr "記録が存在しません"
 
-#: server.py:668
+#: server.py:674
 msgid "这条记录不存在，或不属于当前登录用户。"
 msgstr "この記録は存在しないか、現在ログイン中のユーザーのものではありません。"
 
-#: server.py:670
+#: server.py:676
 msgid "返回记录列表"
 msgstr "記録一覧へ戻る"
 
-#: server.py:716
+#: server.py:722
 msgid "当前密码不正确"
 msgstr "現在のパスワードが正しくありません"
 
-#: server.py:768
+#: server.py:774
 msgid "设置已保存"
 msgstr "設定を保存しました"
 
-#: server.py:812
+#: server.py:818
 msgid "用户名已存在"
 msgstr "ユーザー名は既に存在します"
 
-#: server.py:820
+#: server.py:826
 msgid "邮箱已存在"
 msgstr "メールアドレスは既に存在します"
 
-#: server.py:871
+#: server.py:878
 msgid "用户名/邮箱或密码错误"
 msgstr "ユーザー名/メールアドレスまたはパスワードが正しくありません"
 
-#: server.py:987 server.py:1026 server.py:1129
+#: server.py:997 server.py:1036 server.py:1139
 msgid "月份格式无效"
 msgstr "月の形式が無効です"
 
-#: server.py:1133
+#: server.py:1143
 msgid "预算金额格式无效"
 msgstr "予算金額の形式が無効です"
 
-#: templates/base.html:6 templates/base.html:14 templates/budgets.html:3
+#: templates/base.html:6 templates/base.html:15 templates/budgets.html:3
 #: templates/dashboard.html:3 templates/login.html:6 templates/message.html:3
 #: templates/record_form.html:3 templates/records.html:3
 #: templates/register.html:6 templates/settings.html:3
@@ -345,56 +344,66 @@ msgstr "予算金額の形式が無効です"
 msgid "简易记账"
 msgstr "シンプル家計簿"
 
-#: templates/base.html:15
+#: templates/base.html:7 templates/index.html:4
+msgid "Easy Kakeibo 是一个支持收入、支出、预算和统计功能的中日双语个人记账工具。"
+msgstr "Easy Kakeibo は、収入・支出・予算・統計に対応した中国語と日本語の個人向け家計簿ツールです。"
+
+#: templates/base.html:16
 msgid "切换导航"
 msgstr "ナビゲーションを切り替え"
 
-#: templates/base.html:20 templates/dashboard.html:3 templates/dashboard.html:8
+#: templates/base.html:22 templates/dashboard.html:3 templates/dashboard.html:8
 msgid "仪表盘"
 msgstr "ダッシュボード"
 
-#: templates/base.html:21
+#: templates/base.html:23
 msgid "记录"
 msgstr "記録"
 
-#: templates/base.html:22
+#: templates/base.html:24
 msgid "统计"
 msgstr "統計"
 
-#: templates/base.html:23
+#: templates/base.html:25
 msgid "预算"
 msgstr "予算"
 
-#: templates/base.html:24
-msgid "设置"
-msgstr "設定"
+#: templates/base.html:27
+msgid "首页"
+msgstr "ホーム"
 
-#: templates/base.html:25 templates/settings.html:11 templates/support.html:3
+#: templates/base.html:29 templates/index.html:110 templates/index.html:114
+#: templates/settings.html:11 templates/support.html:3
 msgid "支持与计划"
 msgstr "サポートと予定"
 
-#: templates/base.html:39
+#: templates/base.html:31
+msgid "设置"
+msgstr "設定"
+
+#: templates/base.html:46
 #, python-format
 msgid "欢迎，%(name)s"
 msgstr "ようこそ、%(name)s さん"
 
-#: templates/base.html:41 templates/settings.html:71
+#: templates/base.html:48 templates/settings.html:71
 msgid "免费版"
 msgstr "無料版"
 
-#: templates/base.html:45
+#: templates/base.html:52
 msgid "退出登录"
 msgstr "ログアウト"
 
-#: templates/base.html:48 templates/login.html:56
+#: templates/base.html:55 templates/index.html:19 templates/index.html:113
+#: templates/login.html:59
 msgid "登录"
 msgstr "ログイン"
 
-#: templates/base.html:49 templates/register.html:81
+#: templates/base.html:56 templates/register.html:81
 msgid "注册"
 msgstr "登録"
 
-#: templates/budgets.html:3 templates/budgets.html:8
+#: templates/budgets.html:3 templates/budgets.html:8 templates/index.html:62
 msgid "预算管理"
 msgstr "予算管理"
 
@@ -414,11 +423,13 @@ msgstr "予算を保存"
 msgid "查看本月概览，快速进入常用功能。"
 msgstr "今月の概要を確認し、よく使う機能へすばやく移動します。"
 
-#: templates/dashboard.html:18 templates/statistics.html:15
+#: templates/dashboard.html:18 templates/index.html:32
+#: templates/statistics.html:15
 msgid "本月收入"
 msgstr "今月の収入"
 
-#: templates/dashboard.html:26 templates/statistics.html:16
+#: templates/dashboard.html:26 templates/index.html:36
+#: templates/statistics.html:16
 msgid "本月支出"
 msgstr "今月の支出"
 
@@ -426,7 +437,7 @@ msgstr "今月の支出"
 msgid "本月结余"
 msgstr "今月の残高"
 
-#: templates/dashboard.html:45
+#: templates/dashboard.html:45 templates/index.html:40
 msgid "预算状态"
 msgstr "予算状況"
 
@@ -444,7 +455,7 @@ msgstr "クイックアクセス"
 msgid "添加记录"
 msgstr "記録を追加"
 
-#: templates/dashboard.html:64
+#: templates/dashboard.html:64 templates/index.html:16
 msgid "查看记录"
 msgstr "記録を見る"
 
@@ -456,25 +467,153 @@ msgstr "統計を見る"
 msgid "设置预算"
 msgstr "予算を設定"
 
+#: templates/index.html:3
+msgid "Easy Kakeibo - 简洁的中日双语记账工具"
+msgstr "Easy Kakeibo - シンプルな中日バイリンガル家計簿"
+
+#: templates/index.html:10
+msgid "Easy Kakeibo"
+msgstr "Easy Kakeibo"
+
+#: templates/index.html:11
+msgid "轻松记录每一笔收支"
+msgstr "収支をかんたんに記録"
+
+#: templates/index.html:12
+msgid "简洁清晰的中日双语个人记账工具，帮助你管理收入、支出、预算和消费趋势。"
+msgstr "すっきり見やすい中日バイリンガルの個人向け家計簿ツール。収入、支出、予算、消費傾向の管理を助けます。"
+
+#: templates/index.html:15 templates/index.html:109
+msgid "进入仪表盘"
+msgstr "ダッシュボードへ"
+
+#: templates/index.html:18
+msgid "免费开始使用"
+msgstr "無料で始める"
+
+#: templates/index.html:24
+msgid "仪表盘预览占位图"
+msgstr "ダッシュボードプレビューのプレースホルダー"
+
+#: templates/index.html:33 templates/index.html:37
+msgid "示例数据"
+msgstr "サンプルデータ"
+
+#: templates/index.html:44
+msgid "产品截图预留区域，后续可替换为不含真实用户数据的仪表盘截图。"
+msgstr "製品スクリーンショット用のエリアです。後で実ユーザーデータを含まないダッシュボード画像に差し替えられます。"
+
+#: templates/index.html:53
+msgid "主要功能"
+msgstr "主な機能"
+
+#: templates/index.html:54
+msgid "从日常记账到趋势查看，把个人财务整理得更清楚。"
+msgstr "毎日の記録から傾向の確認まで、個人のお金の流れをわかりやすく整理します。"
+
+#: templates/index.html:59
+msgid "收入与支出记录"
+msgstr "収入と支出の記録"
+
+#: templates/index.html:59
+msgid "快速记录收入和支出，保留日期、分类、金额和备注。"
+msgstr "収入と支出をすばやく記録し、日付、カテゴリ、金額、メモを残せます。"
+
+#: templates/index.html:60
+msgid "分类与搜索"
+msgstr "カテゴリと検索"
+
+#: templates/index.html:60
+msgid "按类型、月份和分类整理账目，回看消费更轻松。"
+msgstr "タイプ、月、カテゴリで記録を整理し、支出の振り返りを楽にします。"
+
+#: templates/index.html:61
+msgid "数据统计与图表"
+msgstr "統計とグラフ"
+
+#: templates/index.html:61
+msgid "用清晰图表查看收入、支出和分类占比。"
+msgstr "見やすいグラフで収入、支出、カテゴリ別の割合を確認できます。"
+
+#: templates/index.html:62
+msgid "为每月支出设置预算，并查看使用进度。"
+msgstr "月ごとの支出予算を設定し、使用状況を確認できます。"
+
+#: templates/index.html:63
+msgid "中日双语"
+msgstr "中国語・日本語対応"
+
+#: templates/index.html:63
+msgid "支持简体中文和日语界面，适合跨语言日常使用。"
+msgstr "簡体字中国語と日本語の画面に対応し、複数言語での日常利用に向いています。"
+
+#: templates/index.html:64
+msgid "手机端适配"
+msgstr "モバイル対応"
+
+#: templates/index.html:64
+msgid "页面在手机、平板和电脑上都能顺畅使用。"
+msgstr "スマートフォン、タブレット、PC でスムーズに使えます。"
+
+#: templates/index.html:83
+msgid "产品预览"
+msgstr "製品プレビュー"
+
+#: templates/index.html:85
+msgid "这里将展示仪表盘截图"
+msgstr "ここにダッシュボード画像を表示します"
+
+#: templates/index.html:86
+msgid "本次使用静态占位区域，避免展示真实用户数据或依赖外部图片。"
+msgstr "今回は静的なプレースホルダーを使い、実ユーザーデータの表示や外部画像への依存を避けています。"
+
+#: templates/index.html:94
+msgid "使用说明"
+msgstr "利用にあたって"
+
+#: templates/index.html:96
+msgid "当前可免费使用。"
+msgstr "現在は無料で利用できます。"
+
+#: templates/index.html:97
+msgid "数据按账号隔离，登录后只能查看自己的记录。"
+msgstr "データはアカウントごとに分離され、ログイン後は自分の記録だけを閲覧できます。"
+
+#: templates/index.html:98
+msgid "项目仍在持续更新，功能会根据反馈逐步改进。"
+msgstr "プロジェクトは継続的に更新されており、フィードバックに応じて少しずつ改善していきます。"
+
+#: templates/index.html:106
+msgid "开始整理你的个人账本"
+msgstr "個人の家計簿を整えはじめましょう"
+
+#: templates/index.html:112
+msgid "免费注册"
+msgstr "無料登録"
+
 #: templates/login.html:6 templates/login.html:13
 msgid "用户登录"
 msgstr "ユーザーログイン"
 
 #: templates/login.html:14
-msgid "登录后继续管理你的账本"
-msgstr "ログインして家計簿の管理を続けましょう"
+msgid "简单、清晰的中日双语个人记账工具。"
+msgstr "シンプルで見やすい中日バイリンガルの個人向け家計簿ツールです。"
 
-#: templates/login.html:33
+#: templates/login.html:36
 msgid "用户名或邮箱"
 msgstr "ユーザー名またはメールアドレス"
 
-#: templates/login.html:45 templates/register.html:57
+#: templates/login.html:48 templates/register.html:57
 msgid "密码"
 msgstr "パスワード"
 
-#: templates/login.html:57
-msgid "注册账号"
-msgstr "アカウント登録"
+#: templates/login.html:60
+msgid "还没有账号？免费注册"
+msgstr "アカウントがない方は無料登録"
+
+#: templates/login.html:65
+msgid "先了解 Easy Kakeibo"
+msgstr "まず Easy Kakeibo を見る"
 
 #: templates/record_form.html:3 templates/record_form.html:8
 msgid "编辑记录"
@@ -589,8 +728,8 @@ msgid "用户注册"
 msgstr "ユーザー登録"
 
 #: templates/register.html:14
-msgid "创建账号后即可开始管理个人账本"
-msgstr "アカウントを作成すると、すぐに個人の家計簿を管理できます"
+msgid "创建账号后即可开始管理收入、支出、预算和消费趋势。"
+msgstr "アカウントを作成すると、収入、支出、予算、消費傾向の管理を始められます。"
 
 #: templates/register.html:33 templates/settings.html:30
 msgid "用户名"
@@ -605,8 +744,12 @@ msgid "确认密码"
 msgstr "パスワード確認"
 
 #: templates/register.html:82
-msgid "去登录"
-msgstr "ログインへ"
+msgid "已有账号？登录"
+msgstr "アカウントをお持ちの方はログイン"
+
+#: templates/register.html:87
+msgid "返回产品首页"
+msgstr "製品ホームへ戻る"
 
 #: templates/settings.html:3 templates/settings.html:8
 msgid "用户设置"
@@ -836,3 +979,14 @@ msgstr "v0.4.0"
 msgid "用户设置与会员展示版"
 msgstr "ユーザー設定と会員表示版"
 
+#~ msgid "登录后继续管理你的账本"
+#~ msgstr "ログインして家計簿の管理を続けましょう"
+
+#~ msgid "注册账号"
+#~ msgstr "アカウント登録"
+
+#~ msgid "创建账号后即可开始管理个人账本"
+#~ msgstr "アカウントを作成すると、すぐに個人の家計簿を管理できます"
+
+#~ msgid "去登录"
+#~ msgstr "ログインへ"
