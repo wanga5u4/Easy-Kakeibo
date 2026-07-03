@@ -25,21 +25,35 @@
     <section class="col-lg-7">
       <div class="card border-0 shadow-sm h-100">
         <div class="card-body">
+          {% set username_value = user['username'] or '' %}
+          {% set email_value = user['email'] or '' %}
+          {% set username_is_email = username_value|lower == email_value|lower %}
           <h2 class="h5 mb-3">{{ _('个人资料') }}</h2>
-          <div class="mb-3">
-            <label class="form-label" for="username">{{ _('用户名') }}</label>
-            <input class="form-control" id="username" value="{{ user['username'] }}" disabled>
-            <div class="form-text">{{ _('用户名用于登录和数据归属，保存后不可直接修改。') }}</div>
-          </div>
+          {% if username_is_email %}
+            <div class="mb-3">
+              <label class="form-label" for="login_email">{{ _('登录邮箱') }}</label>
+              <input class="form-control" type="email" id="login_email" value="{{ email_value }}" readonly>
+              <div class="form-text">{{ _('该邮箱用于登录，暂不支持在此页面修改。') }}</div>
+            </div>
+          {% else %}
+            <div class="mb-3">
+              <label class="form-label" for="username">{{ _('用户名') }}</label>
+              <input class="form-control" id="username" value="{{ username_value }}" disabled>
+              <div class="form-text">{{ _('用户名可用于登录和数据归属，暂不支持在此页面修改。') }}</div>
+            </div>
+          {% endif %}
           <div class="mb-3">
             <label class="form-label" for="nickname">{{ _('昵称') }}</label>
             <input class="form-control" id="nickname" name="nickname" maxlength="30" value="{{ user['nickname'] or '' }}" placeholder="{{ _('例如：小明的账本') }}">
+            <div class="form-text">{{ _('昵称将用于页面中的欢迎信息和账户显示。') }}</div>
           </div>
-          <div class="mb-3">
-            <label class="form-label" for="email">{{ _('邮箱') }}</label>
-            <input class="form-control" type="email" id="email" value="{{ user['email'] }}" readonly>
-            <div class="form-text">{{ _('邮箱用于登录和账号识别，暂不支持在此页面修改。') }}</div>
-          </div>
+          {% if not username_is_email %}
+            <div class="mb-3">
+              <label class="form-label" for="email">{{ _('邮箱') }}</label>
+              <input class="form-control" type="email" id="email" value="{{ email_value }}" readonly>
+              <div class="form-text">{{ _('邮箱可用于登录和账号识别，暂不支持在此页面修改。') }}</div>
+            </div>
+          {% endif %}
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label" for="language">{{ _('语言') }}</label>
@@ -63,21 +77,6 @@
     </section>
 
     <section class="col-lg-5">
-      <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body">
-          <h2 class="h5 mb-3">{{ _('当前套餐') }}</h2>
-          <div class="d-flex align-items-center justify-content-between">
-            <div>
-              <div class="fw-semibold">{{ "Premium" if user["plan"] == "premium" else _("免费版") }}</div>
-              <div class="text-muted small">{{ _('当前账号使用的套餐与权益状态。') }}</div>
-            </div>
-            <span class="badge text-bg-{{ 'warning' if user['plan'] == 'premium' else 'secondary' }}">
-              {{ user["plan"] }}
-            </span>
-          </div>
-        </div>
-      </div>
-
       <div class="card border-0 shadow-sm">
         <div class="card-body">
           <h2 class="h5 mb-3">{{ _('修改密码') }}</h2>
@@ -103,4 +102,46 @@
     <a class="btn btn-outline-secondary" href="{{ url_for('dashboard') }}">{{ _('返回仪表盘') }}</a>
   </div>
 </form>
+
+<section class="mt-4">
+  <div class="card border-danger shadow-sm">
+    <div class="card-body">
+      <h2 class="h5 mb-2 text-danger">{{ _('危险区域') }}</h2>
+      <p class="text-muted mb-3">{{ _('注销账号后，你的账户及相关记账数据将被永久删除，且无法恢复。') }}</p>
+      <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+        {{ _('注销账号') }}
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" action="{{ url_for('delete_account') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="deleteAccountModalLabel">{{ _('确认注销账号') }}</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ _('关闭') }}"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted">{{ _('请输入当前密码，并输入 DELETE 确认永久注销账号。') }}</p>
+          <div class="mb-3">
+            <label class="form-label" for="delete_current_password">{{ _('当前密码') }}</label>
+            <input class="form-control" type="password" id="delete_current_password" name="delete_current_password" autocomplete="current-password" required>
+          </div>
+          <div>
+            <label class="form-label" for="delete_confirmation">{{ _('确认文字') }}</label>
+            <input class="form-control" id="delete_confirmation" name="delete_confirmation" autocomplete="off" required>
+            <div class="form-text">{{ _('请输入 DELETE') }}</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ _('取消') }}</button>
+          <button type="submit" class="btn btn-danger">{{ _('注销账号') }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
