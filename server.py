@@ -125,6 +125,8 @@ EMAIL_RE = re.compile(r"^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Z
 ALLOWED_PER_PAGE = {10, 20, 50}
 DEFAULT_PER_PAGE = 10
 LOCALE_ALIASES = {"zh-CN": "zh_CN", "zh": "zh_CN", "ja-JP": "ja"}
+ACCOUNT_DELETION_CONFIRMATION = "DELETE"
+USER_OWNED_TABLES = ("records", "budgets")
 
 
 def normalize_locale(value):
@@ -386,6 +388,39 @@ def validate_settings_payload(form):
         "new_password": new_password,
         "wants_password_change": wants_password_change,
     }, errors
+
+
+def validate_account_deletion_payload(form, user):
+    errors = []
+    current_password = form.get("delete_current_password") or ""
+    confirmation_text = (form.get("delete_confirmation") or "").strip()
+
+    if not current_password:
+        errors.append(_("请输入当前密码"))
+    elif not check_password_hash(user["password_hash"], current_password):
+        errors.append(_("当前密码不正确"))
+
+    if confirmation_text != ACCOUNT_DELETION_CONFIRMATION:
+        errors.append(_("确认文字错误，请输入 DELETE"))
+
+    return errors
+
+
+def delete_user_account(user_id):
+    conn = get_connection()
+    try:
+        conn.execute("BEGIN")
+        for table_name in USER_OWNED_TABLES:
+            conn.execute(f"DELETE FROM {table_name} WHERE user_id = ?", (user_id,))
+        deleted = conn.execute("DELETE FROM users WHERE id = ?", (user_id,)).rowcount
+        if deleted != 1:
+            raise RuntimeError("current user no longer exists")
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
 
 
 def wants_json_response():
@@ -702,6 +737,10 @@ def settings_page():
         return login_redirect
 
     user = get_current_user()
+    if not user:
+        session.clear()
+        return redirect(url_for("login"))
+
     if request.method == "GET":
         return render_template(
             "settings.html",
@@ -773,6 +812,38 @@ def settings_page():
     session["lang"] = form_data["language"]
     flash(_("设置已保存"), "success")
     return redirect(url_for("settings_page"))
+
+
+@app.post("/settings/delete-account")
+def delete_account():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+
+    user = get_current_user()
+    if not user:
+        session.clear()
+        flash(_("请重新登录后再试"), "error")
+        return redirect(url_for("login"))
+
+    errors = validate_account_deletion_payload(request.form, user)
+    if errors:
+        app.logger.warning("Account deletion rejected: user_id=%s", user["id"])
+        for error in errors:
+            flash(error, "error")
+        return redirect(url_for("settings_page"))
+
+    try:
+        delete_user_account(user["id"])
+    except Exception:
+        app.logger.error("Account deletion failed: user_id=%s", user["id"], exc_info=True)
+        flash(_("账号注销失败，请稍后重试。"), "error")
+        return redirect(url_for("settings_page"))
+
+    app.logger.info("Account deletion succeeded: user_id=%s", user["id"])
+    session.clear()
+    flash(_("账号已注销"), "success")
+    return redirect(url_for("register"))
 
 
 @app.get("/support")

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 17:44+0900\n"
+"POT-Creation-Date: 2026-07-03 19:53+0900\n"
 "PO-Revision-Date: 2026-06-30 22:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -18,321 +18,337 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: server.py:137
+#: server.py:139
 msgid "简体中文"
 msgstr "簡体字中国語"
 
-#: server.py:137
+#: server.py:139
 msgid "日本語"
 msgstr "日本語"
 
-#: server.py:142
+#: server.py:144
 msgid "人民币 CNY"
 msgstr "人民元 CNY"
 
-#: server.py:143
+#: server.py:145
 msgid "美元 USD"
 msgstr "米ドル USD"
 
-#: server.py:144
+#: server.py:146
 msgid "日元 JPY"
 msgstr "日本円 JPY"
 
-#: server.py:145
+#: server.py:147
 msgid "欧元 EUR"
 msgstr "ユーロ EUR"
 
-#: server.py:283
+#: server.py:285
 msgid "日期格式无效"
 msgstr "日付形式が無効です"
 
-#: server.py:287
+#: server.py:289
 msgid "类型必须是 income 或 expense"
 msgstr "タイプは income または expense である必要があります"
 
-#: server.py:291
+#: server.py:293
 msgid "分类不能为空"
 msgstr "カテゴリは空にできません"
 
-#: server.py:295
+#: server.py:297
 msgid "金额格式无效"
 msgstr "金額形式が無効です"
 
-#: server.py:317
+#: server.py:319
 msgid "用户名不能为空"
 msgstr "ユーザー名は空にできません"
 
-#: server.py:320
+#: server.py:322
 msgid "邮箱不能为空"
 msgstr "メールアドレスは空にできません"
 
-#: server.py:322
+#: server.py:324
 msgid "邮箱格式无效"
 msgstr "メールアドレスの形式が無効です"
 
-#: server.py:325
+#: server.py:327
 msgid "密码至少需要 8 位"
 msgstr "パスワードは8文字以上必要です"
 
-#: server.py:328
+#: server.py:330
 msgid "两次输入的密码不一致"
 msgstr "入力したパスワードが一致しません"
 
-#: server.py:343
+#: server.py:345
 msgid "用户名或邮箱不能为空"
 msgstr "ユーザー名またはメールアドレスは空にできません"
 
-#: server.py:346
+#: server.py:348
 msgid "密码不能为空"
 msgstr "パスワードは空にできません"
 
-#: server.py:364
+#: server.py:366
 msgid "昵称不能超过 30 个字符"
 msgstr "ニックネームは30文字以内にしてください"
 
-#: server.py:367
+#: server.py:369
 msgid "语言选项无效"
 msgstr "言語オプションが無効です"
 
-#: server.py:370
+#: server.py:372
 msgid "货币选项无效"
 msgstr "通貨オプションが無効です"
 
-#: server.py:375
+#: server.py:377 server.py:399
 msgid "请输入当前密码"
 msgstr "現在のパスワードを入力してください"
 
-#: server.py:377
+#: server.py:379
 msgid "新密码至少需要 8 位"
 msgstr "新しいパスワードは8文字以上必要です"
 
-#: server.py:379
+#: server.py:381
 msgid "两次输入的新密码不一致"
 msgstr "入力した新しいパスワードが一致しません"
 
-#: server.py:454
+#: server.py:401 server.py:761
+msgid "当前密码不正确"
+msgstr "現在のパスワードが正しくありません"
+
+#: server.py:404
+msgid "确认文字错误，请输入 DELETE"
+msgstr "確認文字が正しくありません。DELETE と入力してください"
+
+#: server.py:489
 msgid "安全验证失败，请刷新页面后重试。"
 msgstr "リクエストの期限切れ、またはセキュリティ検証に失敗しました。ページを更新して再試行してください。"
 
-#: server.py:458
+#: server.py:493
 msgid "安全验证失败"
 msgstr "セキュリティ検証に失敗しました"
 
-#: server.py:459
+#: server.py:494
 msgid "请求已过期或安全验证失败，请刷新页面后重试。"
 msgstr "リクエストの期限切れ、またはセキュリティ検証に失敗しました。ページを更新して再試行してください。"
 
-#: server.py:461 server.py:474
+#: server.py:496 server.py:509
 msgid "返回首页"
 msgstr "ホームへ戻る"
 
-#: server.py:471
+#: server.py:506
 #, python-format
 msgid "%(status_code)s 错误"
 msgstr "%(status_code)s エラー"
 
-#: server.py:480
+#: server.py:515
 msgid "请求无效，请检查输入后重试。"
 msgstr "リクエストが無効です。入力内容を確認して再試行してください。"
 
-#: server.py:485
+#: server.py:520
 msgid "没有权限执行此操作。"
 msgstr "この操作を実行する権限がありません。"
 
-#: server.py:490
+#: server.py:525
 msgid "页面或资源不存在。"
 msgstr "ページまたはリソースが存在しません。"
 
-#: server.py:499
+#: server.py:534
 msgid "服务器暂时无法处理请求，请稍后重试。"
 msgstr "サーバーは現在リクエストを処理できません。後でもう一度お試しください。"
 
-#: server.py:510
+#: server.py:545
 msgid "请求过于频繁，请稍后再试。"
 msgstr "リクエストが多すぎます。しばらくしてからもう一度お試しください。"
 
-#: server.py:516
+#: server.py:551
 msgid "请求过于频繁"
 msgstr "リクエストが多すぎます"
 
-#: server.py:519
+#: server.py:554
 msgid "返回后重试"
 msgstr "戻ってから再試行"
 
-#: server.py:525
+#: server.py:560
 msgid "请先登录"
 msgstr "先にログインしてください"
 
-#: server.py:565 templates/budgets.html:28 templates/dashboard.html:53
+#: server.py:600 templates/budgets.html:28 templates/dashboard.html:53
 msgid "未设置预算"
 msgstr "予算未設定"
 
-#: server.py:568
+#: server.py:603
 msgid "已超出预算"
 msgstr "予算を超過しました"
 
-#: server.py:570
+#: server.py:605
 msgid "预算即将用完"
 msgstr "予算が残り少なくなっています"
 
-#: server.py:571
+#: server.py:606
 msgid "预算正常"
 msgstr "予算は正常です"
 
-#: server.py:582
+#: server.py:617
 msgid "请求失败，请稍后重试"
 msgstr "リクエストに失敗しました。後でもう一度お試しください"
 
-#: server.py:584
+#: server.py:619
 msgid "工资"
 msgstr "給与"
 
-#: server.py:584
+#: server.py:619
 msgid "奖金"
 msgstr "ボーナス"
 
-#: server.py:584
+#: server.py:619
 msgid "理财"
 msgstr "資産運用"
 
-#: server.py:584
+#: server.py:619
 msgid "兼职"
 msgstr "副業"
 
-#: server.py:584
+#: server.py:619
 msgid "其他收入"
 msgstr "その他収入"
 
-#: server.py:585
+#: server.py:620
 msgid "餐饮"
 msgstr "飲食"
 
-#: server.py:585
+#: server.py:620
 msgid "交通"
 msgstr "交通"
 
-#: server.py:585
+#: server.py:620
 msgid "购物"
 msgstr "買い物"
 
-#: server.py:585
+#: server.py:620
 msgid "住房"
 msgstr "住居"
 
-#: server.py:585
+#: server.py:620
 msgid "娱乐"
 msgstr "娯楽"
 
-#: server.py:585
+#: server.py:620
 msgid "医疗"
 msgstr "医療"
 
-#: server.py:585
+#: server.py:620
 msgid "教育"
 msgstr "教育"
 
-#: server.py:585
+#: server.py:620
 msgid "其他支出"
 msgstr "その他支出"
 
-#: server.py:587 server.py:600 templates/record_form.html:26
+#: server.py:622 server.py:635 templates/record_form.html:26
 msgid "收入"
 msgstr "収入"
 
-#: server.py:587 server.py:601 templates/record_form.html:25
+#: server.py:622 server.py:636 templates/record_form.html:25
 msgid "支出"
 msgstr "支出"
 
-#: server.py:588
+#: server.py:623
 #, python-format
 msgid "%(year)s年%(month)s月%(day)s日"
 msgstr "%(year)s年%(month)s月%(day)s日"
 
-#: server.py:589 templates/budgets.html:22 templates/dashboard.html:47
+#: server.py:624 templates/budgets.html:22 templates/dashboard.html:47
 #, python-format
 msgid "已用 %(amount)s"
 msgstr "使用済み %(amount)s"
 
-#: server.py:590
+#: server.py:625
 #, python-format
 msgid "%(status)s，剩余 %(amount)s"
 msgstr "%(status)s、残り %(amount)s"
 
-#: server.py:591
+#: server.py:626
 msgid "编辑"
 msgstr "編集"
 
-#: server.py:592 templates/records.html:68
+#: server.py:627 templates/records.html:68
 msgid "删除"
 msgstr "削除"
 
-#: server.py:593
+#: server.py:628
 msgid "—"
 msgstr "—"
 
-#: server.py:594
+#: server.py:629
 #, python-format
 msgid "第 %(page)s / %(total_pages)s 页，共 %(total)s 条"
 msgstr "%(page)s / %(total_pages)s ページ、全 %(total)s 件"
 
-#: server.py:595
+#: server.py:630
 msgid "记录已删除"
 msgstr "記録を削除しました"
 
-#: server.py:596
+#: server.py:631
 #, python-format
 msgid "删除失败：%(message)s"
 msgstr "削除に失敗しました：%(message)s"
 
-#: server.py:597
+#: server.py:632
 msgid "记录已更新"
 msgstr "記録を更新しました"
 
-#: server.py:598
+#: server.py:633
 msgid "记录已添加"
 msgstr "記録を追加しました"
 
-#: server.py:599
+#: server.py:634
 msgid "预算已保存"
 msgstr "予算を保存しました"
 
-#: server.py:673 server.py:983 server.py:1216 server.py:1263
+#: server.py:708 server.py:1054 server.py:1287 server.py:1334
 msgid "记录不存在"
 msgstr "記録が存在しません"
 
-#: server.py:674
+#: server.py:709
 msgid "这条记录不存在，或不属于当前登录用户。"
 msgstr "この記録は存在しないか、現在ログイン中のユーザーのものではありません。"
 
-#: server.py:676
+#: server.py:711
 msgid "返回记录列表"
 msgstr "記録一覧へ戻る"
 
-#: server.py:722
-msgid "当前密码不正确"
-msgstr "現在のパスワードが正しくありません"
-
-#: server.py:774
+#: server.py:813
 msgid "设置已保存"
 msgstr "設定を保存しました"
 
-#: server.py:818
+#: server.py:826
+msgid "请重新登录后再试"
+msgstr "もう一度ログインしてからお試しください"
+
+#: server.py:840
+msgid "账号注销失败，请稍后重试。"
+msgstr "アカウント削除に失敗しました。後でもう一度お試しください。"
+
+#: server.py:845
+msgid "账号已注销"
+msgstr "アカウントを削除しました"
+
+#: server.py:889
 msgid "用户名已存在"
 msgstr "ユーザー名は既に存在します"
 
-#: server.py:826
+#: server.py:897
 msgid "邮箱已存在"
 msgstr "メールアドレスは既に存在します"
 
-#: server.py:878
+#: server.py:949
 msgid "用户名/邮箱或密码错误"
 msgstr "ユーザー名/メールアドレスまたはパスワードが正しくありません"
 
-#: server.py:997 server.py:1036 server.py:1139
+#: server.py:1068 server.py:1107 server.py:1210
 msgid "月份格式无效"
 msgstr "月の形式が無効です"
 
-#: server.py:1143
+#: server.py:1214
 msgid "预算金额格式无效"
 msgstr "予算金額の形式が無効です"
 
@@ -386,7 +402,7 @@ msgstr "設定"
 msgid "欢迎，%(name)s"
 msgstr "ようこそ、%(name)s さん"
 
-#: templates/base.html:48 templates/settings.html:71
+#: templates/base.html:48
 msgid "免费版"
 msgstr "無料版"
 
@@ -656,6 +672,7 @@ msgid "保存修改"
 msgstr "変更を保存"
 
 #: templates/record_form.html:44 templates/records.html:67
+#: templates/settings.html:140
 msgid "取消"
 msgstr "キャンセル"
 
@@ -715,7 +732,7 @@ msgstr "次のページ"
 msgid "确认删除"
 msgstr "削除の確認"
 
-#: templates/records.html:61
+#: templates/records.html:61 templates/settings.html:125
 msgid "关闭"
 msgstr "閉じる"
 
@@ -731,11 +748,11 @@ msgstr "ユーザー登録"
 msgid "创建账号后即可开始管理收入、支出、预算和消费趋势。"
 msgstr "アカウントを作成すると、収入、支出、予算、消費傾向の管理を始められます。"
 
-#: templates/register.html:33 templates/settings.html:30
+#: templates/register.html:33 templates/settings.html:40
 msgid "用户名"
 msgstr "ユーザー名"
 
-#: templates/register.html:45 templates/settings.html:39
+#: templates/register.html:45 templates/settings.html:52
 msgid "邮箱"
 msgstr "メールアドレス"
 
@@ -759,65 +776,97 @@ msgstr "ユーザー設定"
 msgid "管理个人资料、显示偏好和登录密码。"
 msgstr "プロフィール、表示設定、ログインパスワードを管理します。"
 
-#: templates/settings.html:28
+#: templates/settings.html:31
 msgid "个人资料"
 msgstr "プロフィール"
 
-#: templates/settings.html:32
-msgid "用户名用于登录和数据归属，保存后不可直接修改。"
-msgstr "ユーザー名はログインとデータの識別に使用され、保存後は直接変更できません。"
+#: templates/settings.html:34
+msgid "登录邮箱"
+msgstr "ログイン用メールアドレス"
 
-#: templates/settings.html:35
+#: templates/settings.html:36
+msgid "该邮箱用于登录，暂不支持在此页面修改。"
+msgstr "このメールアドレスはログインに使用されます。現在、このページでは変更できません。"
+
+#: templates/settings.html:42
+msgid "用户名可用于登录和数据归属，暂不支持在此页面修改。"
+msgstr "ユーザー名はログインとデータの識別に使用されます。現在、このページでは変更できません。"
+
+#: templates/settings.html:46
 msgid "昵称"
 msgstr "ニックネーム"
 
-#: templates/settings.html:36
+#: templates/settings.html:47
 msgid "例如：小明的账本"
 msgstr "例：太郎の家計簿"
 
-#: templates/settings.html:41
-msgid "邮箱用于登录和账号识别，暂不支持在此页面修改。"
-msgstr "メールアドレスはログインとアカウント識別に使用され、このページでは変更できません。"
+#: templates/settings.html:48
+msgid "昵称将用于页面中的欢迎信息和账户显示。"
+msgstr "ニックネームは、ページ上の歓迎メッセージやアカウント表示に使用されます。"
 
-#: templates/settings.html:45
+#: templates/settings.html:54
+msgid "邮箱可用于登录和账号识别，暂不支持在此页面修改。"
+msgstr "メールアドレスはログインとアカウント識別に使用できます。現在、このページでは変更できません。"
+
+#: templates/settings.html:59
 msgid "语言"
 msgstr "言語"
 
-#: templates/settings.html:53
+#: templates/settings.html:67
 msgid "默认货币"
 msgstr "既定の通貨"
 
-#: templates/settings.html:68
-msgid "当前套餐"
-msgstr "現在のプラン"
-
-#: templates/settings.html:72
-msgid "当前账号使用的套餐与权益状态。"
-msgstr "現在のアカウントのプランと特典状況です。"
-
-#: templates/settings.html:83
+#: templates/settings.html:82
 msgid "修改密码"
 msgstr "パスワード変更"
 
-#: templates/settings.html:85
+#: templates/settings.html:84 templates/settings.html:130
 msgid "当前密码"
 msgstr "現在のパスワード"
 
-#: templates/settings.html:89
+#: templates/settings.html:88
 msgid "新密码"
 msgstr "新しいパスワード"
 
-#: templates/settings.html:93
+#: templates/settings.html:92
 msgid "确认新密码"
 msgstr "新しいパスワード確認"
 
-#: templates/settings.html:102
+#: templates/settings.html:101
 msgid "保存设置"
 msgstr "設定を保存"
 
-#: templates/settings.html:103
+#: templates/settings.html:102
 msgid "返回仪表盘"
 msgstr "ダッシュボードへ戻る"
+
+#: templates/settings.html:109
+msgid "危险区域"
+msgstr "危険な操作"
+
+#: templates/settings.html:110
+msgid "注销账号后，你的账户及相关记账数据将被永久删除，且无法恢复。"
+msgstr "アカウントを削除すると、アカウントおよび関連する記録は完全に削除され、元に戻すことはできません。"
+
+#: templates/settings.html:112 templates/settings.html:141
+msgid "注销账号"
+msgstr "アカウントを削除"
+
+#: templates/settings.html:124
+msgid "确认注销账号"
+msgstr "アカウント削除の確認"
+
+#: templates/settings.html:128
+msgid "请输入当前密码，并输入 DELETE 确认永久注销账号。"
+msgstr "現在のパスワードを入力し、DELETE と入力してアカウントの完全削除を確認してください。"
+
+#: templates/settings.html:134
+msgid "确认文字"
+msgstr "確認文字"
+
+#: templates/settings.html:136
+msgid "请输入 DELETE"
+msgstr "DELETE と入力してください"
 
 #: templates/statistics.html:3 templates/statistics.html:8
 msgid "统计分析"
@@ -990,3 +1039,12 @@ msgstr "ユーザー設定と会員表示版"
 
 #~ msgid "去登录"
 #~ msgstr "ログインへ"
+
+#~ msgid "用户名用于登录和数据归属，保存后不可直接修改。"
+#~ msgstr "ユーザー名はログインとデータの識別に使用され、保存後は直接変更できません。"
+
+#~ msgid "当前套餐"
+#~ msgstr "現在のプラン"
+
+#~ msgid "当前账号使用的套餐与权益状态。"
+#~ msgstr "現在のアカウントのプランと特典状況です。"
