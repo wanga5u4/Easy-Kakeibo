@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('反馈与建议') }} - {{ _('简易记账') }}{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">{{ _('反馈与建议') }}</h1>
+    <p class="text-muted mb-0">{{ _('告诉我们哪里可以变得更好，或提交你遇到的问题。') }}</p>
+  </div>
+  <a class="btn btn-outline-secondary" href="{{ url_for('support_page') }}">{{ _('支持与计划') }}</a>
+</div>
+
+{% if errors %}
+  <div class="alert alert-danger">
+    {% for error in errors %}
+      <div>{{ error }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<div class="row g-4">
+  <section class="col-lg-7">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5 mb-3">{{ _('提交反馈') }}</h2>
+        <form method="post" action="{{ url_for('feedback_page') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="mb-3">
+            <label class="form-label" for="feedback_type">{{ _('反馈类型') }}</label>
+            <select class="form-select" id="feedback_type" name="feedback_type" required>
+              {% for value, label in feedback_type_labels.items() %}
+                <option value="{{ value }}" {% if form.feedback_type == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="title">{{ _('标题') }}</label>
+            <input class="form-control" id="title" name="title" maxlength="100" minlength="2" value="{{ form.title }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="content">{{ _('详细内容') }}</label>
+            <textarea class="form-control" id="content" name="content" rows="7" maxlength="2000" minlength="5" required>{{ form.content }}</textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="page_url">{{ _('当前页面') }}</label>
+            <input class="form-control" id="page_url" name="page_url" maxlength="200" value="{{ form.page_url }}">
+            <div class="form-text">{{ _('仅作为普通文本保存，不会用于跳转。') }}</div>
+          </div>
+          <div class="mb-4">
+            <label class="form-label" for="contact">{{ _('联系方式') }}</label>
+            <input class="form-control" id="contact" name="contact" maxlength="120" value="{{ form.contact }}">
+            <div class="form-text">{{ _('可选，仅用于管理员联系你，不会展示给其他用户。') }}</div>
+          </div>
+          <button class="btn btn-primary" type="submit">{{ _('提交反馈') }}</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-lg-5">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5 mb-3">{{ _('最近反馈') }}</h2>
+        {% if recent_feedback %}
+          <div class="list-group list-group-flush">
+            {% for item in recent_feedback %}
+              <article class="list-group-item px-0">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                  <div>
+                    <div class="small text-muted mb-1">{{ feedback_type_labels[item.feedback_type] }}</div>
+                    <h3 class="h6 mb-1">{{ item.title }}</h3>
+                  </div>
+                  <span class="badge text-bg-secondary">{{ feedback_status_labels[item.status] }}</span>
+                </div>
+                <p class="text-muted small mb-2">{{ truncate_text(item.content, 120) }}</p>
+                <div class="text-muted small">{{ item.created_at }}</div>
+              </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-muted mb-0">{{ _('你还没有提交过反馈。') }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -142,7 +142,8 @@ body {
 }
 
 input,
-select {
+select,
+textarea {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
@@ -153,7 +154,8 @@ select {
 }
 
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
@@ -552,6 +554,14 @@ tbody tr:hover {
   color: var(--text-secondary);
 }
 
+.share-url-input {
+  min-width: 220px;
+}
+
+.public-share-page {
+  max-width: 980px;
+}
+
 @media (max-width: 860px) {
   .header-top {
     flex-direction: column;
@@ -639,7 +649,8 @@ tbody tr:hover {
   }
 
   :root[data-theme="dark"] input,
-  :root[data-theme="dark"] select {
+  :root[data-theme="dark"] select,
+  :root[data-theme="dark"] textarea {
     background: #0f172a;
     color: var(--text-primary);
     border-color: var(--border-color);

@@ -15,6 +15,8 @@ USER_PROFILE_COLUMNS = {
     "plan": "TEXT NOT NULL DEFAULT 'free'",
     "premium_until": "TIMESTAMP",
 }
+FEEDBACK_TYPES = ("bug", "feature", "question", "other")
+FEEDBACK_STATUSES = ("new", "reviewing", "resolved", "closed")
 
 
 def get_connection():
@@ -81,6 +83,44 @@ def init_db():
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS feedback (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                feedback_type TEXT NOT NULL CHECK(feedback_type IN ('bug', 'feature', 'question', 'other')),
+                title TEXT NOT NULL,
+                content TEXT NOT NULL,
+                page_url TEXT NOT NULL DEFAULT '',
+                contact TEXT NOT NULL DEFAULT '',
+                status TEXT NOT NULL DEFAULT 'new' CHECK(status IN ('new', 'reviewing', 'resolved', 'closed')),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP,
+                FOREIGN KEY(user_id) REFERENCES users(id)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS share_links (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                token TEXT NOT NULL UNIQUE,
+                title TEXT NOT NULL,
+                description TEXT NOT NULL DEFAULT '',
+                share_month TEXT NOT NULL,
+                include_income_summary INTEGER NOT NULL DEFAULT 1 CHECK(include_income_summary IN (0, 1)),
+                include_expense_summary INTEGER NOT NULL DEFAULT 1 CHECK(include_expense_summary IN (0, 1)),
+                include_category_summary INTEGER NOT NULL DEFAULT 1 CHECK(include_category_summary IN (0, 1)),
+                expires_at TIMESTAMP,
+                is_active INTEGER NOT NULL DEFAULT 1 CHECK(is_active IN (0, 1)),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                last_viewed_at TIMESTAMP,
+                view_count INTEGER NOT NULL DEFAULT 0 CHECK(view_count >= 0),
+                FOREIGN KEY(user_id) REFERENCES users(id)
+            )
+            """
+        )
         migrate_records_user_id(conn)
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_records_user_id ON records(user_id)"
@@ -90,6 +130,24 @@ def init_db():
         )
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_budgets_user_month ON budgets(user_id, month)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_feedback_user_id ON feedback(user_id)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_feedback_status ON feedback(status)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_feedback_created_at ON feedback(created_at)"
+        )
+        conn.execute(
+            "CREATE UNIQUE INDEX IF NOT EXISTS idx_share_links_token ON share_links(token)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_share_links_user_id ON share_links(user_id)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_share_links_created_at ON share_links(created_at)"
         )
         conn.commit()
 

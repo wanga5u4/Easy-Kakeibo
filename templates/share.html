@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('分享链接') }} - {{ _('简易记账') }}{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">{{ _('分享链接') }}</h1>
+    <p class="text-muted mb-0">{{ _('创建只包含月度汇总的公开链接，不分享完整交易明细。') }}</p>
+  </div>
+</div>
+
+{% if errors %}
+  <div class="alert alert-danger">
+    {% for error in errors %}
+      <div>{{ error }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<section class="card border-0 shadow-sm mb-4">
+  <div class="card-body">
+    <h2 class="h5 mb-3">{{ _('创建分享链接') }}</h2>
+    <form method="post" action="{{ url_for('share_page') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <label class="form-label" for="title">{{ _('分享标题') }}</label>
+          <input class="form-control" id="title" name="title" maxlength="100" value="{{ form.title }}" placeholder="{{ _('%(month)s 收支概览', month=current_month) }}">
+        </div>
+        <div class="col-lg-3">
+          <label class="form-label" for="share_month">{{ _('分享月份') }}</label>
+          <input class="form-control" id="share_month" name="share_month" type="month" value="{{ form.share_month }}" required>
+        </div>
+        <div class="col-lg-3">
+          <label class="form-label" for="expires_in">{{ _('有效期') }}</label>
+          <select class="form-select" id="expires_in" name="expires_in">
+            <option value="1" {% if form.expires_in == '1' %}selected{% endif %}>{{ _('1 天') }}</option>
+            <option value="7" {% if form.expires_in == '7' %}selected{% endif %}>{{ _('7 天') }}</option>
+            <option value="30" {% if form.expires_in == '30' %}selected{% endif %}>{{ _('30 天') }}</option>
+            <option value="forever" {% if form.expires_in == 'forever' %}selected{% endif %}>{{ _('永久') }}</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="description">{{ _('分享说明') }}</label>
+          <textarea class="form-control" id="description" name="description" rows="3" maxlength="300">{{ form.description }}</textarea>
+        </div>
+        <div class="col-12">
+          <div class="form-label">{{ _('分享内容') }}</div>
+          <div class="d-flex flex-wrap gap-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="include_income_summary" name="include_income_summary" value="1" {% if form.include_income_summary %}checked{% endif %}>
+              <label class="form-check-label" for="include_income_summary">{{ _('收入汇总') }}</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="include_expense_summary" name="include_expense_summary" value="1" {% if form.include_expense_summary %}checked{% endif %}>
+              <label class="form-check-label" for="include_expense_summary">{{ _('支出汇总') }}</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="include_category_summary" name="include_category_summary" value="1" {% if form.include_category_summary %}checked{% endif %}>
+              <label class="form-check-label" for="include_category_summary">{{ _('分类汇总') }}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary mt-4" type="submit">{{ _('创建分享链接') }}</button>
+    </form>
+  </div>
+</section>
+
+<section class="card border-0 shadow-sm">
+  <div class="card-body">
+    <h2 class="h5 mb-3">{{ _('已创建分享链接') }}</h2>
+    {% if share_links %}
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>{{ _('标题') }}</th>
+              <th>{{ _('分享月份') }}</th>
+              <th>{{ _('状态') }}</th>
+              <th>{{ _('创建时间') }}</th>
+              <th>{{ _('到期时间') }}</th>
+              <th>{{ _('浏览次数') }}</th>
+              <th>{{ _('操作') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for link in share_links %}
+              {% set status = get_share_status(link) %}
+              {% set public_link = public_links[link.id] %}
+              <tr>
+                <td>
+                  <div class="fw-semibold">{{ link.title }}</div>
+                  <input class="form-control form-control-sm mt-2 share-url-input" type="text" value="{{ public_link }}" readonly aria-label="{{ _('公开链接') }}">
+                </td>
+                <td>{{ link.share_month }}</td>
+                <td><span class="badge text-bg-{{ 'success' if status == 'active' else 'secondary' }}">{{ share_status_labels[status] }}</span></td>
+                <td>{{ link.created_at }}</td>
+                <td>{{ link.expires_at or _('永久') }}</td>
+                <td>{{ link.view_count }}</td>
+                <td>
+                  <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" data-copy-url="{{ public_link }}">{{ _('复制链接') }}</button>
+                    <a class="btn btn-outline-primary btn-sm" href="{{ public_link }}" target="_blank" rel="noopener">{{ _('预览') }}</a>
+                    {% if link.is_active %}
+                      <form method="post" action="{{ url_for('disable_share_link', link_id=link.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-outline-warning btn-sm" type="submit">{{ _('停用') }}</button>
+                      </form>
+                    {% else %}
+                      <form method="post" action="{{ url_for('enable_share_link', link_id=link.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-outline-success btn-sm" type="submit">{{ _('启用') }}</button>
+                      </form>
+                    {% endif %}
+                    <form method="post" action="{{ url_for('delete_share_link', link_id=link.id) }}" data-confirm-delete>
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="btn btn-outline-danger btn-sm" type="submit">{{ _('删除') }}</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted mb-0">{{ _('还没有创建分享链接。') }}</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/share.js') }}"></script>
+{% endblock %}
