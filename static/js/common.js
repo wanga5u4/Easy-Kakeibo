@@ -43,8 +43,27 @@ async function api(path, options = {}) {
   return data;
 }
 
-function formatMoney(value) {
-  return '￥' + Number(value || 0).toFixed(2);
+function formatMoney(value, currencyCode) {
+  if (value && typeof value === 'object' && value.formatted) return value.formatted;
+  const code = currencyCode || T.currentBaseCurrency || 'JPY';
+  const currency = T.currencies?.[code] || { symbol: '¥', decimal_places: 0 };
+  const amount = Number(value || 0);
+  return `${currency.symbol}${amount.toLocaleString(undefined, {
+    minimumFractionDigits: currency.decimal_places,
+    maximumFractionDigits: currency.decimal_places,
+  })} ${code}`;
+}
+
+function formatRecordAmount(record) {
+  const original = record.formatted_original_amount
+    || formatMoney(record.original_amount ?? record.amount, record.currency_code);
+  if (!record.base_currency_code || record.currency_code === record.base_currency_code) {
+    return escapeHtml(original);
+  }
+  const converted = record.formatted_converted_amount
+    || formatMoney(record.converted_amount, record.base_currency_code);
+  const approximate = (T.approximately || 'About %(amount)s').replace('%(amount)s', converted);
+  return `${escapeHtml(original)}<div class="text-muted small">${escapeHtml(approximate)}</div>`;
 }
 
 function todayStr() {
@@ -105,8 +124,14 @@ function applyBudgetView(budget) {
 
   const percent = Number(budget.percent || 0);
   const progress = Math.min(percent, 100);
-  if (amountEl) amountEl.value = budget.amount ? Number(budget.amount).toFixed(2) : '';
-  usedEl.textContent = (T.used || 'Used %(amount)s').replace('%(amount)s', formatMoney(budget.used));
+  if (amountEl) amountEl.value = budget.amount ? String(budget.amount) : '';
+  const budgetCurrency = budget.currency_code || T.currentBaseCurrency || 'JPY';
+  const currencyLabel = document.getElementById('budgetCurrencyLabel');
+  const currencyHint = document.getElementById('budgetCurrencyHint');
+  if (currencyLabel) currencyLabel.textContent = budgetCurrency;
+  if (currencyHint) currencyHint.textContent = `${T.budgetCurrency || '预算币种'}：${budgetCurrency}`;
+  usedEl.textContent = (T.used || 'Used %(amount)s')
+    .replace('%(amount)s', budget.formatted_used || formatMoney(budget.used, budgetCurrency));
   percentEl.textContent = `${percent.toFixed(1)}%`;
   progressEl.style.width = `${progress}%`;
   progressEl.className = 'progress-bar';
@@ -128,5 +153,5 @@ function applyBudgetView(budget) {
 
   statusEl.textContent = (T.remaining || '%(status)s, remaining %(amount)s')
     .replace('%(status)s', budget.status)
-    .replace('%(amount)s', formatMoney(budget.remaining));
+    .replace('%(amount)s', budget.formatted_remaining || formatMoney(budget.remaining, budgetCurrency));
 }

@@ -6,6 +6,7 @@ import math
 import re
 import logging
 import hashlib
+from decimal import Decimal
 from datetime import date, datetime, timedelta, timezone
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
@@ -19,6 +20,23 @@ from flask_limiter.util import get_remote_address
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database import get_connection, init_db, row_to_dict
+from currency import (
+    DEFAULT_BASE_CURRENCY,
+    ENABLED_CURRENCY_CODES,
+    CurrencyValidationError,
+    amount_to_minor_units,
+    convert_amount,
+    currency_config_for_client,
+    decimal_to_api_number,
+    decimal_to_plain_string,
+    format_money,
+    format_money_minor,
+    invert_exchange_rate,
+    minor_units_to_api_number,
+    minor_units_to_decimal,
+    validate_currency_code,
+    validate_exchange_rate,
+)
 
 BASE_DIR = Path(__file__).parent
 
@@ -114,10 +132,8 @@ LANGUAGE_OPTIONS = {
     "ja": "日本語",
 }
 CURRENCY_OPTIONS = {
-    "CNY": "人民币 CNY",
-    "USD": "美元 USD",
     "JPY": "日元 JPY",
-    "EUR": "欧元 EUR",
+    "CNY": "人民币 CNY",
 }
 
 UNSAFE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
@@ -130,7 +146,7 @@ FEEDBACK_TYPES = ("bug", "feature", "question", "other")
 FEEDBACK_STATUSES = ("new", "reviewing", "resolved", "closed")
 SHARE_EXPIRATION_DAYS = {"1": 1, "7": 7, "30": 30, "forever": None}
 SHARE_TOKEN_BYTES = 32
-USER_OWNED_TABLES = ("records", "budgets", "feedback", "share_links")
+USER_OWNED_TABLES = ("records", "budgets", "feedback", "share_links", "user_exchange_rates")
 
 
 def normalize_locale(value):
@@ -145,11 +161,16 @@ def get_language_options():
 
 def get_currency_options():
     return {
-        "CNY": _("人民币 CNY"),
-        "USD": _("美元 USD"),
         "JPY": _("日元 JPY"),
-        "EUR": _("欧元 EUR"),
+        "CNY": _("人民币 CNY"),
     }
+
+
+def get_currency_name(code):
+    return {
+        "JPY": _("日元"),
+        "CNY": _("人民币"),
+    }.get(code, code)
 
 
 def get_current_user_id():
@@ -165,7 +186,7 @@ def get_current_user():
         return conn.execute(
             """
             SELECT id, username, email, password_hash, nickname, language,
-                   currency, plan, premium_until, created_at
+                   currency, base_currency_code, plan, premium_until, created_at
             FROM users
             WHERE id = ?
             """,
@@ -251,18 +272,6 @@ def parse_record_date(value):
         return None
 
 
-def parse_positive_amount(value, max_value=1_000_000_000):
-    try:
-        amount = float(value)
-    except (TypeError, ValueError):
-        return None
-    if not math.isfinite(amount):
-        return None
-    if amount <= 0 or amount > max_value:
-        return None
-    return round(amount, 2)
-
-
 def parse_pagination_args():
     try:
         page = int(request.args.get("page", 1))
@@ -281,7 +290,322 @@ def parse_pagination_args():
     return page, per_page
 
 
-def validate_record_payload(data):
+def get_user_base_currency(conn, user_id):
+    row = conn.execute(
+        "SELECT base_currency_code FROM users WHERE id = ?",
+        (user_id,),
+    ).fetchone()
+    if not row:
+        return DEFAULT_BASE_CURRENCY
+    try:
+        return validate_currency_code(row["base_currency_code"], enabled_only=True)
+    except CurrencyValidationError:
+        return DEFAULT_BASE_CURRENCY
+
+
+def get_latest_user_exchange_rate(conn, user_id, from_currency_code, to_currency_code):
+    from_currency_code = validate_currency_code(from_currency_code, enabled_only=True)
+    to_currency_code = validate_currency_code(to_currency_code, enabled_only=True)
+    if from_currency_code == to_currency_code:
+        return {
+            "found": True,
+            "from_currency_code": from_currency_code,
+            "to_currency_code": to_currency_code,
+            "rate": "1",
+            "source": "same_currency",
+        }
+
+    row = conn.execute(
+        """
+        SELECT rate
+        FROM user_exchange_rates
+        WHERE user_id = ? AND from_currency_code = ? AND to_currency_code = ?
+        """,
+        (user_id, from_currency_code, to_currency_code),
+    ).fetchone()
+    if row:
+        return {
+            "found": True,
+            "from_currency_code": from_currency_code,
+            "to_currency_code": to_currency_code,
+            "rate": row["rate"],
+            "source": "direct",
+        }
+
+    inverse_row = conn.execute(
+        """
+        SELECT rate
+        FROM user_exchange_rates
+        WHERE user_id = ? AND from_currency_code = ? AND to_currency_code = ?
+        """,
+        (user_id, to_currency_code, from_currency_code),
+    ).fetchone()
+    if inverse_row:
+        inverse_rate = invert_exchange_rate(inverse_row["rate"])
+        return {
+            "found": True,
+            "from_currency_code": from_currency_code,
+            "to_currency_code": to_currency_code,
+            "rate": decimal_to_plain_string(inverse_rate),
+            "source": "inverse",
+        }
+
+    return {
+        "found": False,
+        "from_currency_code": from_currency_code,
+        "to_currency_code": to_currency_code,
+    }
+
+
+def save_latest_user_exchange_rate(conn, user_id, from_currency_code, to_currency_code, rate):
+    from_currency_code = validate_currency_code(from_currency_code, enabled_only=True)
+    to_currency_code = validate_currency_code(to_currency_code, enabled_only=True)
+    if from_currency_code == to_currency_code:
+        return
+    rate_text = decimal_to_plain_string(validate_exchange_rate(rate))
+    conn.execute(
+        """
+        INSERT INTO user_exchange_rates (
+            user_id, from_currency_code, to_currency_code, rate, updated_at
+        )
+        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(user_id, from_currency_code, to_currency_code)
+        DO UPDATE SET rate = excluded.rate, updated_at = CURRENT_TIMESTAMP
+        """,
+        (user_id, from_currency_code, to_currency_code, rate_text),
+    )
+
+
+def resolve_display_rate(conn, user_id, from_currency_code, to_currency_code):
+    try:
+        return get_latest_user_exchange_rate(
+            conn,
+            user_id,
+            from_currency_code,
+            to_currency_code,
+        )
+    except CurrencyValidationError:
+        return {
+            "found": False,
+            "from_currency_code": from_currency_code,
+            "to_currency_code": to_currency_code,
+        }
+
+
+def convert_record_to_currency(conn, user_id, record, target_currency_code):
+    target_currency_code = validate_currency_code(target_currency_code, enabled_only=True)
+    if record["currency_code"] == target_currency_code:
+        return {
+            "converted_minor": record["original_amount_minor"],
+            "target_currency": target_currency_code,
+            "rate": "1",
+            "source": "same_currency",
+            "is_estimated": False,
+            "missing_rate": False,
+        }
+    if record["base_currency_code"] == target_currency_code:
+        return {
+            "converted_minor": record["converted_amount_minor"],
+            "target_currency": target_currency_code,
+            "rate": record["exchange_rate"],
+            "source": "historical_record_rate",
+            "is_estimated": False,
+            "missing_rate": False,
+        }
+
+    latest_rate = resolve_display_rate(
+        conn,
+        user_id,
+        record["currency_code"],
+        target_currency_code,
+    )
+    if not latest_rate.get("found"):
+        return {
+            "converted_minor": 0,
+            "target_currency": target_currency_code,
+            "rate": None,
+            "source": "missing",
+            "is_estimated": False,
+            "missing_rate": True,
+            "missing_direction": (
+                record["currency_code"],
+                target_currency_code,
+            ),
+        }
+
+    try:
+        converted_minor = convert_amount(
+            record["original_amount_minor"],
+            record["currency_code"],
+            latest_rate["rate"],
+            target_currency_code,
+        )
+    except CurrencyValidationError:
+        return {
+            "converted_minor": 0,
+            "target_currency": target_currency_code,
+            "rate": None,
+            "source": "missing",
+            "is_estimated": False,
+            "missing_rate": True,
+            "missing_direction": (
+                record["currency_code"],
+                target_currency_code,
+            ),
+        }
+    return {
+        "converted_minor": converted_minor,
+        "target_currency": target_currency_code,
+        "rate": latest_rate["rate"],
+        "source": (
+            "inverse_recent_user_rate"
+            if latest_rate["source"] == "inverse"
+            else "recent_user_rate"
+        ),
+        "is_estimated": True,
+        "missing_rate": False,
+        "direction": (
+            record["currency_code"],
+            target_currency_code,
+            latest_rate["rate"],
+        ),
+    }
+
+
+def empty_aggregate_meta():
+    return {
+        "estimated_count": 0,
+        "missing_count": 0,
+        "estimated_directions": {},
+        "missing_directions": {},
+    }
+
+
+def add_conversion_meta(meta, conversion):
+    if conversion["is_estimated"]:
+        meta["estimated_count"] += 1
+        from_code, to_code, rate = conversion["direction"]
+        key = f"{from_code}->{to_code}"
+        meta["estimated_directions"][key] = {
+            "from_currency_code": from_code,
+            "to_currency_code": to_code,
+            "rate": rate,
+        }
+    if conversion["missing_rate"]:
+        meta["missing_count"] += 1
+        from_code, to_code = conversion["missing_direction"]
+        key = f"{from_code}->{to_code}"
+        direction = meta["missing_directions"].setdefault(
+            key,
+            {
+                "from_currency_code": from_code,
+                "to_currency_code": to_code,
+                "count": 0,
+            },
+        )
+        direction["count"] += 1
+
+
+def aggregate_records_in_currency(
+    conn,
+    user_id,
+    target_currency_code,
+    month=None,
+    start_month=None,
+    end_month=None,
+    record_type=None,
+):
+    where_parts = ["user_id = ?"]
+    params = [user_id]
+    if month:
+        where_parts.append("date LIKE ?")
+        params.append(f"{month}%")
+    if start_month and end_month:
+        where_parts.append("substr(date, 1, 7) BETWEEN ? AND ?")
+        params.extend([start_month, end_month])
+    if record_type:
+        where_parts.append("type = ?")
+        params.append(record_type)
+
+    rows = conn.execute(
+        f"""
+        SELECT *
+        FROM records
+        WHERE {" AND ".join(where_parts)}
+        """,
+        params,
+    ).fetchall()
+
+    totals_minor = {"income": 0, "expense": 0}
+    categories = {}
+    trends = {}
+    meta = empty_aggregate_meta()
+    for row in rows:
+        conversion = convert_record_to_currency(conn, user_id, row, target_currency_code)
+        add_conversion_meta(meta, conversion)
+        if conversion["missing_rate"]:
+            continue
+        amount_minor = conversion["converted_minor"]
+        totals_minor[row["type"]] += amount_minor
+        month_key = row["date"][:7]
+        trends.setdefault(month_key, {"income": 0, "expense": 0})
+        trends[month_key][row["type"]] += amount_minor
+        if (record_type and row["type"] == record_type) or (
+            not record_type and row["type"] == "expense"
+        ):
+            categories[row["category"]] = categories.get(row["category"], 0) + amount_minor
+
+    balance_minor = totals_minor["income"] - totals_minor["expense"]
+    category_total = sum(categories.values())
+    category_items = [
+        {
+            "category": category,
+            "amount_minor": amount_minor,
+            "amount": minor_units_to_api_number(amount_minor, target_currency_code),
+            "formatted_amount": format_money_minor(amount_minor, target_currency_code),
+            "percent": round(amount_minor / category_total * 100, 1) if category_total else 0,
+        }
+        for category, amount_minor in sorted(
+            categories.items(),
+            key=lambda item: item[1],
+            reverse=True,
+        )
+    ]
+
+    return {
+        "currency_code": target_currency_code,
+        "total_income_minor": totals_minor["income"],
+        "total_expense_minor": totals_minor["expense"],
+        "balance_minor": balance_minor,
+        "total_income": minor_units_to_api_number(totals_minor["income"], target_currency_code),
+        "total_expense": minor_units_to_api_number(totals_minor["expense"], target_currency_code),
+        "balance": minor_units_to_api_number(balance_minor, target_currency_code),
+        "categories": category_items,
+        "trends": trends,
+        "meta": meta,
+    }
+
+
+def aggregate_notice_payload(meta):
+    missing_notice = ""
+    estimated_notice = ""
+    if meta["missing_count"]:
+        missing_notice = _("部分记录没有可用汇率，因此未计入当前汇总。")
+    if meta["estimated_count"]:
+        estimated_notice = _("部分金额按你最近使用的汇率估算。")
+    return {
+        "estimatedCount": meta["estimated_count"],
+        "missingRateCount": meta["missing_count"],
+        "estimatedDirections": list(meta["estimated_directions"].values()),
+        "missingRateDirections": list(meta["missing_directions"].values()),
+        "estimatedRateNotice": estimated_notice,
+        "missingRateNotice": missing_notice,
+        "excludedBaseCurrencyCount": meta["missing_count"],
+        "excludedBaseCurrencyNotice": missing_notice,
+    }
+
+
+def validate_record_payload(data, base_currency_code):
     errors = []
 
     parsed_date = parse_record_date(data.get("date", ""))
@@ -296,18 +620,62 @@ def validate_record_payload(data):
     if not category:
         errors.append(_("分类不能为空"))
 
-    amount = parse_positive_amount(data.get("amount"))
-    if amount is None:
+    try:
+        currency_code = validate_currency_code(
+            data.get("currency_code") or data.get("currency") or base_currency_code,
+            enabled_only=True,
+        )
+    except CurrencyValidationError:
+        currency_code = None
+        errors.append(_("货币代码无效"))
+
+    original_amount_minor = None
+    if currency_code:
+        try:
+            original_amount_minor = amount_to_minor_units(data.get("amount"), currency_code)
+        except CurrencyValidationError:
+            errors.append(_("金额格式无效"))
+    else:
         errors.append(_("金额格式无效"))
+
+    exchange_rate = None
+    converted_amount_minor = None
+    rate_source = "manual"
+    if currency_code and original_amount_minor is not None:
+        if currency_code == base_currency_code:
+            exchange_rate = Decimal("1")
+            converted_amount_minor = original_amount_minor
+            rate_source = "same_currency"
+        else:
+            try:
+                exchange_rate = validate_exchange_rate(data.get("exchange_rate"))
+                converted_amount_minor = convert_amount(
+                    original_amount_minor,
+                    currency_code,
+                    exchange_rate,
+                    base_currency_code,
+                )
+            except CurrencyValidationError:
+                errors.append(_("汇率格式无效"))
 
     if errors:
         return None, errors
 
+    original_amount = minor_units_to_decimal(original_amount_minor, currency_code)
+    converted_amount = minor_units_to_decimal(converted_amount_minor, base_currency_code)
     return {
         "date": parsed_date.isoformat(),
         "type": record_type,
         "category": category,
-        "amount": amount,
+        "amount": decimal_to_api_number(original_amount),
+        "original_amount_minor": original_amount_minor,
+        "currency_code": currency_code,
+        "exchange_rate": decimal_to_plain_string(exchange_rate),
+        "converted_amount_minor": converted_amount_minor,
+        "converted_amount": decimal_to_api_number(converted_amount),
+        "base_currency_code": base_currency_code,
+        "rate_date": parsed_date.isoformat(),
+        "rate_source": rate_source,
         "note": (data.get("note") or "").strip(),
     }, None
 
@@ -361,7 +729,9 @@ def validate_settings_payload(form):
     errors = []
     nickname = (form.get("nickname") or "").strip()
     language = normalize_locale(form.get("language")) or "zh_CN"
-    currency = (form.get("currency") or "CNY").strip()
+    base_currency_code = (
+        form.get("base_currency_code") or form.get("currency") or DEFAULT_BASE_CURRENCY
+    ).strip().upper()
     current_password = form.get("current_password") or ""
     new_password = form.get("new_password") or ""
     confirm_password = form.get("confirm_password") or ""
@@ -372,7 +742,7 @@ def validate_settings_payload(form):
     if language not in LANGUAGE_OPTIONS:
         errors.append(_("语言选项无效"))
 
-    if currency not in CURRENCY_OPTIONS:
+    if base_currency_code not in CURRENCY_OPTIONS:
         errors.append(_("货币选项无效"))
 
     wants_password_change = any([current_password, new_password, confirm_password])
@@ -387,7 +757,8 @@ def validate_settings_payload(form):
     return {
         "nickname": nickname,
         "language": language,
-        "currency": currency,
+        "currency": base_currency_code,
+        "base_currency_code": base_currency_code,
         "current_password": current_password,
         "new_password": new_password,
         "wants_password_change": wants_password_change,
@@ -573,54 +944,61 @@ def is_share_expired(link):
     return bool(expires_at and expires_at <= utc_now())
 
 
-def get_month_totals(conn, user_id, month):
-    rows = conn.execute(
-        """
-        SELECT type, COALESCE(SUM(amount), 0) AS amount
-        FROM records
-        WHERE user_id = ? AND date LIKE ?
-        GROUP BY type
-        """,
-        (user_id, f"{month}%"),
-    ).fetchall()
-    totals = {"income": 0, "expense": 0}
-    for row in rows:
-        totals[row["type"]] = row["amount"]
-    totals["balance"] = totals["income"] - totals["expense"]
-    return totals
+def get_month_totals(conn, user_id, month, base_currency_code):
+    aggregate = aggregate_records_in_currency(
+        conn,
+        user_id,
+        base_currency_code,
+        month=month,
+    )
+    return {
+        "income": aggregate["total_income"],
+        "expense": aggregate["total_expense"],
+        "balance": aggregate["balance"],
+        "income_minor": aggregate["total_income_minor"],
+        "expense_minor": aggregate["total_expense_minor"],
+        "balance_minor": aggregate["balance_minor"],
+        "meta": aggregate["meta"],
+    }
 
 
-def get_category_summary(conn, user_id, month, record_type):
-    rows = conn.execute(
-        """
-        SELECT category, COALESCE(SUM(amount), 0) AS amount
-        FROM records
-        WHERE user_id = ? AND type = ? AND date LIKE ?
-        GROUP BY category
-        ORDER BY amount DESC
-        """,
-        (user_id, record_type, f"{month}%"),
-    ).fetchall()
-    total = sum(row["amount"] for row in rows)
-    return [
-        {
-            "category": row["category"],
-            "amount": row["amount"],
-            "percent": round(row["amount"] / total * 100, 1) if total else 0,
-        }
-        for row in rows
-    ]
+def get_excluded_base_currency_count(conn, user_id, month, base_currency_code):
+    return get_month_totals(conn, user_id, month, base_currency_code)["meta"]["missing_count"]
+
+
+def get_category_summary(conn, user_id, month, record_type, base_currency_code):
+    aggregate = aggregate_records_in_currency(
+        conn,
+        user_id,
+        base_currency_code,
+        month=month,
+        record_type=record_type,
+    )
+    return aggregate["categories"]
 
 
 def get_public_share_summary(conn, user_id, month):
-    totals = get_month_totals(conn, user_id, month)
+    base_currency_code = get_user_base_currency(conn, user_id)
+    aggregate = aggregate_records_in_currency(
+        conn,
+        user_id,
+        base_currency_code,
+        month=month,
+    )
+    notice_payload = aggregate_notice_payload(aggregate["meta"])
     return {
         "month": month,
-        "totalIncome": totals["income"],
-        "totalExpense": totals["expense"],
-        "balance": totals["balance"],
-        "incomeCategories": get_category_summary(conn, user_id, month, "income"),
-        "expenseCategories": get_category_summary(conn, user_id, month, "expense"),
+        "currencyCode": base_currency_code,
+        "currencyName": get_currency_name(base_currency_code),
+        "totalIncome": aggregate["total_income"],
+        "totalExpense": aggregate["total_expense"],
+        "balance": aggregate["balance"],
+        "formattedTotalIncome": format_money_minor(aggregate["total_income_minor"], base_currency_code),
+        "formattedTotalExpense": format_money_minor(aggregate["total_expense_minor"], base_currency_code),
+        "formattedBalance": format_money_minor(aggregate["balance_minor"], base_currency_code),
+        "incomeCategories": get_category_summary(conn, user_id, month, "income", base_currency_code),
+        "expenseCategories": aggregate["categories"],
+        **notice_payload,
     }
 
 
@@ -824,13 +1202,32 @@ def get_budget_status(amount, used):
     return _("预算正常")
 
 
+@app.template_filter("money")
+def money_filter(value, currency_code):
+    return format_money(value or 0, currency_code or DEFAULT_BASE_CURRENCY)
+
+
+@app.template_filter("money_minor")
+def money_minor_filter(value, currency_code):
+    return format_money_minor(value or 0, currency_code or DEFAULT_BASE_CURRENCY)
+
+
 @app.context_processor
 def inject_user_context():
     current_language = str(get_locale())
+    current_user_profile = get_current_user()
+    current_base_currency = (
+        current_user_profile["base_currency_code"]
+        if current_user_profile
+        else DEFAULT_BASE_CURRENCY
+    )
     return {
-        "current_user_profile": get_current_user(),
+        "current_user_profile": current_user_profile,
         "current_language": current_language,
         "language_options": get_language_options(),
+        "current_base_currency": current_base_currency,
+        "currency_options": get_currency_options(),
+        "enabled_currency_codes": ENABLED_CURRENCY_CODES,
         "js_i18n": {
             "requestFailed": _("请求失败，请稍后重试"),
             "categories": {
@@ -855,6 +1252,27 @@ def inject_user_context():
             "linkCopied": _("链接已复制"),
             "copyManually": _("复制失败，请手动复制链接。"),
             "confirmDeleteShareLink": _("确定要删除这个分享链接吗？此操作无法撤销。"),
+            "currentBaseCurrency": current_base_currency,
+            "currencies": currency_config_for_client(),
+            "currencyLabels": {
+                "JPY": _("日元 JPY"),
+                "CNY": _("人民币 CNY"),
+            },
+            "currencyNames": {
+                "JPY": _("日元"),
+                "CNY": _("人民币"),
+            },
+            "noConversionNeeded": _("无需换算"),
+            "manualRate": _("手动汇率"),
+            "rateRequired": _("请输入换算汇率"),
+            "autoFilledRate": _("已自动填入你上次使用的汇率，可随时修改。"),
+            "inverseRateSuggestion": _("已根据反方向汇率推算，可随时修改。"),
+            "rateHelp": _("请输入 1 %(source)s 相当于多少 %(target)s。"),
+            "budgetCurrency": _("预算币种"),
+            "approximately": _("约 %(amount)s"),
+            "conversionPreview": _("%(original)s ≈ %(converted)s"),
+            "rateDirection": _("1 %(source)s = %(rate)s %(target)s"),
+            "excludedCurrencyNotice": _("部分记录没有可用汇率，因此未计入当前汇总。"),
         },
     }
 
@@ -1254,6 +1672,7 @@ def settings_page():
                     "nickname": form_data["nickname"],
                     "language": form_data["language"],
                     "currency": form_data["currency"],
+                    "base_currency_code": form_data["base_currency_code"],
                 }
             )
             return render_template(
@@ -1269,13 +1688,14 @@ def settings_page():
             conn.execute(
                 """
                 UPDATE users
-                SET nickname = ?, language = ?, currency = ?, password_hash = ?
+                SET nickname = ?, language = ?, currency = ?, base_currency_code = ?, password_hash = ?
                 WHERE id = ?
                 """,
                 (
                     form_data["nickname"],
                     form_data["language"],
                     form_data["currency"],
+                    form_data["base_currency_code"],
                     generate_password_hash(form_data["new_password"]),
                     user["id"],
                 ),
@@ -1284,13 +1704,14 @@ def settings_page():
             conn.execute(
                 """
                 UPDATE users
-                SET nickname = ?, language = ?, currency = ?
+                SET nickname = ?, language = ?, currency = ?, base_currency_code = ?
                 WHERE id = ?
                 """,
                 (
                     form_data["nickname"],
                     form_data["language"],
                     form_data["currency"],
+                    form_data["base_currency_code"],
                     user["id"],
                 ),
             )
@@ -1555,14 +1976,26 @@ def get_summary():
         return jsonify({"error": _("月份格式无效")}), 400
 
     with get_connection() as conn:
-        totals = get_month_totals(conn, user_id, month)
+        base_currency_code = get_user_base_currency(conn, user_id)
+        aggregate = aggregate_records_in_currency(
+            conn,
+            user_id,
+            base_currency_code,
+            month=month,
+        )
+        notice_payload = aggregate_notice_payload(aggregate["meta"])
 
     return jsonify(
         {
             "month": month,
-            "totalIncome": totals["income"],
-            "totalExpense": totals["expense"],
-            "balance": totals["balance"],
+            "currencyCode": base_currency_code,
+            "formattedTotalIncome": format_money_minor(aggregate["total_income_minor"], base_currency_code),
+            "formattedTotalExpense": format_money_minor(aggregate["total_expense_minor"], base_currency_code),
+            "formattedBalance": format_money_minor(aggregate["balance_minor"], base_currency_code),
+            "totalIncome": aggregate["total_income"],
+            "totalExpense": aggregate["total_expense"],
+            "balance": aggregate["balance"],
+            **notice_payload,
         }
     )
 
@@ -1581,53 +2014,113 @@ def get_analytics():
     trend_months = [month_shift(month, offset) for offset in range(-5, 1)]
 
     with get_connection() as conn:
-        totals = get_month_totals(conn, user_id, month)
-        categories = get_category_summary(conn, user_id, month, "expense")
-        trend_rows = conn.execute(
-            """
-            SELECT substr(date, 1, 7) AS month, type, COALESCE(SUM(amount), 0) AS amount
-            FROM records
-            WHERE user_id = ? AND substr(date, 1, 7) BETWEEN ? AND ?
-            GROUP BY substr(date, 1, 7), type
-            """,
-            (user_id, trend_months[0], trend_months[-1]),
-        ).fetchall()
+        base_currency_code = get_user_base_currency(conn, user_id)
+        aggregate = aggregate_records_in_currency(
+            conn,
+            user_id,
+            base_currency_code,
+            month=month,
+        )
+        trend_aggregate = aggregate_records_in_currency(
+            conn,
+            user_id,
+            base_currency_code,
+            start_month=trend_months[0],
+            end_month=trend_months[-1],
+        )
         budget_row = conn.execute(
             """
-            SELECT amount
+            SELECT amount, amount_minor, currency_code
             FROM budgets
             WHERE user_id = ? AND month = ?
             """,
             (user_id, month),
         ).fetchone()
+        budget_usage = None
+        if budget_row:
+            budget_usage = aggregate_records_in_currency(
+                conn,
+                user_id,
+                budget_row["currency_code"],
+                month=month,
+                record_type="expense",
+            )
 
     trend_map = {
-        trend_month: {"month": trend_month, "income": 0, "expense": 0, "balance": 0}
+        trend_month: {
+            "month": trend_month,
+            "income": 0,
+            "expense": 0,
+            "balance": 0,
+            "income_minor": 0,
+            "expense_minor": 0,
+            "balance_minor": 0,
+        }
         for trend_month in trend_months
     }
-    for row in trend_rows:
-        trend_map[row["month"]][row["type"]] = row["amount"]
+    for trend_month, values in trend_aggregate["trends"].items():
+        if trend_month not in trend_map:
+            continue
+        for record_type in ("income", "expense"):
+            amount_minor = values.get(record_type, 0)
+            trend_map[trend_month][record_type] = minor_units_to_api_number(
+                amount_minor,
+                base_currency_code,
+            )
+            trend_map[trend_month][f"{record_type}_minor"] = amount_minor
     for item in trend_map.values():
-        item["balance"] = item["income"] - item["expense"]
+        item["balance_minor"] = item["income_minor"] - item["expense_minor"]
+        item["balance"] = minor_units_to_api_number(item["balance_minor"], base_currency_code)
 
-    budget_amount = budget_row["amount"] if budget_row else 0
-    budget_percent = round(totals["expense"] / budget_amount * 100, 1) if budget_amount else 0
-    budget_remaining = budget_amount - totals["expense"] if budget_amount else 0
+    if budget_row:
+        budget_currency = budget_row["currency_code"]
+        budget_amount_minor = budget_row["amount_minor"]
+        budget_used_minor = budget_usage["total_expense_minor"]
+        budget_meta = budget_usage["meta"]
+    else:
+        budget_currency = base_currency_code
+        budget_amount_minor = 0
+        budget_used_minor = aggregate["total_expense_minor"]
+        budget_meta = aggregate["meta"]
+    budget_remaining_minor = budget_amount_minor - budget_used_minor if budget_amount_minor else 0
+    budget_amount = minor_units_to_api_number(budget_amount_minor, budget_currency)
+    budget_used = minor_units_to_api_number(budget_used_minor, budget_currency)
+    budget_remaining = minor_units_to_api_number(budget_remaining_minor, budget_currency)
+    budget_percent = round(budget_used_minor / budget_amount_minor * 100, 1) if budget_amount_minor else 0
+    notice_payload = aggregate_notice_payload(aggregate["meta"])
+    budget_notice_payload = aggregate_notice_payload(budget_meta)
 
     return jsonify(
         {
             "month": month,
-            "totalIncome": totals["income"],
-            "totalExpense": totals["expense"],
-            "balance": totals["balance"],
-            "categories": categories,
+            "currencyCode": base_currency_code,
+            "currencyName": get_currency_name(base_currency_code),
+            "totalIncome": aggregate["total_income"],
+            "totalExpense": aggregate["total_expense"],
+            "balance": aggregate["balance"],
+            "formattedTotalIncome": format_money_minor(aggregate["total_income_minor"], base_currency_code),
+            "formattedTotalExpense": format_money_minor(aggregate["total_expense_minor"], base_currency_code),
+            "formattedBalance": format_money_minor(aggregate["balance_minor"], base_currency_code),
+            "categories": aggregate["categories"],
             "trend": list(trend_map.values()),
+            **notice_payload,
             "budget": {
                 "amount": budget_amount,
-                "used": totals["expense"],
+                "amount_minor": budget_amount_minor,
+                "used": budget_used,
+                "used_minor": budget_used_minor,
                 "remaining": budget_remaining,
+                "remaining_minor": budget_remaining_minor,
                 "percent": budget_percent,
-                "status": get_budget_status(budget_amount, totals["expense"]),
+                "currency_code": budget_currency,
+                "formatted_amount": format_money_minor(budget_amount_minor, budget_currency),
+                "formatted_used": format_money_minor(budget_used_minor, budget_currency),
+                "formatted_remaining": format_money_minor(budget_remaining_minor, budget_currency),
+                "status": get_budget_status(budget_amount, budget_used),
+                **{
+                    f"budget{k[0].upper()}{k[1:]}": v
+                    for k, v in budget_notice_payload.items()
+                },
             },
         }
     )
@@ -1645,23 +2138,76 @@ def save_budget():
     if not month:
         return jsonify({"error": _("月份格式无效")}), 400
 
-    amount = parse_positive_amount(data.get("amount"))
-    if amount is None:
-        return jsonify({"error": _("预算金额格式无效")}), 400
-
     with get_connection() as conn:
+        base_currency_code = get_user_base_currency(conn, user_id)
+        existing_budget = conn.execute(
+            """
+            SELECT currency_code
+            FROM budgets
+            WHERE user_id = ? AND month = ?
+            """,
+            (user_id, month),
+        ).fetchone()
+        budget_currency = (
+            existing_budget["currency_code"] if existing_budget else base_currency_code
+        )
+        try:
+            amount_minor = amount_to_minor_units(data.get("amount"), budget_currency)
+        except CurrencyValidationError:
+            return jsonify({"error": _("预算金额格式无效")}), 400
+        amount = minor_units_to_api_number(amount_minor, budget_currency)
         conn.execute(
             """
-            INSERT INTO budgets (user_id, month, amount)
-            VALUES (?, ?, ?)
+            INSERT INTO budgets (user_id, month, amount, amount_minor, currency_code)
+            VALUES (?, ?, ?, ?, ?)
             ON CONFLICT(user_id, month)
-            DO UPDATE SET amount = excluded.amount, updated_at = CURRENT_TIMESTAMP
+            DO UPDATE SET amount = excluded.amount,
+                          amount_minor = excluded.amount_minor,
+                          updated_at = CURRENT_TIMESTAMP
             """,
-            (user_id, month, amount),
+            (user_id, month, amount, amount_minor, budget_currency),
         )
         conn.commit()
 
-    return jsonify({"month": month, "amount": amount})
+    return jsonify(
+        {
+            "month": month,
+            "amount": amount,
+            "amount_minor": amount_minor,
+            "currency_code": budget_currency,
+            "formatted_amount": format_money_minor(amount_minor, budget_currency),
+        }
+    )
+
+
+@app.get("/api/exchange-rate/latest")
+def latest_exchange_rate():
+    login_error = require_login_json()
+    if login_error:
+        return login_error
+
+    user_id = get_current_user_id()
+    try:
+        from_currency_code = validate_currency_code(
+            request.args.get("from"),
+            enabled_only=True,
+        )
+        to_currency_code = validate_currency_code(
+            request.args.get("to"),
+            enabled_only=True,
+        )
+    except CurrencyValidationError:
+        return jsonify({"error": _("货币代码无效")}), 400
+
+    with get_connection() as conn:
+        rate = get_latest_user_exchange_rate(
+            conn,
+            user_id,
+            from_currency_code,
+            to_currency_code,
+        )
+
+    return jsonify(rate)
 
 
 @app.post("/api/records")
@@ -1671,7 +2217,13 @@ def create_record():
         return login_error
 
     user_id = get_current_user_id()
-    payload, errors = validate_record_payload(request.get_json(silent=True) or {})
+    with get_connection() as conn:
+        base_currency_code = get_user_base_currency(conn, user_id)
+
+    payload, errors = validate_record_payload(
+        request.get_json(silent=True) or {},
+        base_currency_code,
+    )
     if errors:
         return jsonify({"error": errors[0], "errors": errors}), 400
 
@@ -1682,9 +2234,11 @@ def create_record():
         conn.execute(
             """
             INSERT INTO records (
-                id, user_id, date, type, category, amount, note, created_at
+                id, user_id, date, type, category, amount, note, created_at,
+                original_amount_minor, currency_code, exchange_rate,
+                converted_amount_minor, base_currency_code, rate_date, rate_source
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 record_id,
@@ -1695,7 +2249,21 @@ def create_record():
                 payload["amount"],
                 payload["note"],
                 created_at,
+                payload["original_amount_minor"],
+                payload["currency_code"],
+                payload["exchange_rate"],
+                payload["converted_amount_minor"],
+                payload["base_currency_code"],
+                payload["rate_date"],
+                payload["rate_source"],
             ),
+        )
+        save_latest_user_exchange_rate(
+            conn,
+            user_id,
+            payload["currency_code"],
+            payload["base_currency_code"],
+            payload["exchange_rate"],
         )
         conn.commit()
         row = conn.execute(
@@ -1723,16 +2291,39 @@ def update_record(record_id):
         return jsonify({"error": _("记录不存在")}), 404
 
     payload, errors = validate_record_payload(
-        request.get_json(silent=True) or {}
+        request.get_json(silent=True) or {},
+        existing["base_currency_code"],
     )
     if errors:
         return jsonify({"error": errors[0], "errors": errors}), 400
+
+    amount_related_changed = any(
+        [
+            existing["date"] != payload["date"],
+            existing["original_amount_minor"] != payload["original_amount_minor"],
+            existing["currency_code"] != payload["currency_code"],
+            existing["exchange_rate"] != payload["exchange_rate"],
+        ]
+    )
+    if not amount_related_changed:
+        payload.update(
+            {
+                "original_amount_minor": existing["original_amount_minor"],
+                "currency_code": existing["currency_code"],
+                "exchange_rate": existing["exchange_rate"],
+                "converted_amount_minor": existing["converted_amount_minor"],
+                "rate_date": existing["rate_date"],
+                "rate_source": existing["rate_source"],
+            }
+        )
 
     with get_connection() as conn:
         conn.execute(
             """
             UPDATE records
-            SET date = ?, type = ?, category = ?, amount = ?, note = ?
+            SET date = ?, type = ?, category = ?, amount = ?, note = ?,
+                original_amount_minor = ?, currency_code = ?, exchange_rate = ?,
+                converted_amount_minor = ?, rate_date = ?, rate_source = ?
             WHERE id = ? AND user_id = ?
             """,
             (
@@ -1741,10 +2332,24 @@ def update_record(record_id):
                 payload["category"],
                 payload["amount"],
                 payload["note"],
+                payload["original_amount_minor"],
+                payload["currency_code"],
+                payload["exchange_rate"],
+                payload["converted_amount_minor"],
+                payload["rate_date"],
+                payload["rate_source"],
                 record_id,
                 user_id,
             ),
         )
+        if amount_related_changed:
+            save_latest_user_exchange_rate(
+                conn,
+                user_id,
+                payload["currency_code"],
+                existing["base_currency_code"],
+                payload["exchange_rate"],
+            )
         conn.commit()
         row = conn.execute(
             "SELECT * FROM records WHERE id = ? AND user_id = ?",

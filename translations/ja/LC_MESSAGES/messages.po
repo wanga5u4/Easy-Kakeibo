@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-03 20:40+0900\n"
+"POT-Creation-Date: 2026-07-03 23:10+0900\n"
 "PO-Revision-Date: 2026-06-30 22:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -18,514 +18,576 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: server.py:143
+#: server.py:159
 msgid "简体中文"
 msgstr "簡体字中国語"
 
-#: server.py:143
+#: server.py:159
 msgid "日本語"
 msgstr "日本語"
 
-#: server.py:148
-msgid "人民币 CNY"
-msgstr "人民元 CNY"
-
-#: server.py:149
-msgid "美元 USD"
-msgstr "米ドル USD"
-
-#: server.py:150
+#: server.py:164 server.py:1258
 msgid "日元 JPY"
 msgstr "日本円 JPY"
 
-#: server.py:151
-msgid "欧元 EUR"
-msgstr "ユーロ EUR"
+#: server.py:165 server.py:1259
+msgid "人民币 CNY"
+msgstr "人民元 CNY"
 
-#: server.py:289
+#: server.py:171 server.py:1262
+msgid "日元"
+msgstr "日本円"
+
+#: server.py:172 server.py:1263
+msgid "人民币"
+msgstr "人民元"
+
+#: server.py:593 server.py:1275
+msgid "部分记录没有可用汇率，因此未计入当前汇总。"
+msgstr "利用可能な換算レートがない記録は、現在の集計に含まれていません。"
+
+#: server.py:595
+msgid "部分金额按你最近使用的汇率估算。"
+msgstr "一部の金額は、最近使用した換算レートで概算されています。"
+
+#: server.py:613
 msgid "日期格式无效"
 msgstr "日付形式が無効です"
 
-#: server.py:293
+#: server.py:617
 msgid "类型必须是 income 或 expense"
 msgstr "タイプは income または expense である必要があります"
 
-#: server.py:297
+#: server.py:621
 msgid "分类不能为空"
 msgstr "カテゴリは空にできません"
 
-#: server.py:301
+#: server.py:630 server.py:2200
+#, fuzzy
+msgid "货币代码无效"
+msgstr "通貨オプションが無効です"
+
+#: server.py:637 server.py:639
 msgid "金额格式无效"
 msgstr "金額形式が無効です"
 
-#: server.py:323
+#: server.py:659
+#, fuzzy
+msgid "汇率格式无效"
+msgstr "金額形式が無効です"
+
+#: server.py:691
 msgid "用户名不能为空"
 msgstr "ユーザー名は空にできません"
 
-#: server.py:326
+#: server.py:694
 msgid "邮箱不能为空"
 msgstr "メールアドレスは空にできません"
 
-#: server.py:328
+#: server.py:696
 msgid "邮箱格式无效"
 msgstr "メールアドレスの形式が無効です"
 
-#: server.py:331
+#: server.py:699
 msgid "密码至少需要 8 位"
 msgstr "パスワードは8文字以上必要です"
 
-#: server.py:334
+#: server.py:702
 msgid "两次输入的密码不一致"
 msgstr "入力したパスワードが一致しません"
 
-#: server.py:349
+#: server.py:717
 msgid "用户名或邮箱不能为空"
 msgstr "ユーザー名またはメールアドレスは空にできません"
 
-#: server.py:352
+#: server.py:720
 msgid "密码不能为空"
 msgstr "パスワードは空にできません"
 
-#: server.py:370
+#: server.py:740
 msgid "昵称不能超过 30 个字符"
 msgstr "ニックネームは30文字以内にしてください"
 
-#: server.py:373
+#: server.py:743
 msgid "语言选项无效"
 msgstr "言語オプションが無効です"
 
-#: server.py:376
+#: server.py:746
 msgid "货币选项无效"
 msgstr "通貨オプションが無効です"
 
-#: server.py:381 server.py:403
+#: server.py:751 server.py:774
 msgid "请输入当前密码"
 msgstr "現在のパスワードを入力してください"
 
-#: server.py:383
+#: server.py:753
 msgid "新密码至少需要 8 位"
 msgstr "新しいパスワードは8文字以上必要です"
 
-#: server.py:385
+#: server.py:755
 msgid "两次输入的新密码不一致"
 msgstr "入力した新しいパスワードが一致しません"
 
-#: server.py:405 server.py:1248
+#: server.py:776 server.py:1666
 msgid "当前密码不正确"
 msgstr "現在のパスワードが正しくありません"
 
-#: server.py:408
+#: server.py:779
 msgid "确认文字错误，请输入 DELETE"
 msgstr "確認文字が正しくありません。DELETE と入力してください"
 
-#: server.py:415
+#: server.py:786
 msgid "Bug 报告"
 msgstr "バグ報告"
 
-#: server.py:416
+#: server.py:787
 msgid "功能建议"
 msgstr "機能のご要望"
 
-#: server.py:417
+#: server.py:788
 msgid "使用问题"
 msgstr "使い方の質問"
 
-#: server.py:418
+#: server.py:789
 #, fuzzy
 msgid "其他"
 msgstr "その他収入"
 
-#: server.py:424
+#: server.py:795
 msgid "新建"
 msgstr "新規"
 
-#: server.py:425
+#: server.py:796
 msgid "处理中"
 msgstr "確認中"
 
-#: server.py:426
+#: server.py:797
 msgid "已解决"
 msgstr "解決済み"
 
-#: server.py:427
+#: server.py:798
 #, fuzzy
 msgid "已关闭"
 msgstr "閉じる"
 
-#: server.py:441
+#: server.py:812
 msgid "有效"
 msgstr "有効"
 
-#: server.py:442
+#: server.py:813
 msgid "已停用"
 msgstr "無効"
 
-#: server.py:443
+#: server.py:814
 msgid "已过期"
 msgstr "期限切れ"
 
-#: server.py:467
+#: server.py:838
 msgid "反馈类型无效"
 msgstr "フィードバックの種類が無効です"
 
-#: server.py:469
+#: server.py:840
 #, fuzzy
 msgid "标题不能为空"
 msgstr "メールアドレスは空にできません"
 
-#: server.py:471
+#: server.py:842
 msgid "标题长度需要在 2 到 100 个字符之间"
 msgstr "タイトルは2文字以上100文字以内で入力してください"
 
-#: server.py:473
+#: server.py:844
 msgid "详细内容不能为空"
 msgstr "詳細内容を入力してください"
 
-#: server.py:475
+#: server.py:846
 msgid "详细内容长度需要在 5 到 2000 个字符之间"
 msgstr "詳細内容は5文字以上2000文字以内で入力してください"
 
-#: server.py:477
+#: server.py:848
 #, fuzzy
 msgid "当前页面不能超过 200 个字符"
 msgstr "ニックネームは30文字以内にしてください"
 
-#: server.py:479
+#: server.py:850
 #, fuzzy
 msgid "联系方式不能超过 120 个字符"
 msgstr "ニックネームは30文字以内にしてください"
 
-#: server.py:514 server.py:1555 server.py:1579 server.py:1646
+#: server.py:885 server.py:1976 server.py:2012 server.py:2139
 msgid "月份格式无效"
 msgstr "月の形式が無効です"
 
-#: server.py:516 templates/share.html:29
+#: server.py:887 templates/share.html:29
 #, python-format
 msgid "%(month)s 收支概览"
 msgstr "%(month)s 収支概要"
 
-#: server.py:518
+#: server.py:889
 #, fuzzy
 msgid "分享标题不能为空"
 msgstr "カテゴリは空にできません"
 
-#: server.py:520
+#: server.py:891
 #, fuzzy
 msgid "分享标题不能超过 100 个字符"
 msgstr "ニックネームは30文字以内にしてください"
 
-#: server.py:522
+#: server.py:893
 #, fuzzy
 msgid "分享说明不能超过 300 个字符"
 msgstr "ニックネームは30文字以内にしてください"
 
-#: server.py:524
+#: server.py:895
 msgid "请至少选择一项分享内容"
 msgstr "共有内容を少なくとも1つ選択してください"
 
-#: server.py:526
+#: server.py:897
 msgid "有效期无效"
 msgstr "有効期限が無効です"
 
-#: server.py:707
+#: server.py:1085
 msgid "安全验证失败，请刷新页面后重试。"
 msgstr "リクエストの期限切れ、またはセキュリティ検証に失敗しました。ページを更新して再試行してください。"
 
-#: server.py:711
+#: server.py:1089
 msgid "安全验证失败"
 msgstr "セキュリティ検証に失敗しました"
 
-#: server.py:712
+#: server.py:1090
 msgid "请求已过期或安全验证失败，请刷新页面后重试。"
 msgstr "リクエストの期限切れ、またはセキュリティ検証に失敗しました。ページを更新して再試行してください。"
 
-#: server.py:714 server.py:727
+#: server.py:1092 server.py:1105
 msgid "返回首页"
 msgstr "ホームへ戻る"
 
-#: server.py:724
+#: server.py:1102
 #, python-format
 msgid "%(status_code)s 错误"
 msgstr "%(status_code)s エラー"
 
-#: server.py:733
+#: server.py:1111
 msgid "请求无效，请检查输入后重试。"
 msgstr "リクエストが無効です。入力内容を確認して再試行してください。"
 
-#: server.py:738
+#: server.py:1116
 msgid "没有权限执行此操作。"
 msgstr "この操作を実行する権限がありません。"
 
-#: server.py:743
+#: server.py:1121
 msgid "页面或资源不存在。"
 msgstr "ページまたはリソースが存在しません。"
 
-#: server.py:752
+#: server.py:1130
 msgid "服务器暂时无法处理请求，请稍后重试。"
 msgstr "サーバーは現在リクエストを処理できません。後でもう一度お試しください。"
 
-#: server.py:763
+#: server.py:1141
 msgid "请求过于频繁，请稍后再试。"
 msgstr "リクエストが多すぎます。しばらくしてからもう一度お試しください。"
 
-#: server.py:769
+#: server.py:1147
 msgid "请求过于频繁"
 msgstr "リクエストが多すぎます"
 
-#: server.py:772
+#: server.py:1150
 msgid "返回后重试"
 msgstr "戻ってから再試行"
 
-#: server.py:778
+#: server.py:1156
 msgid "请先登录"
 msgstr "先にログインしてください"
 
-#: server.py:818 templates/budgets.html:28 templates/dashboard.html:53
+#: server.py:1196 templates/budgets.html:28 templates/dashboard.html:53
 msgid "未设置预算"
 msgstr "予算未設定"
 
-#: server.py:821
+#: server.py:1199
 msgid "已超出预算"
 msgstr "予算を超過しました"
 
-#: server.py:823
+#: server.py:1201
 msgid "预算即将用完"
 msgstr "予算が残り少なくなっています"
 
-#: server.py:824
+#: server.py:1202
 msgid "预算正常"
 msgstr "予算は正常です"
 
-#: server.py:835
+#: server.py:1232
 msgid "请求失败，请稍后重试"
 msgstr "リクエストに失敗しました。後でもう一度お試しください"
 
-#: server.py:837
+#: server.py:1234
 msgid "工资"
 msgstr "給与"
 
-#: server.py:837
+#: server.py:1234
 msgid "奖金"
 msgstr "ボーナス"
 
-#: server.py:837
+#: server.py:1234
 msgid "理财"
 msgstr "資産運用"
 
-#: server.py:837
+#: server.py:1234
 msgid "兼职"
 msgstr "副業"
 
-#: server.py:837
+#: server.py:1234
 msgid "其他收入"
 msgstr "その他収入"
 
-#: server.py:838
+#: server.py:1235
 msgid "餐饮"
 msgstr "飲食"
 
-#: server.py:838
+#: server.py:1235
 msgid "交通"
 msgstr "交通"
 
-#: server.py:838
+#: server.py:1235
 msgid "购物"
 msgstr "買い物"
 
-#: server.py:838
+#: server.py:1235
 msgid "住房"
 msgstr "住居"
 
-#: server.py:838
+#: server.py:1235
 msgid "娱乐"
 msgstr "娯楽"
 
-#: server.py:838
+#: server.py:1235
 msgid "医疗"
 msgstr "医療"
 
-#: server.py:838
+#: server.py:1235
 msgid "教育"
 msgstr "教育"
 
-#: server.py:838
+#: server.py:1235
 msgid "其他支出"
 msgstr "その他支出"
 
-#: server.py:840 server.py:853 templates/record_form.html:26
+#: server.py:1237 server.py:1250 templates/record_form.html:26
 msgid "收入"
 msgstr "収入"
 
-#: server.py:840 server.py:854 templates/record_form.html:25
+#: server.py:1237 server.py:1251 templates/record_form.html:25
 msgid "支出"
 msgstr "支出"
 
-#: server.py:841
+#: server.py:1238
 #, python-format
 msgid "%(year)s年%(month)s月%(day)s日"
 msgstr "%(year)s年%(month)s月%(day)s日"
 
-#: server.py:842 templates/budgets.html:22 templates/dashboard.html:47
+#: server.py:1239 templates/budgets.html:22 templates/dashboard.html:47
 #, python-format
 msgid "已用 %(amount)s"
 msgstr "使用済み %(amount)s"
 
-#: server.py:843
+#: server.py:1240
 #, python-format
 msgid "%(status)s，剩余 %(amount)s"
 msgstr "%(status)s、残り %(amount)s"
 
-#: server.py:844
+#: server.py:1241
 msgid "编辑"
 msgstr "編集"
 
-#: server.py:845 templates/records.html:68 templates/share.html:119
+#: server.py:1242 templates/records.html:68 templates/share.html:119
 msgid "删除"
 msgstr "削除"
 
-#: server.py:846
+#: server.py:1243
 msgid "—"
 msgstr "—"
 
-#: server.py:847
+#: server.py:1244
 #, python-format
 msgid "第 %(page)s / %(total_pages)s 页，共 %(total)s 条"
 msgstr "%(page)s / %(total_pages)s ページ、全 %(total)s 件"
 
-#: server.py:848
+#: server.py:1245
 msgid "记录已删除"
 msgstr "記録を削除しました"
 
-#: server.py:849
+#: server.py:1246
 #, python-format
 msgid "删除失败：%(message)s"
 msgstr "削除に失敗しました：%(message)s"
 
-#: server.py:850
+#: server.py:1247
 msgid "记录已更新"
 msgstr "記録を更新しました"
 
-#: server.py:851
+#: server.py:1248
 msgid "记录已添加"
 msgstr "記録を追加しました"
 
-#: server.py:852
+#: server.py:1249
 msgid "预算已保存"
 msgstr "予算を保存しました"
 
-#: server.py:855
+#: server.py:1252
 msgid "链接已复制"
 msgstr "リンクをコピーしました"
 
-#: server.py:856
+#: server.py:1253
 msgid "复制失败，请手动复制链接。"
 msgstr "コピーに失敗しました。リンクを手動でコピーしてください。"
 
-#: server.py:857
+#: server.py:1254
 #, fuzzy
 msgid "确定要删除这个分享链接吗？此操作无法撤销。"
 msgstr "この記録を削除してもよろしいですか？この操作は元に戻せません。"
 
-#: server.py:929 server.py:1541 server.py:1723 server.py:1770
+#: server.py:1265 templates/record_form.html:56
+msgid "无需换算"
+msgstr "換算不要"
+
+#: server.py:1266
+msgid "手动汇率"
+msgstr "手動レート"
+
+#: server.py:1267
+msgid "请输入换算汇率"
+msgstr "換算レートを入力してください"
+
+#: server.py:1268
+msgid "已自动填入你上次使用的汇率，可随时修改。"
+msgstr "前回使用した換算レートを自動入力しました。必要に応じて変更できます。"
+
+#: server.py:1269
+msgid "已根据反方向汇率推算，可随时修改。"
+msgstr "反対方向の換算レートから推算しました。必要に応じて変更できます。"
+
+#: server.py:1270
+#, python-format
+msgid "请输入 1 %(source)s 相当于多少 %(target)s。"
+msgstr "1%(source)sが何%(target)sに相当するか入力してください。"
+
+#: server.py:1271 templates/budgets.html:29
+msgid "预算币种"
+msgstr "予算通貨"
+
+#: server.py:1272
+#, fuzzy, python-format
+msgid "约 %(amount)s"
+msgstr "使用済み %(amount)s"
+
+#: server.py:1273
+#, python-format
+msgid "%(original)s ≈ %(converted)s"
+msgstr "%(original)s ≈ %(converted)s"
+
+#: server.py:1274
+#, python-format
+msgid "1 %(source)s = %(rate)s %(target)s"
+msgstr "1 %(source)s = %(rate)s %(target)s"
+
+#: server.py:1347 server.py:1962 server.py:2291 server.py:2375
 msgid "记录不存在"
 msgstr "記録が存在しません"
 
-#: server.py:930
+#: server.py:1348
 msgid "这条记录不存在，或不属于当前登录用户。"
 msgstr "この記録は存在しないか、現在ログイン中のユーザーのものではありません。"
 
-#: server.py:932
+#: server.py:1350
 msgid "返回记录列表"
 msgstr "記録一覧へ戻る"
 
-#: server.py:992
+#: server.py:1410
 msgid "反馈已提交，感谢你的帮助。"
 msgstr "ご意見を送信しました。ご協力ありがとうございます。"
 
-#: server.py:996
+#: server.py:1414
 #, fuzzy
 msgid "反馈提交失败，请稍后重试。"
 msgstr "リクエストに失敗しました。後でもう一度お試しください"
 
-#: server.py:1061
+#: server.py:1479
 msgid "分享链接已创建。"
 msgstr "共有リンクを作成しました。"
 
-#: server.py:1065
+#: server.py:1483
 #, fuzzy
 msgid "分享链接创建失败，请稍后重试。"
 msgstr "アカウント削除に失敗しました。後でもう一度お試しください。"
 
-#: server.py:1124
+#: server.py:1542
 msgid "分享链接已停用。"
 msgstr "共有リンクを無効にしました。"
 
-#: server.py:1126 server.py:1145 server.py:1164
+#: server.py:1544 server.py:1563 server.py:1582
 msgid "分享链接不存在。"
 msgstr "共有リンクが見つかりません。"
 
-#: server.py:1143
+#: server.py:1561
 msgid "分享链接已启用。"
 msgstr "共有リンクを有効にしました。"
 
-#: server.py:1162
+#: server.py:1580
 msgid "分享链接已删除。"
 msgstr "共有リンクを削除しました。"
 
-#: server.py:1186
+#: server.py:1604
 #, fuzzy
 msgid "链接不存在"
 msgstr "記録が存在しません"
 
-#: server.py:1187
+#: server.py:1605
 msgid "这个分享链接不存在或已被删除。"
 msgstr "この共有リンクは存在しないか、削除されています。"
 
-#: server.py:1192
+#: server.py:1610
 msgid "链接已停用"
 msgstr "リンクは無効です"
 
-#: server.py:1193
+#: server.py:1611
 msgid "这个分享链接已停用。"
 msgstr "この共有リンクは無効になっています。"
 
-#: server.py:1198
+#: server.py:1616
 msgid "链接已过期"
 msgstr "リンクの有効期限が切れています"
 
-#: server.py:1199
+#: server.py:1617
 msgid "这个分享链接已过期。"
 msgstr "この共有リンクの有効期限が切れています。"
 
-#: server.py:1300
+#: server.py:1721
 msgid "设置已保存"
 msgstr "設定を保存しました"
 
-#: server.py:1313
+#: server.py:1734
 msgid "请重新登录后再试"
 msgstr "もう一度ログインしてからお試しください"
 
-#: server.py:1327
+#: server.py:1748
 msgid "账号注销失败，请稍后重试。"
 msgstr "アカウント削除に失敗しました。後でもう一度お試しください。"
 
-#: server.py:1332
+#: server.py:1753
 msgid "账号已注销"
 msgstr "アカウントを削除しました"
 
-#: server.py:1376
+#: server.py:1797
 msgid "用户名已存在"
 msgstr "ユーザー名は既に存在します"
 
-#: server.py:1384
+#: server.py:1805
 msgid "邮箱已存在"
 msgstr "メールアドレスは既に存在します"
 
-#: server.py:1436
+#: server.py:1857
 msgid "用户名/邮箱或密码错误"
 msgstr "ユーザー名/メールアドレスまたはパスワードが正しくありません"
 
-#: server.py:1650
+#: server.py:2157
 msgid "预算金额格式无效"
 msgstr "予算金額の形式が無効です"
 
@@ -607,6 +669,10 @@ msgstr "予算管理"
 msgid "为每个月设置支出预算。"
 msgstr "月ごとの支出予算を設定します。"
 
+#: templates/budgets.html:9
+msgid "新预算使用当前默认货币。"
+msgstr "新しい予算には現在の基準通貨が使用されます。"
+
 #: templates/budgets.html:18
 msgid "设置预算金额"
 msgstr "予算金額を設定"
@@ -619,15 +685,15 @@ msgstr "予算を保存"
 msgid "查看本月概览，快速进入常用功能。"
 msgstr "今月の概要を確認し、よく使う機能へすばやく移動します。"
 
-#: templates/dashboard.html:18 templates/index.html:32 templates/statistics.html:15
+#: templates/dashboard.html:18 templates/index.html:32 templates/statistics.html:16
 msgid "本月收入"
 msgstr "今月の収入"
 
-#: templates/dashboard.html:26 templates/index.html:36 templates/statistics.html:16
+#: templates/dashboard.html:26 templates/index.html:36 templates/statistics.html:17
 msgid "本月支出"
 msgstr "今月の支出"
 
-#: templates/dashboard.html:34 templates/statistics.html:17
+#: templates/dashboard.html:34 templates/statistics.html:18
 msgid "本月结余"
 msgstr "今月の残高"
 
@@ -635,32 +701,32 @@ msgstr "今月の残高"
 msgid "预算状态"
 msgstr "予算状況"
 
-#: templates/dashboard.html:54
+#: templates/dashboard.html:55
 msgid "管理预算"
 msgstr "予算を管理"
 
-#: templates/dashboard.html:61
+#: templates/dashboard.html:62
 msgid "快捷入口"
 msgstr "クイックアクセス"
 
-#: templates/dashboard.html:63 templates/record_form.html:3 templates/record_form.html:8
-#: templates/record_form.html:43 templates/records.html:11
+#: templates/dashboard.html:64 templates/record_form.html:3 templates/record_form.html:8
+#: templates/record_form.html:67 templates/records.html:11
 msgid "添加记录"
 msgstr "記録を追加"
 
-#: templates/dashboard.html:64 templates/index.html:16
+#: templates/dashboard.html:65 templates/index.html:16
 msgid "查看记录"
 msgstr "記録を見る"
 
-#: templates/dashboard.html:65
+#: templates/dashboard.html:66
 msgid "查看统计"
 msgstr "統計を見る"
 
-#: templates/dashboard.html:66
+#: templates/dashboard.html:67
 msgid "设置预算"
 msgstr "予算を設定"
 
-#: templates/dashboard.html:67 templates/public_share.html:6 templates/public_share_status.html:6
+#: templates/dashboard.html:68 templates/public_share.html:6 templates/public_share_status.html:6
 #: templates/share.html:3 templates/share.html:8 templates/support.html:28
 msgid "分享链接"
 msgstr "共有リンク"
@@ -873,35 +939,39 @@ msgstr "Easy Kakeibo"
 msgid "统计月份"
 msgstr "統計"
 
-#: templates/public_share.html:26 templates/share.html:53
+#: templates/public_share.html:18 templates/statistics.html:10
+msgid "统计货币"
+msgstr "集計通貨"
+
+#: templates/public_share.html:31 templates/share.html:53
 #, fuzzy
 msgid "收入汇总"
 msgstr "収入"
 
-#: templates/public_share.html:36 templates/share.html:57
+#: templates/public_share.html:41 templates/share.html:57
 #, fuzzy
 msgid "支出汇总"
 msgstr "支出"
 
-#: templates/public_share.html:45
+#: templates/public_share.html:50
 #, fuzzy
 msgid "结余"
 msgstr "今月の残高"
 
-#: templates/public_share.html:57
+#: templates/public_share.html:62
 #, fuzzy
 msgid "支出分类汇总"
 msgstr "支出カテゴリ比率"
 
-#: templates/public_share.html:71 templates/public_share.html:93
+#: templates/public_share.html:76 templates/public_share.html:98
 msgid "暂无数据"
 msgstr "データがありません"
 
-#: templates/public_share.html:79
+#: templates/public_share.html:84
 msgid "收入分类汇总"
 msgstr "収入カテゴリ集計"
 
-#: templates/public_share.html:102
+#: templates/public_share.html:107
 msgid "此页面仅展示用户主动分享的汇总信息，不包含完整交易明细。"
 msgstr "このページには、ユーザーが共有を許可した集計情報のみが表示され、取引の詳細は含まれていません。"
 
@@ -910,8 +980,8 @@ msgid "编辑记录"
 msgstr "記録を編集"
 
 #: templates/record_form.html:9
-msgid "填写日期、分类和金额。"
-msgstr "日付、カテゴリ、金額を入力してください。"
+msgid "填写日期、分类、金额和币种。"
+msgstr "日付、カテゴリ、金額、通貨を入力してください。"
 
 #: templates/record_form.html:11
 msgid "返回列表"
@@ -933,19 +1003,35 @@ msgstr "カテゴリ"
 msgid "金额"
 msgstr "金額"
 
-#: templates/record_form.html:38 templates/records.html:38
+#: templates/record_form.html:38
+msgid "币种"
+msgstr "通貨"
+
+#: templates/record_form.html:46
+msgid "换算汇率"
+msgstr "換算レート"
+
+#: templates/record_form.html:55
+msgid "换算结果"
+msgstr "換算結果"
+
+#: templates/record_form.html:59 templates/records.html:38
 msgid "备注"
 msgstr "メモ"
 
-#: templates/record_form.html:39
+#: templates/record_form.html:60
 msgid "可选备注"
 msgstr "任意のメモ"
 
-#: templates/record_form.html:43
+#: templates/record_form.html:64
+msgid "修改金额、币种、日期或汇率后，系统将重新计算折算金额。"
+msgstr "金額、通貨、日付、為替レートを変更すると換算金額が再計算されます。"
+
+#: templates/record_form.html:67
 msgid "保存修改"
 msgstr "変更を保存"
 
-#: templates/record_form.html:44 templates/records.html:67 templates/settings.html:140
+#: templates/record_form.html:68 templates/records.html:67 templates/settings.html:141
 msgid "取消"
 msgstr "キャンセル"
 
@@ -1005,7 +1091,7 @@ msgstr "次のページ"
 msgid "确认删除"
 msgstr "削除の確認"
 
-#: templates/records.html:61 templates/settings.html:125
+#: templates/records.html:61 templates/settings.html:126
 msgid "关闭"
 msgstr "閉じる"
 
@@ -1087,57 +1173,61 @@ msgstr "言語"
 
 #: templates/settings.html:67
 msgid "默认货币"
-msgstr "既定の通貨"
+msgstr "基準通貨"
 
-#: templates/settings.html:82
+#: templates/settings.html:73
+msgid "默认货币用于仪表盘、统计和新建预算的统一展示。修改默认货币不会修改历史记录；其他币种的记录会按你最近使用的汇率进行换算。"
+msgstr "基準通貨はダッシュボード、統計、新しい予算の表示に使用されます。基準通貨を変更しても過去の記録は変更されません。他の通貨の記録は、最近使用した換算レートで換算されます。"
+
+#: templates/settings.html:83
 msgid "修改密码"
 msgstr "パスワード変更"
 
-#: templates/settings.html:84 templates/settings.html:130
+#: templates/settings.html:85 templates/settings.html:131
 msgid "当前密码"
 msgstr "現在のパスワード"
 
-#: templates/settings.html:88
+#: templates/settings.html:89
 msgid "新密码"
 msgstr "新しいパスワード"
 
-#: templates/settings.html:92
+#: templates/settings.html:93
 msgid "确认新密码"
 msgstr "新しいパスワード確認"
 
-#: templates/settings.html:101
+#: templates/settings.html:102
 msgid "保存设置"
 msgstr "設定を保存"
 
-#: templates/settings.html:102
+#: templates/settings.html:103
 msgid "返回仪表盘"
 msgstr "ダッシュボードへ戻る"
 
-#: templates/settings.html:109
+#: templates/settings.html:110
 msgid "危险区域"
 msgstr "危険な操作"
 
-#: templates/settings.html:110
+#: templates/settings.html:111
 msgid "注销账号后，你的账户及相关记账数据将被永久删除，且无法恢复。"
 msgstr "アカウントを削除すると、アカウントおよび関連する記録は完全に削除され、元に戻すことはできません。"
 
-#: templates/settings.html:112 templates/settings.html:141
+#: templates/settings.html:113 templates/settings.html:142
 msgid "注销账号"
 msgstr "アカウントを削除"
 
-#: templates/settings.html:124
+#: templates/settings.html:125
 msgid "确认注销账号"
 msgstr "アカウント削除の確認"
 
-#: templates/settings.html:128
+#: templates/settings.html:129
 msgid "请输入当前密码，并输入 DELETE 确认永久注销账号。"
 msgstr "現在のパスワードを入力し、DELETE と入力してアカウントの完全削除を確認してください。"
 
-#: templates/settings.html:134
+#: templates/settings.html:135
 msgid "确认文字"
 msgstr "確認文字"
 
-#: templates/settings.html:136
+#: templates/settings.html:137
 msgid "请输入 DELETE"
 msgstr "DELETE と入力してください"
 
@@ -1244,11 +1334,11 @@ msgstr "統計分析"
 msgid "查看月度统计、分类占比和六个月趋势。"
 msgstr "月次統計、カテゴリ比率、6か月の推移を確認します。"
 
-#: templates/statistics.html:24
+#: templates/statistics.html:26
 msgid "支出分类占比"
 msgstr "支出カテゴリ比率"
 
-#: templates/statistics.html:32
+#: templates/statistics.html:34
 msgid "最近六个月收支趋势"
 msgstr "直近6か月の収支推移"
 
@@ -1412,4 +1502,25 @@ msgstr "ユーザー設定と会員表示版"
 
 #~ msgid "当前账号使用的套餐与权益状态。"
 #~ msgstr "現在のアカウントのプランと特典状況です。"
+
+#~ msgid "美元 USD"
+#~ msgstr "米ドル USD"
+
+#~ msgid "欧元 EUR"
+#~ msgstr "ユーロ EUR"
+
+#~ msgid "原始金额"
+#~ msgstr "元の金額"
+
+#~ msgid "原始币种"
+#~ msgstr "通貨"
+
+#~ msgid "汇率方向固定为：1 原始货币 = X 默认货币。"
+#~ msgstr "レートの方向は固定です：元の通貨 1 = 基準通貨 X。"
+
+#~ msgid "默认货币修改只影响之后新增或重新编辑的记录。历史记录保留创建时的汇率与换算结果。"
+#~ msgstr "基準通貨の変更は、今後追加または再編集する記録にのみ適用されます。履歴は作成時の為替レートと換算結果を保持します。"
+
+#~ msgid "部分历史记录使用其他基准货币，未计入当前统计"
+#~ msgstr "一部の履歴は別の基準通貨で保存されているため、現在の集計には含まれていません"
 

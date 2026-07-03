@@ -23,7 +23,7 @@ budgetEls.save.addEventListener('click', async () => {
       method: 'POST',
       body: JSON.stringify({
         month: budgetEls.month.value,
-        amount: parseFloat(budgetEls.amount.value || '0'),
+        amount: budgetEls.amount.value,
       }),
     });
     showToast(T.budgetSaved || 'Budget saved', 'success');

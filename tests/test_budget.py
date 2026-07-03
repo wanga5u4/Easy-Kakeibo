@@ -23,7 +23,7 @@ def test_budget_is_user_isolated(client):
 
 def test_invalid_budget_amounts_rejected(client):
     login_as_new_user(client, "alice", "alice@example.com")
-    for value in ["", 0, -1, "abc", "NaN", "Infinity", "-Infinity", 1_000_000_001]:
+    for value in ["", 0, -1, "abc", "NaN", "Infinity", "-Infinity", 1_000_000_000_000]:
         assert save_budget(client, "2026-06", value).status_code == 400
 
 

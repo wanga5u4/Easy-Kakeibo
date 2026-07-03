@@ -67,9 +67,10 @@
               <label class="form-label" for="currency">{{ _('默认货币') }}</label>
               <select class="form-select" id="currency" name="currency">
                 {% for value, label in currency_options.items() %}
-                  <option value="{{ value }}" {% if user['currency'] == value %}selected{% endif %}>{{ label }}</option>
+                  <option value="{{ value }}" {% if user['base_currency_code'] == value %}selected{% endif %}>{{ label }}</option>
                 {% endfor %}
               </select>
+              <div class="form-text">{{ _('默认货币用于仪表盘、统计和新建预算的统一展示。修改默认货币不会修改历史记录；其他币种的记录会按你最近使用的汇率进行换算。') }}</div>
             </div>
           </div>
         </div>

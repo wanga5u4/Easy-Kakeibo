@@ -44,7 +44,7 @@ function renderRecords() {
       <td>${formatDate(record.date)}</td>
       <td><span class="tag ${record.type}">${TYPE_LABELS[record.type]}</span></td>
       <td>${escapeHtml(record.category)}</td>
-      <td class="amount-${record.type}">${record.type === 'income' ? '+' : '-'}${formatMoney(record.amount)}</td>
+      <td class="amount-${record.type}">${record.type === 'income' ? '+' : '-'}${formatRecordAmount(record)}</td>
       <td>${escapeHtml(record.note || T.noNote || '—')}</td>
       <td>
         <div class="row-actions">
