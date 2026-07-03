@@ -65,7 +65,7 @@ python -c "import secrets; print(secrets.token_hex(32))"
 
 ## 数据库初始化
 
-应用启动时会执行幂等 `init_db()`，会创建缺失的表和字段，不会清空已有用户、账目或预算。
+应用启动时会执行幂等 `init_db()`，会创建缺失的表和字段，不会清空已有用户、账目、预算、反馈或分享链接。
 
 也可以手动检查初始化：
 
@@ -147,6 +147,50 @@ GUNICORN_TIMEOUT=30
 mkdir -p data logs backups
 python -c "from database import init_db; init_db(); print('ok')"
 ```
+
+当前主要数据表：
+
+- `users`：用户账号、语言、货币和资料设置
+- `records`：当前用户的收入/支出记录
+- `budgets`：当前用户的月度预算
+- `feedback`：登录用户提交的反馈与建议
+- `share_links`：登录用户创建的月度汇总公开分享链接
+
+新增表和索引由 `init_db()` 自动创建；部署新版本后执行一次上面的初始化命令即可完成迁移。
+
+## 用户反馈
+
+登录后访问 `/feedback` 可以提交反馈与建议。反馈字段包括类型、标题、详细内容、当前页面和联系方式；`user_id` 只来自登录 session，表单里伪造的 `user_id` 会被忽略。
+
+反馈保存在 `feedback` 表中，普通用户只能看到自己最近 10 条反馈和当前状态，不能修改状态，也不能查看其他用户的反馈。
+
+本版本不提供公开管理员后台。服务器管理员可在终端查看反馈：
+
+```bash
+python scripts/list_feedback.py
+python scripts/list_feedback.py --status new
+python scripts/list_feedback.py --limit 20
+```
+
+脚本只输出反馈 ID、用户 ID、类型、标题、状态、创建时间、联系方式和内容摘要，不输出密码或密码哈希。
+
+## 分享链接
+
+登录后访问 `/share` 可以创建和管理分享链接。公开链接形如 `/s/<token>`，不需要登录即可查看。
+
+第一版公开范围仅包括：
+
+- 指定月份收入总额
+- 指定月份支出总额
+- 指定月份结余
+- 收入/支出分类汇总
+- 用户填写的分享标题和说明
+
+公开页面不会展示登录邮箱、用户 ID、真实姓名、密码信息、联系方式、预算、反馈内容、单笔交易备注或完整交易明细。公开统计实时按 `share_links.user_id` 和 `share_links.share_month` 计算，URL 查询参数不能改变分享月份或分享范围。
+
+分享链接 token 使用 `secrets.token_urlsafe(32)` 生成，并存入 `share_links.token` 唯一索引。用户只能管理自己的链接；停用、启用和删除都使用 POST。停用或过期后公开页面立即不可用，删除后公开地址返回不存在。
+
+管理页提供复制链接按钮；如果浏览器或本地 HTTP 环境不支持 Clipboard API，仍可手动选中输入框中的公开链接。
 
 6. 运行测试
 
@@ -284,6 +328,29 @@ pytest
 
 测试会为每个用例创建临时 SQLite 数据库，并通过真实 CSRF Token 提交表单和 API 请求。
 
+如果当前机器的默认临时目录不可写，可以把 pytest 临时目录放到项目目录：
+
+```powershell
+New-Item -ItemType Directory -Force tmp_pytest | Out-Null
+$env:TMP=(Resolve-Path tmp_pytest).Path
+$env:TEMP=$env:TMP
+python -m pytest --basetemp tmp_pytest\basetemp -p no:cacheprovider
+```
+
+## 国际化
+
+项目使用 Flask-Babel。更新用户可见文案后执行：
+
+```bash
+pybabel extract -F babel.cfg -o messages.pot .
+pybabel update -i messages.pot -d translations -l zh_CN
+pybabel update -i messages.pot -d translations -l ja
+python scripts/fill_translations.py
+pybabel compile -d translations
+```
+
+需要提交 `messages.pot`、对应语言的 `messages.po` 和编译后的 `messages.mo`。
+
 ## 安全提醒
 
 - 不提交 `.env`
@@ -305,3 +372,5 @@ pytest
 - 支出分类占比图
 - 最近六个月收支趋势图
 - 用户设置和支持与后续更新计划页
+- 反馈与建议提交、最近反馈状态查看
+- 月度汇总分享链接管理和公开只读分享页

@@ -16,8 +16,20 @@
       <div class="card-body">
         <h2 class="h5 mb-3">{{ _('支持方式') }}</h2>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item px-0">{{ _('提交反馈') }}</li>
-          <li class="list-group-item px-0">{{ _('分享给朋友') }}</li>
+          <li class="list-group-item px-0">
+            {% if current_user_profile %}
+              <a href="{{ url_for('feedback_page') }}">{{ _('反馈与建议') }}</a>
+            {% else %}
+              <a href="{{ url_for('login', next=url_for('feedback_page')) }}">{{ _('反馈与建议') }}</a>
+            {% endif %}
+          </li>
+          <li class="list-group-item px-0">
+            {% if current_user_profile %}
+              <a href="{{ url_for('share_page') }}">{{ _('分享链接') }}</a>
+            {% else %}
+              {{ _('分享给朋友') }}
+            {% endif %}
+          </li>
           <li class="list-group-item px-0">{{ _('自愿赞助') }}</li>
         </ul>
         <div class="alert alert-light border mt-3 mb-0">

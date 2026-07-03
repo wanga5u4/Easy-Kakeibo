@@ -6,7 +6,7 @@ import math
 import re
 import logging
 import hashlib
-from datetime import date, datetime
+from datetime import date, datetime, timedelta, timezone
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from urllib.parse import urlparse, urljoin
@@ -126,7 +126,11 @@ ALLOWED_PER_PAGE = {10, 20, 50}
 DEFAULT_PER_PAGE = 10
 LOCALE_ALIASES = {"zh-CN": "zh_CN", "zh": "zh_CN", "ja-JP": "ja"}
 ACCOUNT_DELETION_CONFIRMATION = "DELETE"
-USER_OWNED_TABLES = ("records", "budgets")
+FEEDBACK_TYPES = ("bug", "feature", "question", "other")
+FEEDBACK_STATUSES = ("new", "reviewing", "resolved", "closed")
+SHARE_EXPIRATION_DAYS = {"1": 1, "7": 7, "30": 30, "forever": None}
+SHARE_TOKEN_BYTES = 32
+USER_OWNED_TABLES = ("records", "budgets", "feedback", "share_links")
 
 
 def normalize_locale(value):
@@ -406,6 +410,220 @@ def validate_account_deletion_payload(form, user):
     return errors
 
 
+def get_feedback_type_labels():
+    return {
+        "bug": _("Bug 报告"),
+        "feature": _("功能建议"),
+        "question": _("使用问题"),
+        "other": _("其他"),
+    }
+
+
+def get_feedback_status_labels():
+    return {
+        "new": _("新建"),
+        "reviewing": _("处理中"),
+        "resolved": _("已解决"),
+        "closed": _("已关闭"),
+    }
+
+
+def get_share_status(link):
+    if not link["is_active"]:
+        return "inactive"
+    if is_share_expired(link):
+        return "expired"
+    return "active"
+
+
+def get_share_status_labels():
+    return {
+        "active": _("有效"),
+        "inactive": _("已停用"),
+        "expired": _("已过期"),
+    }
+
+
+def truncate_text(value, length=120):
+    text = value or ""
+    if len(text) <= length:
+        return text
+    return text[:length].rstrip() + "..."
+
+
+def utc_now():
+    return datetime.now(timezone.utc).replace(tzinfo=None)
+
+
+def validate_feedback_payload(form):
+    errors = []
+    feedback_type = (form.get("feedback_type") or "").strip()
+    title = (form.get("title") or "").strip()
+    content = (form.get("content") or "").strip()
+    page_url = (form.get("page_url") or "").strip()
+    contact = (form.get("contact") or "").strip()
+
+    if feedback_type not in FEEDBACK_TYPES:
+        errors.append(_("反馈类型无效"))
+    if not title:
+        errors.append(_("标题不能为空"))
+    elif not 2 <= len(title) <= 100:
+        errors.append(_("标题长度需要在 2 到 100 个字符之间"))
+    if not content:
+        errors.append(_("详细内容不能为空"))
+    elif not 5 <= len(content) <= 2000:
+        errors.append(_("详细内容长度需要在 5 到 2000 个字符之间"))
+    if len(page_url) > 200:
+        errors.append(_("当前页面不能超过 200 个字符"))
+    if len(contact) > 120:
+        errors.append(_("联系方式不能超过 120 个字符"))
+
+    return {
+        "feedback_type": feedback_type,
+        "title": title,
+        "content": content,
+        "page_url": page_url,
+        "contact": contact,
+    }, errors
+
+
+def get_recent_feedback(conn, user_id):
+    return conn.execute(
+        """
+        SELECT id, feedback_type, title, content, status, created_at
+        FROM feedback
+        WHERE user_id = ?
+        ORDER BY created_at DESC, id DESC
+        LIMIT 10
+        """,
+        (user_id,),
+    ).fetchall()
+
+
+def validate_share_payload(form):
+    errors = []
+    share_month = normalize_month(form.get("share_month"))
+    title = (form.get("title") or "").strip()
+    description = (form.get("description") or "").strip()
+    expires_in = (form.get("expires_in") or "7").strip()
+    include_income = 1 if form.get("include_income_summary") == "1" else 0
+    include_expense = 1 if form.get("include_expense_summary") == "1" else 0
+    include_category = 1 if form.get("include_category_summary") == "1" else 0
+
+    if not share_month:
+        errors.append(_("月份格式无效"))
+    if not title and share_month:
+        title = _("%(month)s 收支概览", month=share_month)
+    if not title:
+        errors.append(_("分享标题不能为空"))
+    elif len(title) > 100:
+        errors.append(_("分享标题不能超过 100 个字符"))
+    if len(description) > 300:
+        errors.append(_("分享说明不能超过 300 个字符"))
+    if not any([include_income, include_expense, include_category]):
+        errors.append(_("请至少选择一项分享内容"))
+    if expires_in not in SHARE_EXPIRATION_DAYS:
+        errors.append(_("有效期无效"))
+
+    expires_at = None
+    if expires_in in SHARE_EXPIRATION_DAYS and SHARE_EXPIRATION_DAYS[expires_in] is not None:
+        expires_at = (
+            utc_now() + timedelta(days=SHARE_EXPIRATION_DAYS[expires_in])
+        ).strftime("%Y-%m-%d %H:%M:%S")
+
+    return {
+        "title": title,
+        "description": description,
+        "share_month": share_month or "",
+        "include_income_summary": include_income,
+        "include_expense_summary": include_expense,
+        "include_category_summary": include_category,
+        "expires_at": expires_at,
+        "expires_in": expires_in,
+    }, errors
+
+
+def generate_unique_share_token(conn):
+    for _ in range(5):
+        token = secrets.token_urlsafe(SHARE_TOKEN_BYTES)
+        exists = conn.execute(
+            "SELECT 1 FROM share_links WHERE token = ?",
+            (token,),
+        ).fetchone()
+        if not exists:
+            return token
+    raise RuntimeError("unable to generate unique share token")
+
+
+def parse_db_timestamp(value):
+    if not value:
+        return None
+    if isinstance(value, datetime):
+        return value
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S"):
+        try:
+            return datetime.strptime(str(value), fmt)
+        except ValueError:
+            continue
+    return None
+
+
+def is_share_expired(link):
+    expires_at = parse_db_timestamp(link["expires_at"])
+    return bool(expires_at and expires_at <= utc_now())
+
+
+def get_month_totals(conn, user_id, month):
+    rows = conn.execute(
+        """
+        SELECT type, COALESCE(SUM(amount), 0) AS amount
+        FROM records
+        WHERE user_id = ? AND date LIKE ?
+        GROUP BY type
+        """,
+        (user_id, f"{month}%"),
+    ).fetchall()
+    totals = {"income": 0, "expense": 0}
+    for row in rows:
+        totals[row["type"]] = row["amount"]
+    totals["balance"] = totals["income"] - totals["expense"]
+    return totals
+
+
+def get_category_summary(conn, user_id, month, record_type):
+    rows = conn.execute(
+        """
+        SELECT category, COALESCE(SUM(amount), 0) AS amount
+        FROM records
+        WHERE user_id = ? AND type = ? AND date LIKE ?
+        GROUP BY category
+        ORDER BY amount DESC
+        """,
+        (user_id, record_type, f"{month}%"),
+    ).fetchall()
+    total = sum(row["amount"] for row in rows)
+    return [
+        {
+            "category": row["category"],
+            "amount": row["amount"],
+            "percent": round(row["amount"] / total * 100, 1) if total else 0,
+        }
+        for row in rows
+    ]
+
+
+def get_public_share_summary(conn, user_id, month):
+    totals = get_month_totals(conn, user_id, month)
+    return {
+        "month": month,
+        "totalIncome": totals["income"],
+        "totalExpense": totals["expense"],
+        "balance": totals["balance"],
+        "incomeCategories": get_category_summary(conn, user_id, month, "income"),
+        "expenseCategories": get_category_summary(conn, user_id, month, "expense"),
+    }
+
+
 def delete_user_account(user_id):
     conn = get_connection()
     try:
@@ -634,6 +852,9 @@ def inject_user_context():
             "budgetSaved": _("预算已保存"),
             "income": _("收入"),
             "expense": _("支出"),
+            "linkCopied": _("链接已复制"),
+            "copyManually": _("复制失败，请手动复制链接。"),
+            "confirmDeleteShareLink": _("确定要删除这个分享链接吗？此操作无法撤销。"),
         },
     }
 
@@ -728,6 +949,272 @@ def budgets_page():
     if login_redirect:
         return login_redirect
     return render_template("budgets.html", active_page="budgets")
+
+
+@app.route("/feedback", methods=["GET", "POST"])
+def feedback_page():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+
+    user_id = get_current_user_id()
+    form = {
+        "feedback_type": "bug",
+        "title": "",
+        "content": "",
+        "page_url": (request.args.get("page") or "")[:200],
+        "contact": "",
+    }
+    errors = []
+
+    if request.method == "POST":
+        form, errors = validate_feedback_payload(request.form)
+        if not errors:
+            try:
+                with get_connection() as conn:
+                    conn.execute(
+                        """
+                        INSERT INTO feedback (
+                            user_id, feedback_type, title, content, page_url, contact
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?)
+                        """,
+                        (
+                            user_id,
+                            form["feedback_type"],
+                            form["title"],
+                            form["content"],
+                            form["page_url"],
+                            form["contact"],
+                        ),
+                    )
+                    conn.commit()
+                flash(_("反馈已提交，感谢你的帮助。"), "success")
+                return redirect(url_for("feedback_page"))
+            except Exception:
+                app.logger.error("Feedback submission failed: user_id=%s", user_id, exc_info=True)
+                errors.append(_("反馈提交失败，请稍后重试。"))
+
+    with get_connection() as conn:
+        recent_feedback = get_recent_feedback(conn, user_id)
+
+    return render_template(
+        "feedback.html",
+        active_page="feedback",
+        errors=errors,
+        form=form,
+        recent_feedback=recent_feedback,
+        feedback_type_labels=get_feedback_type_labels(),
+        feedback_status_labels=get_feedback_status_labels(),
+        truncate_text=truncate_text,
+    ), 400 if errors else 200
+
+
+@app.route("/share", methods=["GET", "POST"])
+def share_page():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+
+    user_id = get_current_user_id()
+    form = {
+        "title": "",
+        "description": "",
+        "share_month": current_month(),
+        "include_income_summary": 1,
+        "include_expense_summary": 1,
+        "include_category_summary": 1,
+        "expires_in": "7",
+    }
+    errors = []
+
+    if request.method == "POST":
+        form, errors = validate_share_payload(request.form)
+        if not errors:
+            try:
+                with get_connection() as conn:
+                    token = generate_unique_share_token(conn)
+                    conn.execute(
+                        """
+                        INSERT INTO share_links (
+                            user_id, token, title, description, share_month,
+                            include_income_summary, include_expense_summary,
+                            include_category_summary, expires_at
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        (
+                            user_id,
+                            token,
+                            form["title"],
+                            form["description"],
+                            form["share_month"],
+                            form["include_income_summary"],
+                            form["include_expense_summary"],
+                            form["include_category_summary"],
+                            form["expires_at"],
+                        ),
+                    )
+                    share_link_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+                    conn.commit()
+                app.logger.info("Share link created: share_link_id=%s user_id=%s", share_link_id, user_id)
+                flash(_("分享链接已创建。"), "success")
+                return redirect(url_for("share_page"))
+            except Exception:
+                app.logger.error("Share link creation failed: user_id=%s", user_id, exc_info=True)
+                errors.append(_("分享链接创建失败，请稍后重试。"))
+
+    with get_connection() as conn:
+        share_links = conn.execute(
+            """
+            SELECT id, token, title, share_month, expires_at, is_active,
+                   created_at, view_count
+            FROM share_links
+            WHERE user_id = ?
+            ORDER BY created_at DESC, id DESC
+            """,
+            (user_id,),
+        ).fetchall()
+
+    public_links = {
+        link["id"]: url_for("public_share_page", token=link["token"], _external=True)
+        for link in share_links
+    }
+
+    return render_template(
+        "share.html",
+        active_page="share",
+        errors=errors,
+        form=form,
+        share_links=share_links,
+        public_links=public_links,
+        share_status_labels=get_share_status_labels(),
+        get_share_status=get_share_status,
+        current_month=current_month(),
+    ), 400 if errors else 200
+
+
+def update_own_share_link(link_id, updates):
+    user_id = get_current_user_id()
+    with get_connection() as conn:
+        existing = conn.execute(
+            "SELECT id FROM share_links WHERE id = ? AND user_id = ?",
+            (link_id, user_id),
+        ).fetchone()
+        if not existing:
+            return False
+        updates(conn)
+        conn.commit()
+    return True
+
+
+@app.post("/share/<int:link_id>/disable")
+def disable_share_link(link_id):
+    def updates(conn):
+        conn.execute(
+            "UPDATE share_links SET is_active = 0 WHERE id = ? AND user_id = ?",
+            (link_id, get_current_user_id()),
+        )
+
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+    if update_own_share_link(link_id, updates):
+        app.logger.info("Share link disabled: share_link_id=%s", link_id)
+        flash(_("分享链接已停用。"), "success")
+    else:
+        flash(_("分享链接不存在。"), "error")
+    return redirect(url_for("share_page"))
+
+
+@app.post("/share/<int:link_id>/enable")
+def enable_share_link(link_id):
+    def updates(conn):
+        conn.execute(
+            "UPDATE share_links SET is_active = 1 WHERE id = ? AND user_id = ?",
+            (link_id, get_current_user_id()),
+        )
+
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+    if update_own_share_link(link_id, updates):
+        app.logger.info("Share link enabled: share_link_id=%s", link_id)
+        flash(_("分享链接已启用。"), "success")
+    else:
+        flash(_("分享链接不存在。"), "error")
+    return redirect(url_for("share_page"))
+
+
+@app.post("/share/<int:link_id>/delete")
+def delete_share_link(link_id):
+    def updates(conn):
+        conn.execute(
+            "DELETE FROM share_links WHERE id = ? AND user_id = ?",
+            (link_id, get_current_user_id()),
+        )
+
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+    if update_own_share_link(link_id, updates):
+        app.logger.info("Share link deleted: share_link_id=%s", link_id)
+        flash(_("分享链接已删除。"), "success")
+    else:
+        flash(_("分享链接不存在。"), "error")
+    return redirect(url_for("share_page"))
+
+
+@app.get("/s/<token>")
+def public_share_page(token):
+    with get_connection() as conn:
+        link = conn.execute(
+            """
+            SELECT id, user_id, token, title, description, share_month,
+                   include_income_summary, include_expense_summary,
+                   include_category_summary, expires_at, is_active,
+                   created_at, view_count
+            FROM share_links
+            WHERE token = ?
+            """,
+            (token,),
+        ).fetchone()
+
+        if not link:
+            return render_template(
+                "public_share_status.html",
+                title=_("链接不存在"),
+                message=_("这个分享链接不存在或已被删除。"),
+            ), 404
+        if not link["is_active"]:
+            return render_template(
+                "public_share_status.html",
+                title=_("链接已停用"),
+                message=_("这个分享链接已停用。"),
+            ), 410
+        if is_share_expired(link):
+            return render_template(
+                "public_share_status.html",
+                title=_("链接已过期"),
+                message=_("这个分享链接已过期。"),
+            ), 410
+
+        summary = get_public_share_summary(conn, link["user_id"], link["share_month"])
+        conn.execute(
+            """
+            UPDATE share_links
+            SET view_count = view_count + 1, last_viewed_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            """,
+            (link["id"],),
+        )
+        conn.commit()
+
+    return render_template(
+        "public_share.html",
+        link=link,
+        summary=summary,
+    )
 
 
 @app.route("/settings", methods=["GET", "POST"])
@@ -1068,29 +1555,14 @@ def get_summary():
         return jsonify({"error": _("月份格式无效")}), 400
 
     with get_connection() as conn:
-        income = conn.execute(
-            """
-            SELECT COALESCE(SUM(amount), 0)
-            FROM records
-            WHERE user_id = ? AND type = 'income' AND date LIKE ?
-            """,
-            (user_id, f"{month}%"),
-        ).fetchone()[0]
-        expense = conn.execute(
-            """
-            SELECT COALESCE(SUM(amount), 0)
-            FROM records
-            WHERE user_id = ? AND type = 'expense' AND date LIKE ?
-            """,
-            (user_id, f"{month}%"),
-        ).fetchone()[0]
+        totals = get_month_totals(conn, user_id, month)
 
     return jsonify(
         {
             "month": month,
-            "totalIncome": income,
-            "totalExpense": expense,
-            "balance": income - expense,
+            "totalIncome": totals["income"],
+            "totalExpense": totals["expense"],
+            "balance": totals["balance"],
         }
     )
 
@@ -1109,32 +1581,8 @@ def get_analytics():
     trend_months = [month_shift(month, offset) for offset in range(-5, 1)]
 
     with get_connection() as conn:
-        income = conn.execute(
-            """
-            SELECT COALESCE(SUM(amount), 0)
-            FROM records
-            WHERE user_id = ? AND type = 'income' AND date LIKE ?
-            """,
-            (user_id, f"{month}%"),
-        ).fetchone()[0]
-        expense = conn.execute(
-            """
-            SELECT COALESCE(SUM(amount), 0)
-            FROM records
-            WHERE user_id = ? AND type = 'expense' AND date LIKE ?
-            """,
-            (user_id, f"{month}%"),
-        ).fetchone()[0]
-        category_rows = conn.execute(
-            """
-            SELECT category, COALESCE(SUM(amount), 0) AS amount
-            FROM records
-            WHERE user_id = ? AND type = 'expense' AND date LIKE ?
-            GROUP BY category
-            ORDER BY amount DESC
-            """,
-            (user_id, f"{month}%"),
-        ).fetchall()
+        totals = get_month_totals(conn, user_id, month)
+        categories = get_category_summary(conn, user_id, month, "expense")
         trend_rows = conn.execute(
             """
             SELECT substr(date, 1, 7) AS month, type, COALESCE(SUM(amount), 0) AS amount
@@ -1153,18 +1601,6 @@ def get_analytics():
             (user_id, month),
         ).fetchone()
 
-    category_total = sum(row["amount"] for row in category_rows)
-    categories = [
-        {
-            "category": row["category"],
-            "amount": row["amount"],
-            "percent": round(row["amount"] / category_total * 100, 1)
-            if category_total
-            else 0,
-        }
-        for row in category_rows
-    ]
-
     trend_map = {
         trend_month: {"month": trend_month, "income": 0, "expense": 0, "balance": 0}
         for trend_month in trend_months
@@ -1175,23 +1611,23 @@ def get_analytics():
         item["balance"] = item["income"] - item["expense"]
 
     budget_amount = budget_row["amount"] if budget_row else 0
-    budget_percent = round(expense / budget_amount * 100, 1) if budget_amount else 0
-    budget_remaining = budget_amount - expense if budget_amount else 0
+    budget_percent = round(totals["expense"] / budget_amount * 100, 1) if budget_amount else 0
+    budget_remaining = budget_amount - totals["expense"] if budget_amount else 0
 
     return jsonify(
         {
             "month": month,
-            "totalIncome": income,
-            "totalExpense": expense,
-            "balance": income - expense,
+            "totalIncome": totals["income"],
+            "totalExpense": totals["expense"],
+            "balance": totals["balance"],
             "categories": categories,
             "trend": list(trend_map.values()),
             "budget": {
                 "amount": budget_amount,
-                "used": expense,
+                "used": totals["expense"],
                 "remaining": budget_remaining,
                 "percent": budget_percent,
-                "status": get_budget_status(budget_amount, expense),
+                "status": get_budget_status(budget_amount, totals["expense"]),
             },
         }
     )

@@ -23,6 +23,7 @@
             <li class="nav-item"><a class="nav-link {% if active_page == 'records' %}active{% endif %}" href="{{ url_for('records_page') }}">{{ _('记录') }}</a></li>
             <li class="nav-item"><a class="nav-link {% if active_page == 'statistics' %}active{% endif %}" href="{{ url_for('statistics_page') }}">{{ _('统计') }}</a></li>
             <li class="nav-item"><a class="nav-link {% if active_page == 'budgets' %}active{% endif %}" href="{{ url_for('budgets_page') }}">{{ _('预算') }}</a></li>
+            <li class="nav-item"><a class="nav-link {% if active_page == 'share' %}active{% endif %}" href="{{ url_for('share_page') }}">{{ _('分享') }}</a></li>
           {% else %}
             <li class="nav-item"><a class="nav-link {% if active_page == 'home' %}active{% endif %}" href="{{ url_for('index') }}">{{ _('首页') }}</a></li>
           {% endif %}
