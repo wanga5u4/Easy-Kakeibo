@@ -6,14 +6,14 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
   <div>
     <h1 class="h3 mb-1" id="formTitle">{% if record_id %}{{ _('编辑记录') }}{% else %}{{ _('添加记录') }}{% endif %}</h1>
-    <p class="text-muted mb-0">{{ _('填写日期、分类和金额。') }}</p>
+    <p class="text-muted mb-0">{{ _('填写日期、分类、金额和币种。') }}</p>
   </div>
   <a class="btn btn-outline-secondary" href="{{ url_for('records_page') }}">{{ _('返回列表') }}</a>
 </div>
 
 <section class="card border-0 shadow-sm">
   <div class="card-body">
-    <form id="recordForm" data-record-id="{{ record_id or '' }}">
+    <form id="recordForm" data-record-id="{{ record_id or '' }}" data-base-currency="{{ current_base_currency }}">
       <div class="row g-3">
         <div class="col-md-6">
           <label class="form-label" for="date">{{ _('日期') }}</label>
@@ -32,13 +32,37 @@
         </div>
         <div class="col-md-6">
           <label class="form-label" for="amount">{{ _('金额') }}</label>
-          <input class="form-control" type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required>
+          <input class="form-control" type="text" inputmode="decimal" id="amount" placeholder="0" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="currencyCode">{{ _('币种') }}</label>
+          <select class="form-select" id="currencyCode" required>
+            {% for value, label in currency_options.items() %}
+              <option value="{{ value }}" {% if current_base_currency == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-12" id="exchangeRateGroup">
+          <label class="form-label" for="exchangeRate">{{ _('换算汇率') }}</label>
+          <div class="input-group">
+            <span class="input-group-text" id="ratePrefix">1 JPY =</span>
+            <input class="form-control" type="text" inputmode="decimal" id="exchangeRate" placeholder="0.047">
+            <span class="input-group-text" id="rateSuffix">{{ current_base_currency }}</span>
+          </div>
+          <div class="form-text" id="exchangeRateHelp"></div>
+        </div>
+        <div class="col-12">
+          <label class="form-label">{{ _('换算结果') }}</label>
+          <div class="alert alert-light border mb-0" id="conversionPreview">{{ _('无需换算') }}</div>
         </div>
         <div class="col-12">
           <label class="form-label" for="note">{{ _('备注') }}</label>
           <input class="form-control" type="text" id="note" placeholder="{{ _('可选备注') }}" maxlength="100">
         </div>
       </div>
+      {% if record_id %}
+        <div class="alert alert-info mt-3 mb-0">{{ _('修改金额、币种、日期或汇率后，系统将重新计算折算金额。') }}</div>
+      {% endif %}
       <div class="d-flex gap-2 mt-4">
         <button type="submit" class="btn btn-primary" id="submitBtn">{% if record_id %}{{ _('保存修改') }}{% else %}{{ _('添加记录') }}{% endif %}</button>
         <a class="btn btn-outline-secondary" href="{{ url_for('records_page') }}">{{ _('取消') }}</a>

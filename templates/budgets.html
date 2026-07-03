@@ -6,7 +6,7 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
   <div>
     <h1 class="h3 mb-1">{{ _('预算管理') }}</h1>
-    <p class="text-muted mb-0">{{ _('为每个月设置支出预算。') }}</p>
+    <p class="text-muted mb-0">{{ _('为每个月设置支出预算。') }} {{ _('新预算使用当前默认货币。') }}</p>
   </div>
   <input class="form-control w-auto" type="month" id="budgetMonth">
 </div>
@@ -14,18 +14,19 @@
 <section class="card border-0 shadow-sm">
   <div class="card-body">
     <div class="input-group mb-3">
-      <span class="input-group-text">￥</span>
+      <span class="input-group-text" id="budgetCurrencyLabel">{{ current_base_currency }}</span>
       <input class="form-control" type="number" id="budgetAmount" min="0" step="0.01" placeholder="{{ _('设置预算金额') }}">
       <button class="btn btn-primary" type="button" id="saveBudgetBtn">{{ _('保存预算') }}</button>
     </div>
     <div class="d-flex justify-content-between small text-muted mb-1">
-      <span id="budgetUsed">{{ _('已用 %(amount)s', amount='￥0.00') }}</span>
+      <span id="budgetUsed">{{ _('已用 %(amount)s', amount=0|money(current_base_currency)) }}</span>
       <span id="budgetPercent">0%</span>
     </div>
     <div class="progress mb-3">
       <div class="progress-bar" id="budgetProgress" style="width: 0%"></div>
     </div>
     <div class="alert alert-secondary mb-0 py-2" id="budgetStatus">{{ _('未设置预算') }}</div>
+    <div class="form-text mt-2" id="budgetCurrencyHint">{{ _('预算币种') }}：{{ current_base_currency }}</div>
   </div>
 </section>
 {% endblock %}

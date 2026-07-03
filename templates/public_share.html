@@ -15,7 +15,12 @@
       {% if link.description %}
         <p class="text-muted mb-3">{{ link.description }}</p>
       {% endif %}
-      <div class="text-muted">{{ _('统计月份') }}：{{ summary.month }}</div>
+      <div class="text-muted">{{ _('统计月份') }}：{{ summary.month }} · {{ _('统计货币') }}：{{ summary.currencyCode }}</div>
+      {% if summary.estimatedRateNotice or summary.missingRateNotice %}
+        <div class="alert alert-warning mt-3 mb-0">
+          {{ summary.estimatedRateNotice }} {{ summary.missingRateNotice }}
+        </div>
+      {% endif %}
     </section>
 
     <section class="row g-3 mb-4">
@@ -24,7 +29,7 @@
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
               <div class="text-muted small mb-1">{{ _('收入汇总') }}</div>
-              <div class="fs-4 fw-bold text-success">￥{{ '%.2f'|format(summary.totalIncome) }}</div>
+              <div class="fs-4 fw-bold text-success">{{ summary.formattedTotalIncome }}</div>
             </div>
           </div>
         </div>
@@ -34,7 +39,7 @@
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
               <div class="text-muted small mb-1">{{ _('支出汇总') }}</div>
-              <div class="fs-4 fw-bold text-danger">￥{{ '%.2f'|format(summary.totalExpense) }}</div>
+              <div class="fs-4 fw-bold text-danger">{{ summary.formattedTotalExpense }}</div>
             </div>
           </div>
         </div>
@@ -43,7 +48,7 @@
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
             <div class="text-muted small mb-1">{{ _('结余') }}</div>
-            <div class="fs-4 fw-bold text-primary">￥{{ '%.2f'|format(summary.balance) }}</div>
+            <div class="fs-4 fw-bold text-primary">{{ summary.formattedBalance }}</div>
           </div>
         </div>
       </div>
@@ -60,7 +65,7 @@
                   <div class="mb-3">
                     <div class="d-flex justify-content-between small mb-1">
                       <span>{{ item.category }}</span>
-                      <span>￥{{ '%.2f'|format(item.amount) }} / {{ item.percent }}%</span>
+                      <span>{{ item.formatted_amount }} / {{ item.percent }}%</span>
                     </div>
                     <div class="progress">
                       <div class="progress-bar bg-danger" style="width: {{ item.percent }}%"></div>
@@ -82,7 +87,7 @@
                   <div class="mb-3">
                     <div class="d-flex justify-content-between small mb-1">
                       <span>{{ item.category }}</span>
-                      <span>￥{{ '%.2f'|format(item.amount) }} / {{ item.percent }}%</span>
+                      <span>{{ item.formatted_amount }} / {{ item.percent }}%</span>
                     </div>
                     <div class="progress">
                       <div class="progress-bar bg-success" style="width: {{ item.percent }}%"></div>

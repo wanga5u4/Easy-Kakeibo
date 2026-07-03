@@ -1,6 +1,14 @@
 import sqlite3
 import os
+import logging
 from pathlib import Path
+
+from currency import (
+    DEFAULT_BASE_CURRENCY,
+    amount_to_minor_units_rounded,
+    format_money_minor,
+    minor_units_to_api_number,
+)
 
 DEFAULT_DB_PATH = Path(__file__).parent / "data" / "accounting.db"
 DB_PATH = Path(os.environ.get("DATABASE_PATH", DEFAULT_DB_PATH))
@@ -12,11 +20,26 @@ USER_PROFILE_COLUMNS = {
     "nickname": "TEXT NOT NULL DEFAULT ''",
     "language": "TEXT NOT NULL DEFAULT 'zh-CN'",
     "currency": "TEXT NOT NULL DEFAULT 'CNY'",
+    "base_currency_code": f"TEXT NOT NULL DEFAULT '{DEFAULT_BASE_CURRENCY}'",
     "plan": "TEXT NOT NULL DEFAULT 'free'",
     "premium_until": "TIMESTAMP",
 }
+RECORD_MULTI_CURRENCY_COLUMNS = {
+    "original_amount_minor": "INTEGER NOT NULL DEFAULT 0",
+    "currency_code": f"TEXT NOT NULL DEFAULT '{DEFAULT_BASE_CURRENCY}'",
+    "exchange_rate": "TEXT NOT NULL DEFAULT '1'",
+    "converted_amount_minor": "INTEGER NOT NULL DEFAULT 0",
+    "base_currency_code": f"TEXT NOT NULL DEFAULT '{DEFAULT_BASE_CURRENCY}'",
+    "rate_date": "TEXT",
+    "rate_source": "TEXT NOT NULL DEFAULT 'migration'",
+}
+BUDGET_MULTI_CURRENCY_COLUMNS = {
+    "amount_minor": "INTEGER NOT NULL DEFAULT 0",
+    "currency_code": f"TEXT NOT NULL DEFAULT '{DEFAULT_BASE_CURRENCY}'",
+}
 FEEDBACK_TYPES = ("bug", "feature", "question", "other")
 FEEDBACK_STATUSES = ("new", "reviewing", "resolved", "closed")
+LOGGER = logging.getLogger(__name__)
 
 
 def get_connection():
@@ -121,12 +144,31 @@ def init_db():
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS user_exchange_rates (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                from_currency_code TEXT NOT NULL,
+                to_currency_code TEXT NOT NULL,
+                rate TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                UNIQUE(user_id, from_currency_code, to_currency_code),
+                FOREIGN KEY(user_id) REFERENCES users(id)
+            )
+            """
+        )
         migrate_records_user_id(conn)
+        migrate_records_multi_currency(conn)
+        migrate_budgets_multi_currency(conn)
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_records_user_id ON records(user_id)"
         )
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_records_user_date ON records(user_id, date)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_records_user_base_month ON records(user_id, base_currency_code, date)"
         )
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_budgets_user_month ON budgets(user_id, month)"
@@ -149,6 +191,12 @@ def init_db():
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_share_links_created_at ON share_links(created_at)"
         )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_user_exchange_rates_user_id ON user_exchange_rates(user_id)"
+        )
+        conn.execute(
+            "CREATE UNIQUE INDEX IF NOT EXISTS idx_user_exchange_rates_direction ON user_exchange_rates(user_id, from_currency_code, to_currency_code)"
+        )
         conn.commit()
 
 
@@ -160,6 +208,22 @@ def migrate_users_profile_columns(conn):
         if column_name not in existing_columns:
             conn.execute(
                 f"ALTER TABLE users ADD COLUMN {column_name} {column_definition}"
+            )
+
+
+def get_table_columns(conn, table_name):
+    return {
+        column["name"]
+        for column in conn.execute(f"PRAGMA table_info({table_name})").fetchall()
+    }
+
+
+def add_missing_columns(conn, table_name, column_definitions):
+    existing_columns = get_table_columns(conn, table_name)
+    for column_name, column_definition in column_definitions.items():
+        if column_name not in existing_columns:
+            conn.execute(
+                f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_definition}"
             )
 
 
@@ -199,13 +263,125 @@ def migrate_records_user_id(conn):
     conn.execute("DROP TABLE records_old")
 
 
+def migrate_records_multi_currency(conn):
+    add_missing_columns(conn, "records", RECORD_MULTI_CURRENCY_COLUMNS)
+
+    pending_count = conn.execute(
+        """
+        SELECT COUNT(*)
+        FROM records
+        WHERE original_amount_minor <= 0 OR converted_amount_minor <= 0
+        """
+    ).fetchone()[0]
+    if not pending_count:
+        return
+
+    LOGGER.info("Starting records multi-currency migration: rows=%s", pending_count)
+    rows = conn.execute(
+        """
+        SELECT r.id, r.user_id, r.amount, u.base_currency_code
+        FROM records r
+        LEFT JOIN users u ON u.id = r.user_id
+        WHERE r.original_amount_minor <= 0 OR r.converted_amount_minor <= 0
+        """
+    ).fetchall()
+    migrated = 0
+    for row in rows:
+        base_currency_code = row["base_currency_code"] or DEFAULT_BASE_CURRENCY
+        try:
+            amount_minor = amount_to_minor_units_rounded(
+                row["amount"],
+                base_currency_code,
+            )
+        except Exception:
+            base_currency_code = DEFAULT_BASE_CURRENCY
+            amount_minor = amount_to_minor_units_rounded(row["amount"], base_currency_code)
+        conn.execute(
+            """
+            UPDATE records
+            SET original_amount_minor = ?,
+                currency_code = ?,
+                exchange_rate = '1',
+                converted_amount_minor = ?,
+                base_currency_code = ?,
+                rate_date = NULL,
+                rate_source = 'migration'
+            WHERE id = ?
+            """,
+            (
+                amount_minor,
+                base_currency_code,
+                amount_minor,
+                base_currency_code,
+                row["id"],
+            ),
+        )
+        migrated += 1
+    LOGGER.info("Completed records multi-currency migration: rows=%s", migrated)
+
+
+def migrate_budgets_multi_currency(conn):
+    add_missing_columns(conn, "budgets", BUDGET_MULTI_CURRENCY_COLUMNS)
+    rows = conn.execute(
+        """
+        SELECT id, amount
+        FROM budgets
+        WHERE amount_minor <= 0 AND amount > 0
+        """
+    ).fetchall()
+    if rows:
+        LOGGER.info("Starting budgets currency migration: rows=%s", len(rows))
+    for row in rows:
+        amount_minor = amount_to_minor_units_rounded(
+            row["amount"],
+            DEFAULT_BASE_CURRENCY,
+        )
+        conn.execute(
+            """
+            UPDATE budgets
+            SET amount_minor = ?, currency_code = ?
+            WHERE id = ?
+            """,
+            (amount_minor, DEFAULT_BASE_CURRENCY, row["id"]),
+        )
+    if rows:
+        LOGGER.info("Completed budgets currency migration: rows=%s", len(rows))
+
+
 def row_to_dict(row):
+    original_currency = row["currency_code"]
+    base_currency = row["base_currency_code"]
+    original_amount = minor_units_to_api_number(
+        row["original_amount_minor"],
+        original_currency,
+    )
+    converted_amount = minor_units_to_api_number(
+        row["converted_amount_minor"],
+        base_currency,
+    )
     return {
         "id": row["id"],
         "date": row["date"],
         "type": row["type"],
         "category": row["category"],
-        "amount": row["amount"],
+        "amount": original_amount,
+        "original_amount": original_amount,
+        "original_amount_minor": row["original_amount_minor"],
+        "currency_code": original_currency,
+        "exchange_rate": row["exchange_rate"],
+        "converted_amount": converted_amount,
+        "converted_amount_minor": row["converted_amount_minor"],
+        "base_currency_code": base_currency,
+        "formatted_original_amount": format_money_minor(
+            row["original_amount_minor"],
+            original_currency,
+        ),
+        "formatted_converted_amount": format_money_minor(
+            row["converted_amount_minor"],
+            base_currency,
+        ),
+        "rate_date": row["rate_date"],
+        "rate_source": row["rate_source"],
         "note": row["note"],
         "createdAt": row["created_at"],
     }

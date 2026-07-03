@@ -170,11 +170,11 @@ def test_public_share_privacy_and_scope(app_module, client):
     logout_user(client)
 
     page = client.get(f"/s/{token}?month=2026-08").get_data(as_text=True)
-    assert "￥100.00" in page
-    assert "￥40.00" in page
-    assert "￥60.00" in page
-    assert "￥999.00" not in page
-    assert "￥777.00" not in page
+    assert "¥100 JPY" in page
+    assert "¥40 JPY" in page
+    assert "¥60 JPY" in page
+    assert "¥999 JPY" not in page
+    assert "¥777 JPY" not in page
     assert "alice@example.com" not in page
     assert "User ID" not in page
     assert "secret salary note" not in page

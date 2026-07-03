@@ -73,7 +73,7 @@ def create_record(
     date="2026-06-15",
     record_type="expense",
     category="food",
-    amount=12.5,
+    amount=12,
     note="lunch",
     extra=None,
 ):

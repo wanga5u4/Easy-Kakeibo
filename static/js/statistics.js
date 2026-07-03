@@ -3,6 +3,8 @@ const statsEls = {
   totalIncome: document.getElementById('totalIncome'),
   totalExpense: document.getElementById('totalExpense'),
   balance: document.getElementById('balance'),
+  currency: document.getElementById('statisticsCurrency'),
+  currencyNotice: document.getElementById('currencyNotice'),
 };
 
 let categoryChart = null;
@@ -67,9 +69,15 @@ async function loadStatistics() {
   setLoading(true);
   try {
     const data = await api(`/analytics?month=${statsEls.month.value}`);
-    statsEls.totalIncome.textContent = formatMoney(data.totalIncome);
-    statsEls.totalExpense.textContent = formatMoney(data.totalExpense);
-    statsEls.balance.textContent = formatMoney(data.balance);
+    statsEls.totalIncome.textContent = data.formattedTotalIncome || formatMoney(data.totalIncome, data.currencyCode);
+    statsEls.totalExpense.textContent = data.formattedTotalExpense || formatMoney(data.totalExpense, data.currencyCode);
+    statsEls.balance.textContent = data.formattedBalance || formatMoney(data.balance, data.currencyCode);
+    if (statsEls.currency) statsEls.currency.textContent = data.currencyCode || '';
+    if (statsEls.currencyNotice) {
+      const notices = [data.estimatedRateNotice, data.missingRateNotice].filter(Boolean);
+      statsEls.currencyNotice.textContent = notices.join(' ');
+      statsEls.currencyNotice.classList.toggle('hidden', notices.length === 0);
+    }
     renderCategoryChart(data.categories);
     renderTrendChart(data.trend);
   } catch (err) {

@@ -14,7 +14,7 @@ def test_add_edit_delete_record(client):
             "date": "2026-06-16",
             "type": "income",
             "category": "salary",
-            "amount": 1000.55,
+            "amount": 1000,
             "note": "pay",
         },
         headers=csrf_headers(client),
@@ -36,10 +36,15 @@ def test_record_date_validation(client):
 
 def test_record_amount_validation(client):
     login_as_new_user(client, "alice", "alice@example.com")
-    for value in ["", 0, -1, "abc", "NaN", "Infinity", "-Infinity", 1_000_000_001]:
+    for value in ["", 0, -1, "abc", "NaN", "Infinity", "-Infinity", 1_000_000_000_000]:
         assert create_record(client, amount=value).status_code == 400
     assert create_record(client, amount=10).status_code == 201
-    assert create_record(client, amount=10.23).status_code == 201
+    assert create_record(client, amount=10.23).status_code == 400
+    assert create_record(
+        client,
+        amount="10.23",
+        extra={"currency_code": "CNY", "exchange_rate": "20"},
+    ).status_code == 201
 
 
 def test_record_type_and_category_validation(client):

@@ -17,3 +17,5 @@ logs/
 coverage.xml
 htmlcov/
 .coverage
+
+.tmp/

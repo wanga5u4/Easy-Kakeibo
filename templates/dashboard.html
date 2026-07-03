@@ -15,24 +15,24 @@
   <div class="col-md-4">
     <div class="card border-0 shadow-sm h-100">
       <div class="card-body">
-        <div class="text-muted small mb-1">{{ _('本月收入') }}</div>
-        <div class="fs-4 fw-bold text-success" id="totalIncome">￥0.00</div>
+        <div class="text-muted small mb-1">{{ _('本月收入') }} · <span class="statCurrency">{{ current_base_currency }}</span></div>
+        <div class="fs-4 fw-bold text-success" id="totalIncome">{{ 0|money(current_base_currency) }}</div>
       </div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="card border-0 shadow-sm h-100">
       <div class="card-body">
-        <div class="text-muted small mb-1">{{ _('本月支出') }}</div>
-        <div class="fs-4 fw-bold text-danger" id="totalExpense">￥0.00</div>
+        <div class="text-muted small mb-1">{{ _('本月支出') }} · <span class="statCurrency">{{ current_base_currency }}</span></div>
+        <div class="fs-4 fw-bold text-danger" id="totalExpense">{{ 0|money(current_base_currency) }}</div>
       </div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="card border-0 shadow-sm h-100">
       <div class="card-body">
-        <div class="text-muted small mb-1">{{ _('本月结余') }}</div>
-        <div class="fs-4 fw-bold text-primary" id="balance">￥0.00</div>
+        <div class="text-muted small mb-1">{{ _('本月结余') }} · <span class="statCurrency">{{ current_base_currency }}</span></div>
+        <div class="fs-4 fw-bold text-primary" id="balance">{{ 0|money(current_base_currency) }}</div>
       </div>
     </div>
   </div>
@@ -44,13 +44,14 @@
       <div class="card-body">
         <h2 class="h5 mb-3">{{ _('预算状态') }}</h2>
         <div class="d-flex justify-content-between small text-muted mb-1">
-          <span id="budgetUsed">{{ _('已用 %(amount)s', amount='￥0.00') }}</span>
+          <span id="budgetUsed">{{ _('已用 %(amount)s', amount=0|money(current_base_currency)) }}</span>
           <span id="budgetPercent">0%</span>
         </div>
         <div class="progress mb-3">
           <div class="progress-bar" id="budgetProgress" style="width: 0%"></div>
         </div>
         <div class="alert alert-secondary py-2 mb-3" id="budgetStatus">{{ _('未设置预算') }}</div>
+        <div class="alert alert-warning py-2 mb-3 hidden" id="currencyNotice"></div>
         <a class="btn btn-outline-primary btn-sm" href="{{ url_for('budgets_page') }}">{{ _('管理预算') }}</a>
       </div>
     </div>

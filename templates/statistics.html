@@ -4,18 +4,20 @@
 
 {% block content %}
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-  <div>
+      <div>
     <h1 class="h3 mb-1">{{ _('统计分析') }}</h1>
     <p class="text-muted mb-0">{{ _('查看月度统计、分类占比和六个月趋势。') }}</p>
+    <p class="text-muted mb-0">{{ _('统计货币') }}：<span id="statisticsCurrency">{{ current_base_currency }}</span></p>
   </div>
   <input class="form-control w-auto" type="month" id="statsMonth">
 </div>
 
 <section class="row g-3 mb-4">
-  <div class="col-md-4"><div class="card border-0 shadow-sm"><div class="card-body"><div class="text-muted small mb-1">{{ _('本月收入') }}</div><div class="fs-4 fw-bold text-success" id="totalIncome">￥0.00</div></div></div></div>
-  <div class="col-md-4"><div class="card border-0 shadow-sm"><div class="card-body"><div class="text-muted small mb-1">{{ _('本月支出') }}</div><div class="fs-4 fw-bold text-danger" id="totalExpense">￥0.00</div></div></div></div>
-  <div class="col-md-4"><div class="card border-0 shadow-sm"><div class="card-body"><div class="text-muted small mb-1">{{ _('本月结余') }}</div><div class="fs-4 fw-bold text-primary" id="balance">￥0.00</div></div></div></div>
+  <div class="col-md-4"><div class="card border-0 shadow-sm"><div class="card-body"><div class="text-muted small mb-1">{{ _('本月收入') }}</div><div class="fs-4 fw-bold text-success" id="totalIncome">{{ 0|money(current_base_currency) }}</div></div></div></div>
+  <div class="col-md-4"><div class="card border-0 shadow-sm"><div class="card-body"><div class="text-muted small mb-1">{{ _('本月支出') }}</div><div class="fs-4 fw-bold text-danger" id="totalExpense">{{ 0|money(current_base_currency) }}</div></div></div></div>
+  <div class="col-md-4"><div class="card border-0 shadow-sm"><div class="card-body"><div class="text-muted small mb-1">{{ _('本月结余') }}</div><div class="fs-4 fw-bold text-primary" id="balance">{{ 0|money(current_base_currency) }}</div></div></div></div>
 </section>
+<div class="alert alert-warning hidden" id="currencyNotice"></div>
 
 <section class="row g-4">
   <div class="col-lg-6">
