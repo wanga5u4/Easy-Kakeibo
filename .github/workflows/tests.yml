@@ -13,11 +13,10 @@ jobs:
     env:
       APP_ENV: testing
       SECRET_KEY: ci-test-secret
-      DATABASE_PATH: ${{ runner.temp }}/accounting-ci.db
-      SESSION_COOKIE_SECURE: "false"
+      DATABASE_PATH:  .tmp/accounting-ci.db
       RATELIMIT_STORAGE_URI: memory://
-      LOG_DIR: ${{ runner.temp }}/logs
-      BACKUP_DIR: ${{ runner.temp }}/backups
+      LOG_DIR: .tmp/logs
+      BACKUP_DIR: .tmp/backups/backups
       BACKUP_RETENTION_DAYS: "14"
       PYTHONUNBUFFERED: "1"
 
