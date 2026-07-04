@@ -1,6 +1,9 @@
 from conftest import login_as_new_user
 
 
+DONATION_IMAGE = "wechat-donation.jpg"
+
+
 def test_support_page_accessible_without_login(client):
     response = client.get("/support")
 
@@ -11,14 +14,53 @@ def test_support_page_accessible_without_login(client):
     assert b"Premium" not in response.data
 
 
+def test_support_page_shows_wechat_donation_for_public_users(client):
+    response = client.get("/support")
+    page = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert "微信赞赏" in page
+    assert "请使用微信扫一扫" in page
+    assert f"/static/images/{DONATION_IMAGE}" in page
+    assert "赞助预留区域" not in page
+    assert "支付成功" not in page
+    assert "我已支付" not in page
+    assert "赞助完成" not in page
+
+
+def test_support_page_keeps_feedback_and_share_entry_logic(client):
+    response = client.get("/support")
+    page = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert 'href="/login?next=/feedback"' in page
+    assert 'href="/share"' not in page
+    assert "报告使用问题，或告诉我们你希望加入的功能。" in page
+    assert "把这个记账工具推荐给有需要的朋友。" in page
+    assert "通过微信赞赏支持服务器、域名和持续开发。" in page
+
+
 def test_support_page_accessible_when_logged_in(client):
     login_as_new_user(client, "alice", "alice@example.com")
 
     response = client.get("/support")
+    page = response.get_data(as_text=True)
 
     assert response.status_code == 200
-    assert "支持 Easy Kakeibo".encode("utf-8") in response.data
-    assert "欢迎，alice".encode("utf-8") in response.data
+    assert "支持 Easy Kakeibo" in page
+    assert "欢迎，alice" in page
+    assert 'href="/feedback"' in page
+    assert 'href="/share"' in page
+
+
+def test_feedback_and_share_routes_still_require_login(client):
+    feedback_response = client.get("/feedback")
+    share_response = client.get("/share")
+
+    assert feedback_response.status_code == 302
+    assert "/login" in feedback_response.headers["Location"]
+    assert share_response.status_code == 302
+    assert "/login" in share_response.headers["Location"]
 
 
 def test_support_page_language_switch_to_japanese(client):
