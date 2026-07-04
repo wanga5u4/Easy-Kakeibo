@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-03 23:10+0900\n"
+"POT-Creation-Date: 2026-07-04 18:09+0900\n"
 "PO-Revision-Date: 2026-06-30 22:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -148,10 +148,9 @@ msgstr "機能のご要望"
 msgid "使用问题"
 msgstr "使い方の質問"
 
-#: server.py:789
-#, fuzzy
+#: server.py:789 templates/index.html:130
 msgid "其他"
-msgstr "その他収入"
+msgstr "その他"
 
 #: server.py:795
 msgid "新建"
@@ -338,15 +337,15 @@ msgstr "副業"
 msgid "其他收入"
 msgstr "その他収入"
 
-#: server.py:1235
+#: server.py:1235 templates/index.html:126
 msgid "餐饮"
-msgstr "飲食"
+msgstr "食費"
 
-#: server.py:1235
+#: server.py:1235 templates/index.html:128
 msgid "交通"
 msgstr "交通"
 
-#: server.py:1235
+#: server.py:1235 templates/index.html:129
 msgid "购物"
 msgstr "買い物"
 
@@ -370,11 +369,11 @@ msgstr "教育"
 msgid "其他支出"
 msgstr "その他支出"
 
-#: server.py:1237 server.py:1250 templates/record_form.html:26
+#: server.py:1237 server.py:1250 templates/index.html:141 templates/record_form.html:26
 msgid "收入"
 msgstr "収入"
 
-#: server.py:1237 server.py:1251 templates/record_form.html:25
+#: server.py:1237 server.py:1251 templates/index.html:142 templates/record_form.html:25
 msgid "支出"
 msgstr "支出"
 
@@ -631,7 +630,7 @@ msgstr "共有"
 msgid "首页"
 msgstr "ホーム"
 
-#: templates/base.html:30 templates/feedback.html:11 templates/index.html:110 templates/index.html:114
+#: templates/base.html:30 templates/feedback.html:11 templates/index.html:114 templates/index.html:118
 #: templates/settings.html:11 templates/support.html:3
 msgid "支持与计划"
 msgstr "サポートと予定"
@@ -653,7 +652,7 @@ msgstr "無料版"
 msgid "退出登录"
 msgstr "ログアウト"
 
-#: templates/base.html:56 templates/index.html:19 templates/index.html:113 templates/login.html:59
+#: templates/base.html:56 templates/index.html:19 templates/index.html:117 templates/login.html:59
 msgid "登录"
 msgstr "ログイン"
 
@@ -661,7 +660,7 @@ msgstr "ログイン"
 msgid "注册"
 msgstr "登録"
 
-#: templates/budgets.html:3 templates/budgets.html:8 templates/index.html:62
+#: templates/budgets.html:3 templates/budgets.html:8 templates/index.html:79
 msgid "预算管理"
 msgstr "予算管理"
 
@@ -685,11 +684,11 @@ msgstr "予算を保存"
 msgid "查看本月概览，快速进入常用功能。"
 msgstr "今月の概要を確認し、よく使う機能へすばやく移動します。"
 
-#: templates/dashboard.html:18 templates/index.html:32 templates/statistics.html:16
+#: templates/dashboard.html:18 templates/index.html:35 templates/statistics.html:16
 msgid "本月收入"
 msgstr "今月の収入"
 
-#: templates/dashboard.html:26 templates/index.html:36 templates/statistics.html:17
+#: templates/dashboard.html:26 templates/index.html:39 templates/statistics.html:17
 msgid "本月支出"
 msgstr "今月の支出"
 
@@ -697,7 +696,7 @@ msgstr "今月の支出"
 msgid "本月结余"
 msgstr "今月の残高"
 
-#: templates/dashboard.html:45 templates/index.html:40
+#: templates/dashboard.html:45 templates/index.html:43
 msgid "预算状态"
 msgstr "予算状況"
 
@@ -797,7 +796,7 @@ msgstr "収支をかんたんに記録"
 msgid "简洁清晰的中日双语个人记账工具，帮助你管理收入、支出、预算和消费趋势。"
 msgstr "すっきり見やすい中日バイリンガルの個人向け家計簿ツール。収入、支出、予算、消費傾向の管理を助けます。"
 
-#: templates/index.html:15 templates/index.html:109
+#: templates/index.html:15 templates/index.html:113
 msgid "进入仪表盘"
 msgstr "ダッシュボードへ"
 
@@ -806,104 +805,128 @@ msgid "免费开始使用"
 msgstr "無料で始める"
 
 #: templates/index.html:24
-msgid "仪表盘预览占位图"
-msgstr "ダッシュボードプレビューのプレースホルダー"
+msgid "模拟记账仪表盘"
+msgstr "家計簿デモダッシュボード"
 
-#: templates/index.html:33 templates/index.html:37
-msgid "示例数据"
-msgstr "サンプルデータ"
+#: templates/index.html:31
+msgid "演示数据"
+msgstr "デモデータ"
 
-#: templates/index.html:44
-msgid "产品截图预留区域，后续可替换为不含真实用户数据的仪表盘截图。"
-msgstr "製品スクリーンショット用のエリアです。後で実ユーザーデータを含まないダッシュボード画像に差し替えられます。"
+#: templates/index.html:44 templates/index.html:45
+msgid "已使用"
+msgstr "使用済み"
 
-#: templates/index.html:53
+#: templates/index.html:50
+msgid "支出分类"
+msgstr "支出カテゴリ"
+
+#: templates/index.html:56
+msgid "收支趋势"
+msgstr "収支トレンド"
+
+#: templates/index.html:70
 msgid "主要功能"
 msgstr "主な機能"
 
-#: templates/index.html:54
+#: templates/index.html:71
 msgid "从日常记账到趋势查看，把个人财务整理得更清楚。"
 msgstr "毎日の記録から傾向の確認まで、個人のお金の流れをわかりやすく整理します。"
 
-#: templates/index.html:59
+#: templates/index.html:76
 msgid "收入与支出记录"
 msgstr "収入と支出の記録"
 
-#: templates/index.html:59
+#: templates/index.html:76
 msgid "快速记录收入和支出，保留日期、分类、金额和备注。"
 msgstr "収入と支出をすばやく記録し、日付、カテゴリ、金額、メモを残せます。"
 
-#: templates/index.html:60
+#: templates/index.html:77
 msgid "分类与搜索"
 msgstr "カテゴリと検索"
 
-#: templates/index.html:60
+#: templates/index.html:77
 msgid "按类型、月份和分类整理账目，回看消费更轻松。"
 msgstr "タイプ、月、カテゴリで記録を整理し、支出の振り返りを楽にします。"
 
-#: templates/index.html:61
+#: templates/index.html:78
 msgid "数据统计与图表"
 msgstr "統計とグラフ"
 
-#: templates/index.html:61
+#: templates/index.html:78
 msgid "用清晰图表查看收入、支出和分类占比。"
 msgstr "見やすいグラフで収入、支出、カテゴリ別の割合を確認できます。"
 
-#: templates/index.html:62
+#: templates/index.html:79
 msgid "为每月支出设置预算，并查看使用进度。"
 msgstr "月ごとの支出予算を設定し、使用状況を確認できます。"
 
-#: templates/index.html:63
+#: templates/index.html:80
 msgid "中日双语"
 msgstr "中国語・日本語対応"
 
-#: templates/index.html:63
+#: templates/index.html:80
 msgid "支持简体中文和日语界面，适合跨语言日常使用。"
 msgstr "簡体字中国語と日本語の画面に対応し、複数言語での日常利用に向いています。"
 
-#: templates/index.html:64
+#: templates/index.html:81
 msgid "手机端适配"
 msgstr "モバイル対応"
 
-#: templates/index.html:64
+#: templates/index.html:81
 msgid "页面在手机、平板和电脑上都能顺畅使用。"
 msgstr "スマートフォン、タブレット、PC でスムーズに使えます。"
 
-#: templates/index.html:83
-msgid "产品预览"
-msgstr "製品プレビュー"
-
-#: templates/index.html:85
-msgid "这里将展示仪表盘截图"
-msgstr "ここにダッシュボード画像を表示します"
-
-#: templates/index.html:86
-msgid "本次使用静态占位区域，避免展示真实用户数据或依赖外部图片。"
-msgstr "今回は静的なプレースホルダーを使い、実ユーザーデータの表示や外部画像への依存を避けています。"
-
-#: templates/index.html:94
+#: templates/index.html:99
 msgid "使用说明"
 msgstr "利用にあたって"
 
-#: templates/index.html:96
+#: templates/index.html:101
 msgid "当前可免费使用。"
 msgstr "現在は無料で利用できます。"
 
-#: templates/index.html:97
+#: templates/index.html:102
 msgid "数据按账号隔离，登录后只能查看自己的记录。"
 msgstr "データはアカウントごとに分離され、ログイン後は自分の記録だけを閲覧できます。"
 
-#: templates/index.html:98
+#: templates/index.html:103
 msgid "项目仍在持续更新，功能会根据反馈逐步改进。"
 msgstr "プロジェクトは継続的に更新されており、フィードバックに応じて少しずつ改善していきます。"
 
-#: templates/index.html:106
+#: templates/index.html:110
 msgid "开始整理你的个人账本"
 msgstr "個人の家計簿を整えはじめましょう"
 
-#: templates/index.html:112
+#: templates/index.html:116
 msgid "免费注册"
 msgstr "無料登録"
+
+#: templates/index.html:127
+msgid "房租"
+msgstr "家賃"
+
+#: templates/index.html:134
+msgid "1月"
+msgstr "1月"
+
+#: templates/index.html:135
+msgid "2月"
+msgstr "2月"
+
+#: templates/index.html:136
+msgid "3月"
+msgstr "3月"
+
+#: templates/index.html:137
+msgid "4月"
+msgstr "4月"
+
+#: templates/index.html:138
+msgid "5月"
+msgstr "5月"
+
+#: templates/index.html:139
+msgid "6月"
+msgstr "6月"
 
 #: templates/login.html:6 templates/login.html:13
 msgid "用户登录"
@@ -1481,46 +1504,4 @@ msgstr "v0.4.0"
 #: templates/support.html:114
 msgid "用户设置与会员展示版"
 msgstr "ユーザー設定と会員表示版"
-
-#~ msgid "登录后继续管理你的账本"
-#~ msgstr "ログインして家計簿の管理を続けましょう"
-
-#~ msgid "注册账号"
-#~ msgstr "アカウント登録"
-
-#~ msgid "创建账号后即可开始管理个人账本"
-#~ msgstr "アカウントを作成すると、すぐに個人の家計簿を管理できます"
-
-#~ msgid "去登录"
-#~ msgstr "ログインへ"
-
-#~ msgid "用户名用于登录和数据归属，保存后不可直接修改。"
-#~ msgstr "ユーザー名はログインとデータの識別に使用され、保存後は直接変更できません。"
-
-#~ msgid "当前套餐"
-#~ msgstr "現在のプラン"
-
-#~ msgid "当前账号使用的套餐与权益状态。"
-#~ msgstr "現在のアカウントのプランと特典状況です。"
-
-#~ msgid "美元 USD"
-#~ msgstr "米ドル USD"
-
-#~ msgid "欧元 EUR"
-#~ msgstr "ユーロ EUR"
-
-#~ msgid "原始金额"
-#~ msgstr "元の金額"
-
-#~ msgid "原始币种"
-#~ msgstr "通貨"
-
-#~ msgid "汇率方向固定为：1 原始货币 = X 默认货币。"
-#~ msgstr "レートの方向は固定です：元の通貨 1 = 基準通貨 X。"
-
-#~ msgid "默认货币修改只影响之后新增或重新编辑的记录。历史记录保留创建时的汇率与换算结果。"
-#~ msgstr "基準通貨の変更は、今後追加または再編集する記録にのみ適用されます。履歴は作成時の為替レートと換算結果を保持します。"
-
-#~ msgid "部分历史记录使用其他基准货币，未计入当前统计"
-#~ msgstr "一部の履歴は別の基準通貨で保存されているため、現在の集計には含まれていません"
 

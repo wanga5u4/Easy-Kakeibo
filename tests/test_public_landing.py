@@ -8,8 +8,46 @@ def test_landing_page_accessible_without_login(client):
 
     assert response.status_code == 200
     assert "轻松记录每一笔收支".encode("utf-8") in response.data
+    assert "演示数据".encode("utf-8") in response.data
+    assert "本月收入".encode("utf-8") in response.data
+    assert "¥185,000".encode("utf-8") in response.data
+    assert "¥126,800".encode("utf-8") in response.data
+    assert "已使用".encode("utf-8") in response.data
+    assert "63%".encode("utf-8") in response.data
+    assert "支出分类".encode("utf-8") in response.data
+    assert "收支趋势".encode("utf-8") in response.data
+    assert b'id="landingDemoDashboard"' in response.data
+    assert b'id="landingCategoryChart"' in response.data
+    assert b'id="landingTrendChart"' in response.data
     assert 'href="/login"'.encode("utf-8") in response.data
     assert 'href="/register"'.encode("utf-8") in response.data
+
+
+def test_landing_page_removes_old_product_preview_placeholder(client):
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert "产品预览".encode("utf-8") not in response.data
+    assert "这里将展示仪表盘截图".encode("utf-8") not in response.data
+    assert "本次使用静态占位区域".encode("utf-8") not in response.data
+    assert "产品截图预留区域".encode("utf-8") not in response.data
+    assert "示例数据".encode("utf-8") not in response.data
+
+
+def test_landing_demo_charts_use_static_data_without_user_api(client):
+    page = client.get("/")
+    script = client.get("/static/js/landing.js")
+
+    assert page.status_code == 200
+    assert script.status_code == 200
+    assert b"https://cdn.jsdelivr.net/npm/chart.js" in page.data
+    assert 'src="/static/js/landing.js"'.encode("utf-8") in page.data
+    assert b'"categoryValues": [32, 30, 12, 16, 10]' in page.data
+    assert b'"incomeValues": [150000, 170000, 160000, 190000, 175000, 185000]' in page.data
+    assert b'"expenseValues": [105000, 120000, 115000, 138000, 121000, 126800]' in page.data
+    assert b"fetch(" not in script.data
+    assert b"api(" not in script.data
+    assert b"/api/" not in script.data
 
 
 def test_landing_page_accessible_when_logged_in(client):
@@ -89,8 +127,16 @@ def test_landing_page_renders_chinese_and_japanese(client):
 
     assert chinese.status_code == 200
     assert "轻松记录每一笔收支".encode("utf-8") in chinese.data
+    assert "演示数据".encode("utf-8") in chinese.data
+    assert "支出分类".encode("utf-8") in chinese.data
+    assert "收入".encode("utf-8") in chinese.data
+    assert "支出".encode("utf-8") in chinese.data
     assert japanese.status_code == 200
     assert "収支をかんたんに記録".encode("utf-8") in japanese.data
+    assert "デモデータ".encode("utf-8") in japanese.data
+    assert "支出カテゴリ".encode("utf-8") in japanese.data
+    assert "収入".encode("utf-8") in japanese.data
+    assert "支出".encode("utf-8") in japanese.data
 
 
 def test_existing_user_data_pages_still_require_login(client):
@@ -116,6 +162,7 @@ def test_landing_template_static_assets_resolve(client):
     assert response.status_code == 200
     assert 'href="/static/css/styles.css"'.encode("utf-8") in response.data
     assert 'src="/static/js/common.js"'.encode("utf-8") in response.data
+    assert 'src="/static/js/landing.js"'.encode("utf-8") in response.data
     assert b"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" in response.data
 
 

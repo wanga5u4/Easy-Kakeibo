@@ -6,7 +6,7 @@
 {% block content %}
 <section class="landing-hero mb-5">
   <div class="row align-items-center g-4">
-    <div class="col-lg-6">
+    <div class="col-lg-5 landing-hero-copy">
       <p class="text-primary fw-semibold mb-2">{{ _('Easy Kakeibo') }}</p>
       <h1 class="display-5 fw-bold mb-3">{{ _('轻松记录每一笔收支') }}</h1>
       <p class="lead text-muted mb-4">{{ _('简洁清晰的中日双语个人记账工具，帮助你管理收入、支出、预算和消费趋势。') }}</p>
@@ -20,28 +20,45 @@
         {% endif %}
       </div>
     </div>
-    <div class="col-lg-6">
-      <div class="landing-preview" role="img" aria-label="{{ _('仪表盘预览占位图') }}">
-        <div class="preview-toolbar">
-          <span></span>
-          <span></span>
-          <span></span>
+    <div class="col-lg-7 landing-hero-demo">
+      <div class="landing-preview" id="landingDemoDashboard" role="region" aria-label="{{ _('模拟记账仪表盘') }}">
+        <div class="preview-header">
+          <div class="preview-toolbar" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span class="preview-demo-badge">{{ _('演示数据') }}</span>
         </div>
         <div class="preview-grid">
           <div class="preview-card">
             <div class="preview-label">{{ _('本月收入') }}</div>
-            <div class="preview-value text-success">{{ _('示例数据') }}</div>
+            <div class="preview-value text-success">¥185,000</div>
           </div>
           <div class="preview-card">
             <div class="preview-label">{{ _('本月支出') }}</div>
-            <div class="preview-value text-danger">{{ _('示例数据') }}</div>
+            <div class="preview-value text-danger">¥126,800</div>
           </div>
           <div class="preview-card">
             <div class="preview-label">{{ _('预算状态') }}</div>
-            <div class="preview-bar"><span></span></div>
+            <div class="preview-value">{{ _('已使用') }} 63%</div>
+            <div class="preview-bar" aria-label="{{ _('已使用') }} 63%"><span style="width: 63%"></span></div>
           </div>
         </div>
-        <p class="text-muted small mb-0">{{ _('产品截图预留区域，后续可替换为不含真实用户数据的仪表盘截图。') }}</p>
+        <div class="preview-chart-grid">
+          <div class="preview-chart-card">
+            <h2 class="preview-chart-title">{{ _('支出分类') }}</h2>
+            <div class="preview-chart-box preview-chart-box-doughnut">
+              <canvas id="landingCategoryChart"></canvas>
+            </div>
+          </div>
+          <div class="preview-chart-card">
+            <h2 class="preview-chart-title">{{ _('收支趋势') }}</h2>
+            <div class="preview-chart-box">
+              <canvas id="landingTrendChart"></canvas>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -76,28 +93,15 @@
   </div>
 </section>
 
-<section class="row g-4 align-items-stretch mb-5">
-  <div class="col-lg-7">
-    <div class="card border-0 shadow-sm h-100">
-      <div class="card-body">
-        <h2 class="h4 mb-3">{{ _('产品预览') }}</h2>
-        <div class="landing-screenshot-placeholder">
-          <div class="fw-semibold mb-1">{{ _('这里将展示仪表盘截图') }}</div>
-          <div class="text-muted small">{{ _('本次使用静态占位区域，避免展示真实用户数据或依赖外部图片。') }}</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-5">
-    <div class="card border-0 shadow-sm h-100">
-      <div class="card-body">
-        <h2 class="h4 mb-3">{{ _('使用说明') }}</h2>
-        <ul class="landing-trust-list">
-          <li>{{ _('当前可免费使用。') }}</li>
-          <li>{{ _('数据按账号隔离，登录后只能查看自己的记录。') }}</li>
-          <li>{{ _('项目仍在持续更新，功能会根据反馈逐步改进。') }}</li>
-        </ul>
-      </div>
+<section class="mb-5">
+  <div class="card border-0 shadow-sm">
+    <div class="card-body landing-trust-card">
+      <h2 class="h4 mb-0">{{ _('使用说明') }}</h2>
+      <ul class="landing-trust-list">
+        <li>{{ _('当前可免费使用。') }}</li>
+        <li>{{ _('数据按账号隔离，登录后只能查看自己的记录。') }}</li>
+        <li>{{ _('项目仍在持续更新，功能会根据反馈逐步改进。') }}</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -115,4 +119,34 @@
     {% endif %}
   </div>
 </section>
+
+<script type="application/json" id="landingDemoData">
+{
+  "categoryLabels": [
+    {{ _('餐饮')|tojson }},
+    {{ _('房租')|tojson }},
+    {{ _('交通')|tojson }},
+    {{ _('购物')|tojson }},
+    {{ _('其他')|tojson }}
+  ],
+  "categoryValues": [32, 30, 12, 16, 10],
+  "monthLabels": [
+    {{ _('1月')|tojson }},
+    {{ _('2月')|tojson }},
+    {{ _('3月')|tojson }},
+    {{ _('4月')|tojson }},
+    {{ _('5月')|tojson }},
+    {{ _('6月')|tojson }}
+  ],
+  "incomeLabel": {{ _('收入')|tojson }},
+  "expenseLabel": {{ _('支出')|tojson }},
+  "incomeValues": [150000, 170000, 160000, 190000, 175000, 185000],
+  "expenseValues": [105000, 120000, 115000, 138000, 121000, 126800]
+}
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/landing.js') }}"></script>
 {% endblock %}
