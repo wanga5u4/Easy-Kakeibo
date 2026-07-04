@@ -19,6 +19,7 @@ from flask_limiter.errors import RateLimitExceeded
 from flask_limiter.util import get_remote_address
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from admin import admin_bp
 from database import get_connection, init_db, row_to_dict
 from currency import (
     DEFAULT_BASE_CURRENCY,
@@ -67,6 +68,7 @@ app.config.update(
     BABEL_DEFAULT_LOCALE="zh_CN",
     BABEL_TRANSLATION_DIRECTORIES=str(BASE_DIR / "translations"),
 )
+app.register_blueprint(admin_bp)
 
 
 def setup_logging():
@@ -186,7 +188,8 @@ def get_current_user():
         return conn.execute(
             """
             SELECT id, username, email, password_hash, nickname, language,
-                   currency, base_currency_code, plan, premium_until, created_at
+                   currency, base_currency_code, plan, premium_until, created_at,
+                   is_admin, vip_status, vip_expires_at, last_login_at, is_active
             FROM users
             WHERE id = ?
             """,
@@ -1223,6 +1226,9 @@ def inject_user_context():
     )
     return {
         "current_user_profile": current_user_profile,
+        "current_user_is_admin": bool(
+            current_user_profile and current_user_profile["is_admin"]
+        ),
         "current_language": current_language,
         "language_options": get_language_options(),
         "current_base_currency": current_base_currency,
@@ -1843,7 +1849,7 @@ def login():
         with get_connection() as conn:
             user = conn.execute(
                 """
-                SELECT id, username, password_hash
+                SELECT id, username, password_hash, is_active
                 FROM users
                 WHERE username = ? OR lower(email) = lower(?)
                 """,
@@ -1855,6 +1861,8 @@ def login():
             form_data["password"],
         ):
             errors.append(_("用户名/邮箱或密码错误"))
+        elif not user["is_active"]:
+            errors.append(_("账号已停用，请联系管理员。"))
 
     if errors:
         app.logger.warning(
@@ -1872,6 +1880,19 @@ def login():
     session.clear()
     session["user_id"] = user["id"]
     session["username"] = user["username"]
+    try:
+        with get_connection() as conn:
+            conn.execute(
+                "UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE id = ?",
+                (user["id"],),
+            )
+            conn.commit()
+    except Exception:
+        app.logger.warning(
+            "Failed to update last_login_at: user_id=%s",
+            user["id"],
+            exc_info=True,
+        )
 
     app.logger.info("Login succeeded: user_id=%s username=%s", user["id"], user["username"])
     if next_url:
