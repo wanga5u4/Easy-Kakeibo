@@ -2,6 +2,8 @@ from conftest import login_as_new_user
 
 
 DONATION_IMAGE = "wechat-donation.jpg"
+RECENT_VERSIONS = ("v0.6.2", "v0.6.1", "v0.6.0", "v0.5.2")
+OLDER_VERSIONS = ("v0.5.1", "v0.5.0", "v0.4.0")
 
 
 def test_support_page_accessible_without_login(client):
@@ -26,6 +28,37 @@ def test_support_page_shows_wechat_donation_for_public_users(client):
     assert "支付成功" not in page
     assert "我已支付" not in page
     assert "赞助完成" not in page
+    assert "以下记录来自当前仓库 Git 提交记录和 README 中已有功能描述。" not in page
+
+
+def test_support_page_groups_version_history(client):
+    response = client.get("/support")
+    page = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    for version in RECENT_VERSIONS:
+        assert version in page
+    assert '<details class="version-history-older mt-3">' in page
+    assert "<summary>" in page
+    assert "查看更早版本" in page
+    older_section = page.split('<details class="version-history-older mt-3">', 1)[1]
+    older_section = older_section.split("</details>", 1)[0]
+    for version in OLDER_VERSIONS:
+        assert version in older_section
+
+
+def test_support_page_shows_project_status(client):
+    response = client.get("/support")
+    page = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert "当前版本 v0.6.2" in page
+    assert "免费测试中" in page
+    assert "Easy Kakeibo 仍在持续开发中" in page
+    assert "当前版本：" in page
+    assert "项目状态：" in page
+    assert "最后更新：" in page
+    assert "2026年7月" in page
 
 
 def test_support_page_keeps_feedback_and_share_entry_logic(client):
@@ -36,7 +69,7 @@ def test_support_page_keeps_feedback_and_share_entry_logic(client):
     assert 'href="/login?next=/feedback"' in page
     assert 'href="/share"' not in page
     assert "报告使用问题，或告诉我们你希望加入的功能。" in page
-    assert "把这个记账工具推荐给有需要的朋友。" in page
+    assert "可以复制链接分享给朋友" in page
     assert "通过微信赞赏支持服务器、域名和持续开发。" in page
 
 
