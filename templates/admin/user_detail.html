@@ -1,0 +1,103 @@
+{% extends "admin/base.html" %}
+
+{% block admin_title %}{{ _('用户详情') }}{% endblock %}
+{% block admin_heading %}{{ _('用户详情') }}{% endblock %}
+
+{% block admin_content %}
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header bg-white fw-semibold">{{ _('用户基础信息') }}</div>
+      <div class="card-body">
+        <dl class="row mb-0 admin-detail-list">
+          <dt class="col-sm-5">{{ _('用户 ID') }}</dt>
+          <dd class="col-sm-7">{{ user.id }}</dd>
+          <dt class="col-sm-5">{{ _('用户名') }}</dt>
+          <dd class="col-sm-7">{{ user.username }}</dd>
+          <dt class="col-sm-5">{{ _('昵称') }}</dt>
+          <dd class="col-sm-7">{{ user.nickname or _('未设置') }}</dd>
+          <dt class="col-sm-5">{{ _('注册时间') }}</dt>
+          <dd class="col-sm-7">{{ user.created_at or _('暂无数据') }}</dd>
+          <dt class="col-sm-5">{{ _('最后登录时间') }}</dt>
+          <dd class="col-sm-7">{{ user.last_login_at or _('从未登录') }}</dd>
+          <dt class="col-sm-5">{{ _('默认语言') }}</dt>
+          <dd class="col-sm-7">{{ user.language }}</dd>
+          <dt class="col-sm-5">{{ _('默认货币') }}</dt>
+          <dd class="col-sm-7">{{ user.base_currency_code or user.currency }}</dd>
+          <dt class="col-sm-5">{{ _('是否管理员') }}</dt>
+          <dd class="col-sm-7">{{ _('是') if user.is_admin else _('否') }}</dd>
+          <dt class="col-sm-5">{{ _('账号状态') }}</dt>
+          <dd class="col-sm-7">{{ account_status_label(user) }}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card mb-4">
+      <div class="card-header bg-white fw-semibold">{{ _('VIP 测试权限') }}</div>
+      <div class="card-body">
+        <form method="post" action="{{ url_for('admin.user_detail', user_id=user.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label" for="vip_status">{{ _('当前 VIP 测试权限') }}</label>
+              <select class="form-select" id="vip_status" name="vip_status" required>
+                {% for value, label in vip_status_labels.items() %}
+                  <option value="{{ value }}" {% if user.vip_status == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="vip_expires_at">{{ _('VIP 到期时间') }}</label>
+              <input class="form-control" id="vip_expires_at" name="vip_expires_at" type="date" value="{{ user.vip_expires_at[:10] if user.vip_expires_at else '' }}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="admin_note">{{ _('内部备注') }}</label>
+              <input class="form-control" id="admin_note" name="admin_note" maxlength="500">
+            </div>
+          </div>
+          <div class="mt-3">
+            <button class="btn btn-primary" type="submit">{{ _('保存 VIP 测试权限') }}</button>
+            <a class="btn btn-outline-secondary" href="{{ url_for('admin.users') }}">{{ _('返回用户列表') }}</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header bg-white fw-semibold">{{ _('最近 VIP 操作记录') }}</div>
+      <div class="card-body p-0">
+        {% if audit_logs %}
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>{{ _('操作时间') }}</th>
+                  <th>{{ _('管理员') }}</th>
+                  <th>{{ _('修改前值') }}</th>
+                  <th>{{ _('修改后值') }}</th>
+                  <th>{{ _('备注') }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for log in audit_logs %}
+                  <tr>
+                    <td>{{ log.created_at }}</td>
+                    <td>{{ log.admin_username or _('用户不存在') }}</td>
+                    <td><code>{{ log.old_value or '' }}</code></td>
+                    <td><code>{{ log.new_value or '' }}</code></td>
+                    <td>{{ log.note or '' }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="admin-empty">{{ _('暂无操作记录。') }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

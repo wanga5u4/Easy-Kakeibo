@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-04 21:44+0900\n"
+"POT-Creation-Date: 2026-07-04 22:22+0900\n"
 "PO-Revision-Date: 2026-06-30 22:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -18,567 +18,624 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: server.py:159
+#: server.py:161
 msgid "简体中文"
 msgstr "简体中文"
 
-#: server.py:159
+#: server.py:161
 msgid "日本語"
 msgstr "日本語"
 
-#: server.py:164 server.py:1258
+#: server.py:166 server.py:1264
 msgid "日元 JPY"
 msgstr "日元 JPY"
 
-#: server.py:165 server.py:1259
+#: server.py:167 server.py:1265
 msgid "人民币 CNY"
 msgstr "人民币 CNY"
 
-#: server.py:171 server.py:1262
+#: server.py:173 server.py:1268
 msgid "日元"
 msgstr "日元"
 
-#: server.py:172 server.py:1263
+#: server.py:174 server.py:1269
 msgid "人民币"
 msgstr "人民币"
 
-#: server.py:593 server.py:1275
+#: server.py:596 server.py:1281
 msgid "部分记录没有可用汇率，因此未计入当前汇总。"
 msgstr "部分记录没有可用汇率，因此未计入当前汇总。"
 
-#: server.py:595
+#: server.py:598
 msgid "部分金额按你最近使用的汇率估算。"
 msgstr "部分金额按你最近使用的汇率估算。"
 
-#: server.py:613
+#: server.py:616
 msgid "日期格式无效"
 msgstr "日期格式无效"
 
-#: server.py:617
+#: server.py:620
 msgid "类型必须是 income 或 expense"
 msgstr "类型必须是 income 或 expense"
 
-#: server.py:621
+#: server.py:624
 msgid "分类不能为空"
 msgstr "分类不能为空"
 
-#: server.py:630 server.py:2200
+#: server.py:633 server.py:2221
 msgid "货币代码无效"
 msgstr "货币代码无效"
 
-#: server.py:637 server.py:639
+#: server.py:640 server.py:642
 msgid "金额格式无效"
 msgstr "金额格式无效"
 
-#: server.py:659
+#: server.py:662
 msgid "汇率格式无效"
 msgstr "汇率格式无效"
 
-#: server.py:691
+#: server.py:694
 msgid "用户名不能为空"
 msgstr "用户名不能为空"
 
-#: server.py:694
+#: server.py:697
 msgid "邮箱不能为空"
 msgstr "邮箱不能为空"
 
-#: server.py:696
+#: server.py:699
 msgid "邮箱格式无效"
 msgstr "邮箱格式无效"
 
-#: server.py:699
+#: server.py:702
 msgid "密码至少需要 8 位"
 msgstr "密码至少需要 8 位"
 
-#: server.py:702
+#: server.py:705
 msgid "两次输入的密码不一致"
 msgstr "两次输入的密码不一致"
 
-#: server.py:717
+#: server.py:720
 msgid "用户名或邮箱不能为空"
 msgstr "用户名或邮箱不能为空"
 
-#: server.py:720
+#: server.py:723
 msgid "密码不能为空"
 msgstr "密码不能为空"
 
-#: server.py:740
+#: server.py:743
 msgid "昵称不能超过 30 个字符"
 msgstr "昵称不能超过 30 个字符"
 
-#: server.py:743
+#: server.py:746
 msgid "语言选项无效"
 msgstr "语言选项无效"
 
-#: server.py:746
+#: server.py:749
 msgid "货币选项无效"
 msgstr "货币选项无效"
 
-#: server.py:751 server.py:774
+#: server.py:754 server.py:777
 msgid "请输入当前密码"
 msgstr "请输入当前密码"
 
-#: server.py:753
+#: server.py:756
 msgid "新密码至少需要 8 位"
 msgstr "新密码至少需要 8 位"
 
-#: server.py:755
+#: server.py:758
 msgid "两次输入的新密码不一致"
 msgstr "两次输入的新密码不一致"
 
-#: server.py:776 server.py:1666
+#: server.py:779 server.py:1672
 msgid "当前密码不正确"
 msgstr "当前密码不正确"
 
-#: server.py:779
+#: server.py:782
 msgid "确认文字错误，请输入 DELETE"
 msgstr "确认文字错误，请输入 DELETE"
 
-#: server.py:786
+#: admin/routes.py:68 server.py:789
 msgid "Bug 报告"
 msgstr "Bug 报告"
 
-#: server.py:787
+#: admin/routes.py:69 server.py:790
 msgid "功能建议"
 msgstr "功能建议"
 
-#: server.py:788
+#: admin/routes.py:70 server.py:791
 msgid "使用问题"
 msgstr "使用问题"
 
-#: server.py:789 templates/index.html:130
+#: admin/routes.py:71 server.py:792 templates/index.html:130
 msgid "其他"
 msgstr "其他"
 
-#: server.py:795
+#: admin/routes.py:77 server.py:798
 msgid "新建"
 msgstr "新建"
 
-#: server.py:796
+#: admin/routes.py:78 server.py:799
 msgid "处理中"
 msgstr "处理中"
 
-#: server.py:797
+#: admin/routes.py:79 server.py:800
 msgid "已解决"
 msgstr "已解决"
 
-#: server.py:798
+#: admin/routes.py:80 server.py:801
 msgid "已关闭"
 msgstr "已关闭"
 
-#: server.py:812
+#: server.py:815
 msgid "有效"
 msgstr "有效"
 
-#: server.py:813
+#: server.py:816
 msgid "已停用"
 msgstr "已停用"
 
-#: server.py:814
+#: server.py:817
 msgid "已过期"
 msgstr "已过期"
 
-#: server.py:838
+#: server.py:841
 msgid "反馈类型无效"
 msgstr "反馈类型无效"
 
-#: server.py:840
+#: server.py:843
 msgid "标题不能为空"
 msgstr "标题不能为空"
 
-#: server.py:842
+#: server.py:845
 msgid "标题长度需要在 2 到 100 个字符之间"
 msgstr "标题长度需要在 2 到 100 个字符之间"
 
-#: server.py:844
+#: server.py:847
 msgid "详细内容不能为空"
 msgstr "详细内容不能为空"
 
-#: server.py:846
+#: server.py:849
 msgid "详细内容长度需要在 5 到 2000 个字符之间"
 msgstr "详细内容长度需要在 5 到 2000 个字符之间"
 
-#: server.py:848
+#: server.py:851
 msgid "当前页面不能超过 200 个字符"
 msgstr "当前页面不能超过 200 个字符"
 
-#: server.py:850
+#: server.py:853
 msgid "联系方式不能超过 120 个字符"
 msgstr "联系方式不能超过 120 个字符"
 
-#: server.py:885 server.py:1976 server.py:2012 server.py:2139
+#: server.py:888 server.py:1997 server.py:2033 server.py:2160
 msgid "月份格式无效"
 msgstr "月份格式无效"
 
-#: server.py:887 templates/share.html:29
+#: server.py:890 templates/share.html:29
 #, python-format
 msgid "%(month)s 收支概览"
 msgstr "%(month)s 收支概览"
 
-#: server.py:889
+#: server.py:892
 msgid "分享标题不能为空"
 msgstr "分享标题不能为空"
 
-#: server.py:891
+#: server.py:894
 msgid "分享标题不能超过 100 个字符"
 msgstr "分享标题不能超过 100 个字符"
 
-#: server.py:893
+#: server.py:896
 msgid "分享说明不能超过 300 个字符"
 msgstr "分享说明不能超过 300 个字符"
 
-#: server.py:895
+#: server.py:898
 msgid "请至少选择一项分享内容"
 msgstr "请至少选择一项分享内容"
 
-#: server.py:897
+#: server.py:900
 msgid "有效期无效"
 msgstr "有效期无效"
 
-#: server.py:1085
+#: server.py:1088
 msgid "安全验证失败，请刷新页面后重试。"
 msgstr "安全验证失败，请刷新页面后重试。"
 
-#: server.py:1089
+#: server.py:1092
 msgid "安全验证失败"
 msgstr "安全验证失败"
 
-#: server.py:1090
+#: server.py:1093
 msgid "请求已过期或安全验证失败，请刷新页面后重试。"
 msgstr "请求已过期或安全验证失败，请刷新页面后重试。"
 
-#: server.py:1092 server.py:1105
+#: server.py:1095 server.py:1108
 msgid "返回首页"
 msgstr "返回首页"
 
-#: server.py:1102
+#: server.py:1105
 #, python-format
 msgid "%(status_code)s 错误"
 msgstr "%(status_code)s 错误"
 
-#: server.py:1111
+#: server.py:1114
 msgid "请求无效，请检查输入后重试。"
 msgstr "请求无效，请检查输入后重试。"
 
-#: server.py:1116
+#: server.py:1119
 msgid "没有权限执行此操作。"
 msgstr "没有权限执行此操作。"
 
-#: server.py:1121
+#: server.py:1124
 msgid "页面或资源不存在。"
 msgstr "页面或资源不存在。"
 
-#: server.py:1130
+#: server.py:1133
 msgid "服务器暂时无法处理请求，请稍后重试。"
 msgstr "服务器暂时无法处理请求，请稍后重试。"
 
-#: server.py:1141
+#: server.py:1144
 msgid "请求过于频繁，请稍后再试。"
 msgstr "请求过于频繁，请稍后再试。"
 
-#: server.py:1147
+#: server.py:1150
 msgid "请求过于频繁"
 msgstr "请求过于频繁"
 
-#: server.py:1150
+#: server.py:1153
 msgid "返回后重试"
 msgstr "返回后重试"
 
-#: server.py:1156
+#: server.py:1159
 msgid "请先登录"
 msgstr "请先登录"
 
-#: server.py:1196 templates/budgets.html:28 templates/dashboard.html:53
+#: server.py:1199 templates/budgets.html:28 templates/dashboard.html:53
 msgid "未设置预算"
 msgstr "未设置预算"
 
-#: server.py:1199
+#: server.py:1202
 msgid "已超出预算"
 msgstr "已超出预算"
 
-#: server.py:1201
+#: server.py:1204
 msgid "预算即将用完"
 msgstr "预算即将用完"
 
-#: server.py:1202
+#: server.py:1205
 msgid "预算正常"
 msgstr "预算正常"
 
-#: server.py:1232
+#: server.py:1238
 msgid "请求失败，请稍后重试"
 msgstr "请求失败，请稍后重试"
 
-#: server.py:1234
+#: server.py:1240
 msgid "工资"
 msgstr "工资"
 
-#: server.py:1234
+#: server.py:1240
 msgid "奖金"
 msgstr "奖金"
 
-#: server.py:1234
+#: server.py:1240
 msgid "理财"
 msgstr "理财"
 
-#: server.py:1234
+#: server.py:1240
 msgid "兼职"
 msgstr "兼职"
 
-#: server.py:1234
+#: server.py:1240
 msgid "其他收入"
 msgstr "其他收入"
 
-#: server.py:1235 templates/index.html:126
+#: server.py:1241 templates/index.html:126
 msgid "餐饮"
 msgstr "餐饮"
 
-#: server.py:1235 templates/index.html:128
+#: server.py:1241 templates/index.html:128
 msgid "交通"
 msgstr "交通"
 
-#: server.py:1235 templates/index.html:129
+#: server.py:1241 templates/index.html:129
 msgid "购物"
 msgstr "购物"
 
-#: server.py:1235
+#: server.py:1241
 msgid "住房"
 msgstr "住房"
 
-#: server.py:1235
+#: server.py:1241
 msgid "娱乐"
 msgstr "娱乐"
 
-#: server.py:1235
+#: server.py:1241
 msgid "医疗"
 msgstr "医疗"
 
-#: server.py:1235
+#: server.py:1241
 msgid "教育"
 msgstr "教育"
 
-#: server.py:1235
+#: server.py:1241
 msgid "其他支出"
 msgstr "其他支出"
 
-#: server.py:1237 server.py:1250 templates/index.html:141 templates/record_form.html:26
+#: server.py:1243 server.py:1256 templates/index.html:141 templates/record_form.html:26
 msgid "收入"
 msgstr "收入"
 
-#: server.py:1237 server.py:1251 templates/index.html:142 templates/record_form.html:25
+#: server.py:1243 server.py:1257 templates/index.html:142 templates/record_form.html:25
 msgid "支出"
 msgstr "支出"
 
-#: server.py:1238
+#: server.py:1244
 #, python-format
 msgid "%(year)s年%(month)s月%(day)s日"
 msgstr "%(year)s年%(month)s月%(day)s日"
 
-#: server.py:1239 templates/budgets.html:22 templates/dashboard.html:47
+#: server.py:1245 templates/budgets.html:22 templates/dashboard.html:47
 #, python-format
 msgid "已用 %(amount)s"
 msgstr "已用 %(amount)s"
 
-#: server.py:1240
+#: server.py:1246
 #, python-format
 msgid "%(status)s，剩余 %(amount)s"
 msgstr "%(status)s，剩余 %(amount)s"
 
-#: server.py:1241
+#: server.py:1247
 msgid "编辑"
 msgstr "编辑"
 
-#: server.py:1242 templates/records.html:68 templates/share.html:119
+#: server.py:1248 templates/records.html:68 templates/share.html:119
 msgid "删除"
 msgstr "删除"
 
-#: server.py:1243
+#: server.py:1249
 msgid "—"
 msgstr "—"
 
-#: server.py:1244
+#: server.py:1250
 #, python-format
 msgid "第 %(page)s / %(total_pages)s 页，共 %(total)s 条"
 msgstr "第 %(page)s / %(total_pages)s 页，共 %(total)s 条"
 
-#: server.py:1245
+#: server.py:1251
 msgid "记录已删除"
 msgstr "记录已删除"
 
-#: server.py:1246
+#: server.py:1252
 #, python-format
 msgid "删除失败：%(message)s"
 msgstr "删除失败：%(message)s"
 
-#: server.py:1247
+#: server.py:1253
 msgid "记录已更新"
 msgstr "记录已更新"
 
-#: server.py:1248
+#: server.py:1254
 msgid "记录已添加"
 msgstr "记录已添加"
 
-#: server.py:1249
+#: server.py:1255
 msgid "预算已保存"
 msgstr "预算已保存"
 
-#: server.py:1252
+#: server.py:1258
 msgid "链接已复制"
 msgstr "链接已复制"
 
-#: server.py:1253
+#: server.py:1259
 msgid "复制失败，请手动复制链接。"
 msgstr "复制失败，请手动复制链接。"
 
-#: server.py:1254
+#: server.py:1260
 msgid "确定要删除这个分享链接吗？此操作无法撤销。"
 msgstr "确定要删除这个分享链接吗？此操作无法撤销。"
 
-#: server.py:1265 templates/record_form.html:56
+#: server.py:1271 templates/record_form.html:56
 msgid "无需换算"
 msgstr "无需换算"
 
-#: server.py:1266
+#: server.py:1272
 msgid "手动汇率"
 msgstr "手动汇率"
 
-#: server.py:1267
+#: server.py:1273
 msgid "请输入换算汇率"
 msgstr "请输入换算汇率"
 
-#: server.py:1268
+#: server.py:1274
 msgid "已自动填入你上次使用的汇率，可随时修改。"
 msgstr "已自动填入你上次使用的汇率，可随时修改。"
 
-#: server.py:1269
+#: server.py:1275
 msgid "已根据反方向汇率推算，可随时修改。"
 msgstr "已根据反方向汇率推算，可随时修改。"
 
-#: server.py:1270
+#: server.py:1276
 #, python-format
 msgid "请输入 1 %(source)s 相当于多少 %(target)s。"
 msgstr "请输入 1 %(source)s 相当于多少 %(target)s。"
 
-#: server.py:1271 templates/budgets.html:29
+#: server.py:1277 templates/budgets.html:29
 msgid "预算币种"
 msgstr "预算币种"
 
-#: server.py:1272
+#: server.py:1278
 #, python-format
 msgid "约 %(amount)s"
 msgstr "约 %(amount)s"
 
-#: server.py:1273
+#: server.py:1279
 #, python-format
 msgid "%(original)s ≈ %(converted)s"
 msgstr "%(original)s ≈ %(converted)s"
 
-#: server.py:1274
+#: server.py:1280
 #, python-format
 msgid "1 %(source)s = %(rate)s %(target)s"
 msgstr "1 %(source)s = %(rate)s %(target)s"
 
-#: server.py:1347 server.py:1962 server.py:2291 server.py:2375
+#: server.py:1353 server.py:1983 server.py:2312 server.py:2396
 msgid "记录不存在"
 msgstr "记录不存在"
 
-#: server.py:1348
+#: server.py:1354
 msgid "这条记录不存在，或不属于当前登录用户。"
 msgstr "这条记录不存在，或不属于当前登录用户。"
 
-#: server.py:1350
+#: server.py:1356
 msgid "返回记录列表"
 msgstr "返回记录列表"
 
-#: server.py:1410
+#: server.py:1416
 msgid "反馈已提交，感谢你的帮助。"
 msgstr "反馈已提交，感谢你的帮助。"
 
-#: server.py:1414
+#: server.py:1420
 msgid "反馈提交失败，请稍后重试。"
 msgstr "反馈提交失败，请稍后重试。"
 
-#: server.py:1479
+#: server.py:1485
 msgid "分享链接已创建。"
 msgstr "分享链接已创建。"
 
-#: server.py:1483
+#: server.py:1489
 msgid "分享链接创建失败，请稍后重试。"
 msgstr "分享链接创建失败，请稍后重试。"
 
-#: server.py:1542
+#: server.py:1548
 msgid "分享链接已停用。"
 msgstr "分享链接已停用。"
 
-#: server.py:1544 server.py:1563 server.py:1582
+#: server.py:1550 server.py:1569 server.py:1588
 msgid "分享链接不存在。"
 msgstr "分享链接不存在。"
 
-#: server.py:1561
+#: server.py:1567
 msgid "分享链接已启用。"
 msgstr "分享链接已启用。"
 
-#: server.py:1580
+#: server.py:1586
 msgid "分享链接已删除。"
 msgstr "分享链接已删除。"
 
-#: server.py:1604
+#: server.py:1610
 msgid "链接不存在"
 msgstr "链接不存在"
 
-#: server.py:1605
+#: server.py:1611
 msgid "这个分享链接不存在或已被删除。"
 msgstr "这个分享链接不存在或已被删除。"
 
-#: server.py:1610
+#: server.py:1616
 msgid "链接已停用"
 msgstr "链接已停用"
 
-#: server.py:1611
+#: server.py:1617
 msgid "这个分享链接已停用。"
 msgstr "这个分享链接已停用。"
 
-#: server.py:1616
+#: server.py:1622
 msgid "链接已过期"
 msgstr "链接已过期"
 
-#: server.py:1617
+#: server.py:1623
 msgid "这个分享链接已过期。"
 msgstr "这个分享链接已过期。"
 
-#: server.py:1721
+#: server.py:1727
 msgid "设置已保存"
 msgstr "设置已保存"
 
-#: server.py:1734
+#: server.py:1740
 msgid "请重新登录后再试"
 msgstr "请重新登录后再试"
 
-#: server.py:1748
+#: server.py:1754
 msgid "账号注销失败，请稍后重试。"
 msgstr "账号注销失败，请稍后重试。"
 
-#: server.py:1753
+#: server.py:1759
 msgid "账号已注销"
 msgstr "账号已注销"
 
-#: server.py:1797
+#: server.py:1803
 msgid "用户名已存在"
 msgstr "用户名已存在"
 
-#: server.py:1805
+#: server.py:1811
 msgid "邮箱已存在"
 msgstr "邮箱已存在"
 
-#: server.py:1857
+#: server.py:1863
 msgid "用户名/邮箱或密码错误"
 msgstr "用户名/邮箱或密码错误"
 
-#: server.py:2157
+#: server.py:1865
+msgid "账号已停用，请联系管理员。"
+msgstr "账号已停用，请联系管理员。"
+
+#: server.py:2178
 msgid "预算金额格式无效"
 msgstr "预算金额格式无效"
 
-#: templates/base.html:6 templates/base.html:15 templates/budgets.html:3 templates/dashboard.html:3
-#: templates/feedback.html:3 templates/login.html:6 templates/message.html:3
+#: admin/routes.py:86 templates/base.html:54
+msgid "免费版"
+msgstr "免费版"
+
+#: admin/routes.py:87 templates/admin/user_detail.html:38 templates/admin/users.html:58
+msgid "VIP 测试权限"
+msgstr "VIP 测试权限"
+
+#: admin/routes.py:93 templates/admin/feedback.html:13 templates/admin/users.html:17
+msgid "全部"
+msgstr "全部"
+
+#: admin/routes.py:94 templates/admin/audit_logs.html:15 templates/admin/feedback_detail.html:44
+#: templates/admin/user_detail.html:77
+msgid "管理员"
+msgstr "管理员"
+
+#: admin/routes.py:95
+msgid "普通用户"
+msgstr "普通用户"
+
+#: admin/routes.py:100 templates/share.html:114
+msgid "启用"
+msgstr "启用"
+
+#: admin/routes.py:100 templates/share.html:109
+msgid "停用"
+msgstr "停用"
+
+#: admin/routes.py:151
+msgid "VIP 到期时间格式无效，请使用 YYYY-MM-DD。"
+msgstr "VIP 到期时间格式无效，请使用 YYYY-MM-DD。"
+
+#: admin/routes.py:321
+msgid "VIP 状态无效。"
+msgstr "VIP 状态无效。"
+
+#: admin/routes.py:353
+msgid "VIP 测试权限已更新。"
+msgstr "VIP 测试权限已更新。"
+
+#: admin/routes.py:437
+msgid "反馈状态无效。"
+msgstr "反馈状态无效。"
+
+#: admin/routes.py:440
+msgid "管理员备注不能超过 2000 个字符。"
+msgstr "管理员备注不能超过 2000 个字符。"
+
+#: admin/routes.py:470
+msgid "反馈处理状态已更新。"
+msgstr "反馈处理状态已更新。"
+
+#: templates/admin/base.html:3 templates/base.html:6 templates/base.html:17 templates/budgets.html:3
+#: templates/dashboard.html:3 templates/feedback.html:3 templates/login.html:6 templates/message.html:3
 #: templates/record_form.html:3 templates/records.html:3 templates/register.html:6
 #: templates/settings.html:3 templates/share.html:3 templates/statistics.html:3
 #: templates/support.html:3
@@ -589,61 +646,61 @@ msgstr "简易记账"
 msgid "Easy Kakeibo 是一个支持收入、支出、预算和统计功能的中日双语个人记账工具。"
 msgstr "Easy Kakeibo 是一个支持收入、支出、预算和统计功能的中日双语个人记账工具。"
 
-#: templates/base.html:16
+#: templates/base.html:18
 msgid "切换导航"
 msgstr "切换导航"
 
-#: templates/base.html:22 templates/dashboard.html:3 templates/dashboard.html:8
+#: templates/base.html:24 templates/dashboard.html:3 templates/dashboard.html:8
 msgid "仪表盘"
 msgstr "仪表盘"
 
-#: templates/base.html:23
+#: templates/base.html:25
 msgid "记录"
 msgstr "记录"
 
-#: templates/base.html:24
+#: templates/base.html:26
 msgid "统计"
 msgstr "统计"
 
-#: templates/base.html:25
+#: templates/base.html:27
 msgid "预算"
 msgstr "预算"
 
-#: templates/base.html:26
+#: templates/base.html:28
 msgid "分享"
 msgstr "分享"
 
-#: templates/base.html:28
+#: templates/admin/base.html:3 templates/admin/base.html:16 templates/base.html:30
+msgid "管理后台"
+msgstr "管理后台"
+
+#: templates/base.html:33
 msgid "首页"
 msgstr "首页"
 
-#: templates/base.html:30 templates/feedback.html:11 templates/index.html:114 templates/index.html:118
+#: templates/base.html:35 templates/feedback.html:11 templates/index.html:114 templates/index.html:118
 #: templates/settings.html:11 templates/support.html:3
 msgid "支持与计划"
 msgstr "支持与计划"
 
-#: templates/base.html:32
+#: templates/base.html:37
 msgid "设置"
 msgstr "设置"
 
-#: templates/base.html:47
+#: templates/base.html:52
 #, python-format
 msgid "欢迎，%(name)s"
 msgstr "欢迎，%(name)s"
 
-#: templates/base.html:49
-msgid "免费版"
-msgstr "免费版"
-
-#: templates/base.html:53
+#: templates/base.html:58
 msgid "退出登录"
 msgstr "退出登录"
 
-#: templates/base.html:56 templates/index.html:19 templates/index.html:117 templates/login.html:59
+#: templates/base.html:61 templates/index.html:19 templates/index.html:117 templates/login.html:59
 msgid "登录"
 msgstr "登录"
 
-#: templates/base.html:57 templates/register.html:81
+#: templates/base.html:62 templates/register.html:81
 msgid "注册"
 msgstr "注册"
 
@@ -734,15 +791,16 @@ msgstr "提交反馈"
 msgid "反馈类型"
 msgstr "反馈类型"
 
-#: templates/feedback.html:38 templates/share.html:79
+#: templates/admin/feedback.html:42 templates/admin/feedback_detail.html:17 templates/feedback.html:38
+#: templates/share.html:79
 msgid "标题"
 msgstr "标题"
 
-#: templates/feedback.html:42
+#: templates/admin/feedback_detail.html:29 templates/feedback.html:42
 msgid "详细内容"
 msgstr "详细内容"
 
-#: templates/feedback.html:46
+#: templates/admin/feedback_detail.html:23 templates/feedback.html:46
 msgid "当前页面"
 msgstr "当前页面"
 
@@ -750,7 +808,7 @@ msgstr "当前页面"
 msgid "仅作为普通文本保存，不会用于跳转。"
 msgstr "仅作为普通文本保存，不会用于跳转。"
 
-#: templates/feedback.html:51
+#: templates/admin/feedback_detail.html:25 templates/feedback.html:51
 msgid "联系方式"
 msgstr "联系方式"
 
@@ -758,7 +816,7 @@ msgstr "联系方式"
 msgid "可选，仅用于管理员联系你，不会展示给其他用户。"
 msgstr "可选，仅用于管理员联系你，不会展示给其他用户。"
 
-#: templates/feedback.html:64
+#: templates/admin/dashboard.html:65 templates/feedback.html:64
 msgid "最近反馈"
 msgstr "最近反馈"
 
@@ -966,7 +1024,10 @@ msgstr "结余"
 msgid "支出分类汇总"
 msgstr "支出分类汇总"
 
-#: templates/public_share.html:76 templates/public_share.html:98
+#: templates/admin/dashboard.html:49 templates/admin/dashboard.html:57
+#: templates/admin/dashboard.html:88 templates/admin/dashboard.html:95 templates/admin/feedback.html:56
+#: templates/admin/feedback_detail.html:22 templates/admin/user_detail.html:20
+#: templates/admin/users.html:69 templates/public_share.html:76 templates/public_share.html:98
 msgid "暂无数据"
 msgstr "暂无数据"
 
@@ -994,7 +1055,8 @@ msgstr "返回列表"
 msgid "日期"
 msgstr "日期"
 
-#: templates/record_form.html:23 templates/records.html:35
+#: templates/admin/dashboard.html:73 templates/admin/feedback.html:41
+#: templates/admin/feedback_detail.html:15 templates/record_form.html:23 templates/records.html:35
 msgid "类型"
 msgstr "类型"
 
@@ -1018,7 +1080,8 @@ msgstr "换算汇率"
 msgid "换算结果"
 msgstr "换算结果"
 
-#: templates/record_form.html:59 templates/records.html:38
+#: templates/admin/audit_logs.html:20 templates/admin/feedback_detail.html:47
+#: templates/admin/user_detail.html:80 templates/record_form.html:59 templates/records.html:38
 msgid "备注"
 msgstr "备注"
 
@@ -1074,7 +1137,7 @@ msgstr "每页 50 条"
 msgid "清除筛选"
 msgstr "清除筛选"
 
-#: templates/records.html:39 templates/share.html:85
+#: templates/admin/feedback.html:46 templates/records.html:39 templates/share.html:85
 msgid "操作"
 msgstr "操作"
 
@@ -1082,10 +1145,12 @@ msgstr "操作"
 msgid "暂无记录。"
 msgstr "暂无记录。"
 
+#: templates/admin/audit_logs.html:56 templates/admin/feedback.html:74 templates/admin/users.html:92
 #: templates/records.html:49
 msgid "上一页"
 msgstr "上一页"
 
+#: templates/admin/audit_logs.html:64 templates/admin/feedback.html:82 templates/admin/users.html:100
 #: templates/records.html:50
 msgid "下一页"
 msgstr "下一页"
@@ -1110,6 +1175,7 @@ msgstr "用户注册"
 msgid "创建账号后即可开始管理收入、支出、预算和消费趋势。"
 msgstr "创建账号后即可开始管理收入、支出、预算和消费趋势。"
 
+#: templates/admin/dashboard.html:39 templates/admin/user_detail.html:15 templates/admin/users.html:53
 #: templates/register.html:33 templates/settings.html:40
 msgid "用户名"
 msgstr "用户名"
@@ -1154,7 +1220,7 @@ msgstr "该邮箱用于登录，暂不支持在此页面修改。"
 msgid "用户名可用于登录和数据归属，暂不支持在此页面修改。"
 msgstr "用户名可用于登录和数据归属，暂不支持在此页面修改。"
 
-#: templates/settings.html:46
+#: templates/admin/user_detail.html:17 templates/settings.html:46
 msgid "昵称"
 msgstr "昵称"
 
@@ -1174,7 +1240,7 @@ msgstr "邮箱可用于登录和账号识别，暂不支持在此页面修改。
 msgid "语言"
 msgstr "语言"
 
-#: templates/settings.html:67
+#: templates/admin/user_detail.html:25 templates/admin/users.html:57 templates/settings.html:67
 msgid "默认货币"
 msgstr "默认货币"
 
@@ -1286,7 +1352,7 @@ msgstr "分类汇总"
 msgid "已创建分享链接"
 msgstr "已创建分享链接"
 
-#: templates/share.html:81
+#: templates/admin/dashboard.html:76 templates/admin/feedback.html:11 templates/share.html:81
 msgid "状态"
 msgstr "状态"
 
@@ -1313,14 +1379,6 @@ msgstr "复制链接"
 #: templates/share.html:105
 msgid "预览"
 msgstr "预览"
-
-#: templates/share.html:109
-msgid "停用"
-msgstr "停用"
-
-#: templates/share.html:114
-msgid "启用"
-msgstr "启用"
 
 #: templates/share.html:129
 msgid "还没有创建分享链接。"
@@ -1557,6 +1615,277 @@ msgstr "最后更新："
 #: templates/support.html:152
 msgid "2026年7月"
 msgstr "2026年7月"
+
+#: templates/admin/audit_logs.html:3 templates/admin/audit_logs.html:4 templates/admin/base.html:23
+msgid "操作记录"
+msgstr "操作记录"
+
+#: templates/admin/audit_logs.html:14 templates/admin/feedback_detail.html:43
+#: templates/admin/user_detail.html:76
+msgid "操作时间"
+msgstr "操作时间"
+
+#: templates/admin/audit_logs.html:16
+msgid "操作类型"
+msgstr "操作类型"
+
+#: templates/admin/audit_logs.html:17
+msgid "目标用户或反馈"
+msgstr "目标用户或反馈"
+
+#: templates/admin/audit_logs.html:18 templates/admin/feedback_detail.html:45
+#: templates/admin/user_detail.html:78
+msgid "修改前值"
+msgstr "修改前值"
+
+#: templates/admin/audit_logs.html:19 templates/admin/feedback_detail.html:46
+#: templates/admin/user_detail.html:79
+msgid "修改后值"
+msgstr "修改后值"
+
+#: templates/admin/audit_logs.html:27 templates/admin/audit_logs.html:33
+#: templates/admin/dashboard.html:86 templates/admin/feedback.html:55
+#: templates/admin/feedback_detail.html:20 templates/admin/feedback_detail.html:54
+#: templates/admin/user_detail.html:87
+msgid "用户不存在"
+msgstr "用户不存在"
+
+#: templates/admin/audit_logs.html:31
+msgid "反馈"
+msgstr "反馈"
+
+#: templates/admin/audit_logs.html:33
+msgid "用户"
+msgstr "用户"
+
+#: templates/admin/audit_logs.html:35
+msgid "无"
+msgstr "无"
+
+#: templates/admin/audit_logs.html:47 templates/admin/feedback_detail.html:64
+#: templates/admin/user_detail.html:97
+msgid "暂无操作记录。"
+msgstr "暂无操作记录。"
+
+#: templates/admin/audit_logs.html:53 templates/admin/feedback.html:71 templates/admin/users.html:89
+msgid "分页"
+msgstr "分页"
+
+#: templates/admin/base.html:4
+msgid "Easy Kakeibo 管理后台，仅供授权管理员使用。"
+msgstr "Easy Kakeibo 管理后台，仅供授权管理员使用。"
+
+#: templates/admin/base.html:17 templates/admin/base.html:20 templates/admin/dashboard.html:3
+#: templates/admin/dashboard.html:4
+msgid "概览"
+msgstr "概览"
+
+#: templates/admin/base.html:21 templates/admin/users.html:3 templates/admin/users.html:4
+msgid "用户管理"
+msgstr "用户管理"
+
+#: templates/admin/base.html:22 templates/admin/feedback.html:3 templates/admin/feedback.html:4
+msgid "反馈管理"
+msgstr "反馈管理"
+
+#: templates/admin/dashboard.html:9
+msgid "用户总数"
+msgstr "用户总数"
+
+#: templates/admin/dashboard.html:10
+msgid "今日新增用户"
+msgstr "今日新增用户"
+
+#: templates/admin/dashboard.html:11
+msgid "最近 7 天新增用户"
+msgstr "最近 7 天新增用户"
+
+#: templates/admin/dashboard.html:12
+msgid "VIP 测试用户数"
+msgstr "VIP 测试用户数"
+
+#: templates/admin/dashboard.html:13
+msgid "反馈总数"
+msgstr "反馈总数"
+
+#: templates/admin/dashboard.html:14
+msgid "未处理反馈数"
+msgstr "未处理反馈数"
+
+#: templates/admin/dashboard.html:31
+msgid "最近注册用户"
+msgstr "最近注册用户"
+
+#: templates/admin/dashboard.html:38 templates/admin/user_detail.html:13 templates/admin/users.html:52
+msgid "用户 ID"
+msgstr "用户 ID"
+
+#: templates/admin/dashboard.html:40 templates/admin/user_detail.html:19 templates/admin/users.html:54
+msgid "注册时间"
+msgstr "注册时间"
+
+#: templates/admin/dashboard.html:41 templates/admin/users.html:15
+msgid "VIP 状态"
+msgstr "VIP 状态"
+
+#: templates/admin/dashboard.html:72 templates/admin/feedback.html:40
+#: templates/admin/feedback_detail.html:13
+msgid "反馈 ID"
+msgstr "反馈 ID"
+
+#: templates/admin/dashboard.html:74
+msgid "标题或内容摘要"
+msgstr "标题或内容摘要"
+
+#: templates/admin/dashboard.html:75 templates/admin/feedback.html:43
+#: templates/admin/feedback_detail.html:19
+msgid "提交用户"
+msgstr "提交用户"
+
+#: templates/admin/dashboard.html:77 templates/admin/feedback.html:44
+#: templates/admin/feedback_detail.html:21
+msgid "提交时间"
+msgstr "提交时间"
+
+#: templates/admin/feedback.html:20
+msgid "提交时间排序"
+msgstr "提交时间排序"
+
+#: templates/admin/feedback.html:22 templates/admin/users.html:34
+msgid "最新优先"
+msgstr "最新优先"
+
+#: templates/admin/feedback.html:23 templates/admin/users.html:35
+msgid "最早优先"
+msgstr "最早优先"
+
+#: templates/admin/feedback.html:27 templates/admin/users.html:39
+msgid "筛选"
+msgstr "筛选"
+
+#: templates/admin/feedback.html:45 templates/admin/feedback_detail.html:77
+msgid "当前状态"
+msgstr "当前状态"
+
+#: templates/admin/feedback.html:58
+msgid "查看详情"
+msgstr "查看详情"
+
+#: templates/admin/feedback.html:65
+msgid "没有符合条件的反馈。"
+msgstr "没有符合条件的反馈。"
+
+#: templates/admin/feedback_detail.html:3 templates/admin/feedback_detail.html:4
+msgid "反馈详情"
+msgstr "反馈详情"
+
+#: templates/admin/feedback_detail.html:10
+msgid "原始反馈"
+msgstr "原始反馈"
+
+#: templates/admin/feedback_detail.html:24 templates/admin/feedback_detail.html:26
+msgid "未填写"
+msgstr "未填写"
+
+#: templates/admin/feedback_detail.html:36
+msgid "最近操作记录"
+msgstr "最近操作记录"
+
+#: templates/admin/feedback_detail.html:72
+msgid "处理反馈"
+msgstr "处理反馈"
+
+#: templates/admin/feedback_detail.html:85
+msgid "管理员备注"
+msgstr "管理员备注"
+
+#: templates/admin/feedback_detail.html:88
+msgid "保存处理结果"
+msgstr "保存处理结果"
+
+#: templates/admin/feedback_detail.html:89
+msgid "返回反馈列表"
+msgstr "返回反馈列表"
+
+#: templates/admin/user_detail.html:3 templates/admin/user_detail.html:4
+msgid "用户详情"
+msgstr "用户详情"
+
+#: templates/admin/user_detail.html:10
+msgid "用户基础信息"
+msgstr "用户基础信息"
+
+#: templates/admin/user_detail.html:18 templates/admin/users.html:74
+msgid "未设置"
+msgstr "未设置"
+
+#: templates/admin/user_detail.html:21 templates/admin/users.html:55
+msgid "最后登录时间"
+msgstr "最后登录时间"
+
+#: templates/admin/user_detail.html:22 templates/admin/users.html:70
+msgid "从未登录"
+msgstr "从未登录"
+
+#: templates/admin/user_detail.html:23 templates/admin/users.html:56
+msgid "默认语言"
+msgstr "默认语言"
+
+#: templates/admin/user_detail.html:27 templates/admin/users.html:61
+msgid "是否管理员"
+msgstr "是否管理员"
+
+#: templates/admin/user_detail.html:28 templates/admin/users.html:76
+msgid "是"
+msgstr "是"
+
+#: templates/admin/user_detail.html:28 templates/admin/users.html:76
+msgid "否"
+msgstr "否"
+
+#: templates/admin/user_detail.html:29 templates/admin/users.html:60
+msgid "账号状态"
+msgstr "账号状态"
+
+#: templates/admin/user_detail.html:44
+msgid "当前 VIP 测试权限"
+msgstr "当前 VIP 测试权限"
+
+#: templates/admin/user_detail.html:52 templates/admin/users.html:59
+msgid "VIP 到期时间"
+msgstr "VIP 到期时间"
+
+#: templates/admin/user_detail.html:56
+msgid "内部备注"
+msgstr "内部备注"
+
+#: templates/admin/user_detail.html:61
+msgid "保存 VIP 测试权限"
+msgstr "保存 VIP 测试权限"
+
+#: templates/admin/user_detail.html:62
+msgid "返回用户列表"
+msgstr "返回用户列表"
+
+#: templates/admin/user_detail.html:69
+msgid "最近 VIP 操作记录"
+msgstr "最近 VIP 操作记录"
+
+#: templates/admin/users.html:11
+msgid "用户名搜索"
+msgstr "用户名搜索"
+
+#: templates/admin/users.html:24
+msgid "管理员状态"
+msgstr "管理员状态"
+
+#: templates/admin/users.html:32
+msgid "注册时间排序"
+msgstr "注册时间排序"
+
+#: templates/admin/users.html:83
+msgid "没有符合条件的用户。"
+msgstr "没有符合条件的用户。"
 
 #~ msgid "分类与搜索"
 #~ msgstr "分类与搜索"

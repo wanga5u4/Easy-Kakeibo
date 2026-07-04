@@ -1,0 +1,46 @@
+.admin-shell .card {
+  border-radius: 8px;
+}
+
+.admin-tabs {
+  max-width: 100%;
+}
+
+.admin-tabs .nav-link {
+  white-space: nowrap;
+}
+
+.admin-stat-card .display-6 {
+  line-height: 1.1;
+}
+
+.admin-empty {
+  color: #6c757d;
+  padding: 2rem;
+  text-align: center;
+}
+
+.admin-detail-list dt {
+  color: #6c757d;
+  font-weight: 600;
+}
+
+.admin-detail-list dd {
+  overflow-wrap: anywhere;
+}
+
+.admin-text-box {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  min-height: 8rem;
+  padding: 1rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.admin-shell table code {
+  color: #495057;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

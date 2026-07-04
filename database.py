@@ -24,6 +24,13 @@ USER_PROFILE_COLUMNS = {
     "plan": "TEXT NOT NULL DEFAULT 'free'",
     "premium_until": "TIMESTAMP",
 }
+USER_ADMIN_COLUMNS = {
+    "is_admin": "INTEGER NOT NULL DEFAULT 0 CHECK(is_admin IN (0, 1))",
+    "vip_status": "TEXT NOT NULL DEFAULT 'free' CHECK(vip_status IN ('free', 'vip'))",
+    "vip_expires_at": "TIMESTAMP",
+    "last_login_at": "TIMESTAMP",
+    "is_active": "INTEGER NOT NULL DEFAULT 1 CHECK(is_active IN (0, 1))",
+}
 RECORD_MULTI_CURRENCY_COLUMNS = {
     "original_amount_minor": "INTEGER NOT NULL DEFAULT 0",
     "currency_code": f"TEXT NOT NULL DEFAULT '{DEFAULT_BASE_CURRENCY}'",
@@ -39,6 +46,9 @@ BUDGET_MULTI_CURRENCY_COLUMNS = {
 }
 FEEDBACK_TYPES = ("bug", "feature", "question", "other")
 FEEDBACK_STATUSES = ("new", "reviewing", "resolved", "closed")
+FEEDBACK_ADMIN_COLUMNS = {
+    "admin_note": "TEXT NOT NULL DEFAULT ''",
+}
 LOGGER = logging.getLogger(__name__)
 
 
@@ -65,6 +75,7 @@ def init_db():
             """
         )
         migrate_users_profile_columns(conn)
+        migrate_users_admin_columns(conn)
         conn.execute(
             """
             INSERT OR IGNORE INTO users (id, username, email, password_hash)
@@ -117,6 +128,7 @@ def init_db():
                 page_url TEXT NOT NULL DEFAULT '',
                 contact TEXT NOT NULL DEFAULT '',
                 status TEXT NOT NULL DEFAULT 'new' CHECK(status IN ('new', 'reviewing', 'resolved', 'closed')),
+                admin_note TEXT NOT NULL DEFAULT '',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP,
                 FOREIGN KEY(user_id) REFERENCES users(id)
@@ -158,6 +170,22 @@ def init_db():
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS admin_audit_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                admin_user_id INTEGER NOT NULL,
+                target_user_id INTEGER,
+                target_feedback_id INTEGER,
+                action TEXT NOT NULL,
+                old_value TEXT,
+                new_value TEXT,
+                note TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        migrate_feedback_admin_columns(conn)
         migrate_records_user_id(conn)
         migrate_records_multi_currency(conn)
         migrate_budgets_multi_currency(conn)
@@ -181,6 +209,27 @@ def init_db():
         )
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_feedback_created_at ON feedback(created_at)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_users_vip_status ON users(vip_status)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_users_is_admin ON users(is_admin)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_admin_audit_logs_created_at ON admin_audit_logs(created_at)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_admin_audit_logs_admin_user_id ON admin_audit_logs(admin_user_id)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_admin_audit_logs_target_user_id ON admin_audit_logs(target_user_id)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_admin_audit_logs_target_feedback_id ON admin_audit_logs(target_feedback_id)"
         )
         conn.execute(
             "CREATE UNIQUE INDEX IF NOT EXISTS idx_share_links_token ON share_links(token)"
@@ -209,6 +258,14 @@ def migrate_users_profile_columns(conn):
             conn.execute(
                 f"ALTER TABLE users ADD COLUMN {column_name} {column_definition}"
             )
+
+
+def migrate_users_admin_columns(conn):
+    add_missing_columns(conn, "users", USER_ADMIN_COLUMNS)
+
+
+def migrate_feedback_admin_columns(conn):
+    add_missing_columns(conn, "feedback", FEEDBACK_ADMIN_COLUMNS)
 
 
 def get_table_columns(conn, table_name):

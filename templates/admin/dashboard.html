@@ -1,0 +1,101 @@
+{% extends "admin/base.html" %}
+
+{% block admin_title %}{{ _('概览') }}{% endblock %}
+{% block admin_heading %}{{ _('概览') }}{% endblock %}
+
+{% block admin_content %}
+<div class="row g-3 mb-4">
+  {% set cards = [
+    (_('用户总数'), stats.total_users),
+    (_('今日新增用户'), stats.today_users),
+    (_('最近 7 天新增用户'), stats.week_users),
+    (_('VIP 测试用户数'), stats.vip_users),
+    (_('反馈总数'), stats.total_feedback),
+    (_('未处理反馈数'), stats.open_feedback)
+  ] %}
+  {% for label, value in cards %}
+    <div class="col-6 col-lg-2">
+      <div class="card admin-stat-card h-100">
+        <div class="card-body">
+          <div class="text-muted small">{{ label }}</div>
+          <div class="display-6 fw-semibold">{{ value }}</div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header bg-white fw-semibold">{{ _('最近注册用户') }}</div>
+      <div class="card-body p-0">
+        {% if recent_users %}
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>{{ _('用户 ID') }}</th>
+                  <th>{{ _('用户名') }}</th>
+                  <th>{{ _('注册时间') }}</th>
+                  <th>{{ _('VIP 状态') }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for user in recent_users %}
+                  <tr>
+                    <td>{{ user.id }}</td>
+                    <td><a href="{{ url_for('admin.user_detail', user_id=user.id) }}">{{ user.username }}</a></td>
+                    <td>{{ user.created_at or _('暂无数据') }}</td>
+                    <td><span class="badge text-bg-{{ 'warning' if user.vip_status == 'vip' else 'secondary' }}">{{ vip_status_labels[user.vip_status] }}</span></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="admin-empty">{{ _('暂无数据') }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header bg-white fw-semibold">{{ _('最近反馈') }}</div>
+      <div class="card-body p-0">
+        {% if recent_feedback %}
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>{{ _('反馈 ID') }}</th>
+                  <th>{{ _('类型') }}</th>
+                  <th>{{ _('标题或内容摘要') }}</th>
+                  <th>{{ _('提交用户') }}</th>
+                  <th>{{ _('状态') }}</th>
+                  <th>{{ _('提交时间') }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in recent_feedback %}
+                  <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ feedback_type_labels[item.feedback_type] }}</td>
+                    <td><a href="{{ url_for('admin.feedback_detail', feedback_id=item.id) }}">{{ item.title or truncate_text(item.content) }}</a></td>
+                    <td>{{ item.username or _('用户不存在') }}</td>
+                    <td><span class="badge text-bg-secondary">{{ feedback_status_labels[item.status] }}</span></td>
+                    <td>{{ item.created_at or _('暂无数据') }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="admin-empty">{{ _('暂无数据') }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

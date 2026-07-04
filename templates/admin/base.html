@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}{% block admin_title %}{{ _('管理后台') }}{% endblock %} - {{ _('简易记账') }}{% endblock %}
+{% block meta_description %}{{ _('Easy Kakeibo 管理后台，仅供授权管理员使用。') }}{% endblock %}
+{% block extra_head %}
+  <meta name="robots" content="noindex,nofollow">
+{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-shell">
+  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
+    <div>
+      <p class="text-muted small mb-1">{{ _('管理后台') }}</p>
+      <h1 class="h3 mb-0">{% block admin_heading %}{{ _('概览') }}{% endblock %}</h1>
+    </div>
+    <nav class="admin-tabs nav nav-pills flex-nowrap overflow-auto">
+      <a class="nav-link {% if active_page == 'admin_dashboard' %}active{% endif %}" href="{{ url_for('admin.dashboard') }}">{{ _('概览') }}</a>
+      <a class="nav-link {% if active_page == 'admin_users' %}active{% endif %}" href="{{ url_for('admin.users') }}">{{ _('用户管理') }}</a>
+      <a class="nav-link {% if active_page == 'admin_feedback' %}active{% endif %}" href="{{ url_for('admin.feedback') }}">{{ _('反馈管理') }}</a>
+      <a class="nav-link {% if active_page == 'admin_audit_logs' %}active{% endif %}" href="{{ url_for('admin.audit_logs') }}">{{ _('操作记录') }}</a>
+    </nav>
+  </div>
+  {% block admin_content %}{% endblock %}
+</div>
+{% endblock %}
