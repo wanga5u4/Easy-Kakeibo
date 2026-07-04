@@ -23,6 +23,14 @@ def test_landing_page_accessible_without_login(client):
     assert 'href="/register"'.encode("utf-8") in response.data
 
 
+def test_landing_page_does_not_advertise_unimplemented_search(client):
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert "类型与月份筛选".encode("utf-8") in response.data
+    assert "分类与搜索".encode("utf-8") not in response.data
+
+
 def test_landing_page_removes_old_product_preview_placeholder(client):
     response = client.get("/")
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-04 18:09+0900\n"
+"POT-Creation-Date: 2026-07-04 18:48+0900\n"
 "PO-Revision-Date: 2026-06-30 22:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -63,18 +63,16 @@ msgid "分类不能为空"
 msgstr "カテゴリは空にできません"
 
 #: server.py:630 server.py:2200
-#, fuzzy
 msgid "货币代码无效"
-msgstr "通貨オプションが無効です"
+msgstr "通貨コードが無効です"
 
 #: server.py:637 server.py:639
 msgid "金额格式无效"
 msgstr "金額形式が無効です"
 
 #: server.py:659
-#, fuzzy
 msgid "汇率格式无效"
-msgstr "金額形式が無効です"
+msgstr "為替レートの形式が無効です"
 
 #: server.py:691
 msgid "用户名不能为空"
@@ -165,9 +163,8 @@ msgid "已解决"
 msgstr "解決済み"
 
 #: server.py:798
-#, fuzzy
 msgid "已关闭"
-msgstr "閉じる"
+msgstr "クローズ済み"
 
 #: server.py:812
 msgid "有效"
@@ -186,9 +183,8 @@ msgid "反馈类型无效"
 msgstr "フィードバックの種類が無効です"
 
 #: server.py:840
-#, fuzzy
 msgid "标题不能为空"
-msgstr "メールアドレスは空にできません"
+msgstr "タイトルを入力してください"
 
 #: server.py:842
 msgid "标题长度需要在 2 到 100 个字符之间"
@@ -203,14 +199,12 @@ msgid "详细内容长度需要在 5 到 2000 个字符之间"
 msgstr "詳細内容は5文字以上2000文字以内で入力してください"
 
 #: server.py:848
-#, fuzzy
 msgid "当前页面不能超过 200 个字符"
-msgstr "ニックネームは30文字以内にしてください"
+msgstr "現在のページは200文字以内で入力してください"
 
 #: server.py:850
-#, fuzzy
 msgid "联系方式不能超过 120 个字符"
-msgstr "ニックネームは30文字以内にしてください"
+msgstr "連絡先は120文字以内で入力してください"
 
 #: server.py:885 server.py:1976 server.py:2012 server.py:2139
 msgid "月份格式无效"
@@ -222,19 +216,16 @@ msgid "%(month)s 收支概览"
 msgstr "%(month)s 収支概要"
 
 #: server.py:889
-#, fuzzy
 msgid "分享标题不能为空"
-msgstr "カテゴリは空にできません"
+msgstr "共有タイトルを入力してください"
 
 #: server.py:891
-#, fuzzy
 msgid "分享标题不能超过 100 个字符"
-msgstr "ニックネームは30文字以内にしてください"
+msgstr "共有タイトルは100文字以内で入力してください"
 
 #: server.py:893
-#, fuzzy
 msgid "分享说明不能超过 300 个字符"
-msgstr "ニックネームは30文字以内にしてください"
+msgstr "共有説明は300文字以内で入力してください"
 
 #: server.py:895
 msgid "请至少选择一项分享内容"
@@ -439,9 +430,8 @@ msgid "复制失败，请手动复制链接。"
 msgstr "コピーに失敗しました。リンクを手動でコピーしてください。"
 
 #: server.py:1254
-#, fuzzy
 msgid "确定要删除这个分享链接吗？此操作无法撤销。"
-msgstr "この記録を削除してもよろしいですか？この操作は元に戻せません。"
+msgstr "この共有リンクを削除してもよろしいですか？この操作は元に戻せません。"
 
 #: server.py:1265 templates/record_form.html:56
 msgid "无需换算"
@@ -473,9 +463,9 @@ msgid "预算币种"
 msgstr "予算通貨"
 
 #: server.py:1272
-#, fuzzy, python-format
+#, python-format
 msgid "约 %(amount)s"
-msgstr "使用済み %(amount)s"
+msgstr "約 %(amount)s"
 
 #: server.py:1273
 #, python-format
@@ -504,18 +494,16 @@ msgid "反馈已提交，感谢你的帮助。"
 msgstr "ご意見を送信しました。ご協力ありがとうございます。"
 
 #: server.py:1414
-#, fuzzy
 msgid "反馈提交失败，请稍后重试。"
-msgstr "リクエストに失敗しました。後でもう一度お試しください"
+msgstr "フィードバックの送信に失敗しました。後でもう一度お試しください。"
 
 #: server.py:1479
 msgid "分享链接已创建。"
 msgstr "共有リンクを作成しました。"
 
 #: server.py:1483
-#, fuzzy
 msgid "分享链接创建失败，请稍后重试。"
-msgstr "アカウント削除に失敗しました。後でもう一度お試しください。"
+msgstr "共有リンクの作成に失敗しました。後でもう一度お試しください。"
 
 #: server.py:1542
 msgid "分享链接已停用。"
@@ -534,9 +522,8 @@ msgid "分享链接已删除。"
 msgstr "共有リンクを削除しました。"
 
 #: server.py:1604
-#, fuzzy
 msgid "链接不存在"
-msgstr "記録が存在しません"
+msgstr "リンクが存在しません"
 
 #: server.py:1605
 msgid "这个分享链接不存在或已被删除。"
@@ -744,9 +731,8 @@ msgid "提交反馈"
 msgstr "フィードバックを送る"
 
 #: templates/feedback.html:30
-#, fuzzy
 msgid "反馈类型"
-msgstr "タイプ"
+msgstr "フィードバックの種類"
 
 #: templates/feedback.html:38 templates/share.html:79
 msgid "标题"
@@ -841,12 +827,12 @@ msgid "快速记录收入和支出，保留日期、分类、金额和备注。"
 msgstr "収入と支出をすばやく記録し、日付、カテゴリ、金額、メモを残せます。"
 
 #: templates/index.html:77
-msgid "分类与搜索"
-msgstr "カテゴリと検索"
+msgid "类型与月份筛选"
+msgstr "タイプと月で絞り込み"
 
 #: templates/index.html:77
-msgid "按类型、月份和分类整理账目，回看消费更轻松。"
-msgstr "タイプ、月、カテゴリで記録を整理し、支出の振り返りを楽にします。"
+msgid "按收入、支出和月份筛选记录，回看账目更轻松。"
+msgstr "収入・支出・月で記録を絞り込み、家計を振り返りやすくします。"
 
 #: templates/index.html:78
 msgid "数据统计与图表"
@@ -953,38 +939,32 @@ msgid "先了解 Easy Kakeibo"
 msgstr "まず Easy Kakeibo を見る"
 
 #: templates/public_share.html:13
-#, fuzzy
 msgid "Easy Kakeibo 分享"
-msgstr "Easy Kakeibo"
+msgstr "Easy Kakeibo 共有"
 
 #: templates/public_share.html:18
-#, fuzzy
 msgid "统计月份"
-msgstr "統計"
+msgstr "集計月"
 
 #: templates/public_share.html:18 templates/statistics.html:10
 msgid "统计货币"
 msgstr "集計通貨"
 
 #: templates/public_share.html:31 templates/share.html:53
-#, fuzzy
 msgid "收入汇总"
-msgstr "収入"
+msgstr "収入集計"
 
 #: templates/public_share.html:41 templates/share.html:57
-#, fuzzy
 msgid "支出汇总"
-msgstr "支出"
+msgstr "支出集計"
 
 #: templates/public_share.html:50
-#, fuzzy
 msgid "结余"
-msgstr "今月の残高"
+msgstr "残高"
 
 #: templates/public_share.html:62
-#, fuzzy
 msgid "支出分类汇总"
-msgstr "支出カテゴリ比率"
+msgstr "支出カテゴリ集計"
 
 #: templates/public_share.html:76 templates/public_share.html:98
 msgid "暂无数据"
@@ -1299,18 +1279,16 @@ msgid "分享内容"
 msgstr "共有内容"
 
 #: templates/share.html:61
-#, fuzzy
 msgid "分类汇总"
-msgstr "カテゴリ"
+msgstr "カテゴリ集計"
 
 #: templates/share.html:73
 msgid "已创建分享链接"
 msgstr "作成済み共有リンク"
 
 #: templates/share.html:81
-#, fuzzy
 msgid "状态"
-msgstr "予算状況"
+msgstr "状態"
 
 #: templates/share.html:82
 msgid "创建时间"
@@ -1333,9 +1311,8 @@ msgid "复制链接"
 msgstr "リンクをコピー"
 
 #: templates/share.html:105
-#, fuzzy
 msgid "预览"
-msgstr "製品プレビュー"
+msgstr "プレビュー"
 
 #: templates/share.html:109
 msgid "停用"
@@ -1482,26 +1459,48 @@ msgid "以下记录来自当前仓库 Git 提交记录和 README 中已有功能
 msgstr "以下の記録は、現在のリポジトリの Git コミット履歴と README の既存機能説明に基づいています。"
 
 #: templates/support.html:103
+msgid "v0.6.1"
+msgstr "v0.6.1"
+
+#: templates/support.html:104
+msgid "多货币稳定版收尾、文档与自动测试完善"
+msgstr "多通貨安定版の仕上げ、ドキュメントと自動テストの整備"
+
+#: templates/support.html:107
+msgid "v0.6.0"
+msgstr "v0.6.0"
+
+#: templates/support.html:108
+msgid "多货币记录、默认货币和汇率换算"
+msgstr "多通貨記録、基準通貨、為替換算"
+
+#: templates/support.html:111
 msgid "v0.5.2"
 msgstr "v0.5.2"
 
-#: templates/support.html:104
+#: templates/support.html:112
 msgid "网页文字修改"
 msgstr "画面テキストの修正"
 
-#: templates/support.html:107
+#: templates/support.html:115
 msgid "v0.5.1"
 msgstr "v0.5.1"
 
-#: templates/support.html:110
+#: templates/support.html:118
 msgid "v0.5.0"
 msgstr "v0.5.0"
 
-#: templates/support.html:113
+#: templates/support.html:121
 msgid "v0.4.0"
 msgstr "v0.4.0"
 
-#: templates/support.html:114
+#: templates/support.html:122
 msgid "用户设置与会员展示版"
 msgstr "ユーザー設定と会員表示版"
+
+#~ msgid "分类与搜索"
+#~ msgstr "カテゴリと検索"
+
+#~ msgid "按类型、月份和分类整理账目，回看消费更轻松。"
+#~ msgstr "タイプ、月、カテゴリで記録を整理し、支出の振り返りを楽にします。"
 

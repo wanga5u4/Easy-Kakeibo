@@ -1,0 +1,40 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+
+    env:
+      APP_ENV: testing
+      SECRET_KEY: ci-test-secret
+      DATABASE_PATH: ${{ runner.temp }}/accounting-ci.db
+      SESSION_COOKIE_SECURE: "false"
+      RATELIMIT_STORAGE_URI: memory://
+      LOG_DIR: ${{ runner.temp }}/logs
+      BACKUP_DIR: ${{ runner.temp }}/backups
+      BACKUP_RETENTION_DAYS: "14"
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run tests
+        run: python -m pytest -q

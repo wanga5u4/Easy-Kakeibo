@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-04 18:09+0900\n"
+"POT-Creation-Date: 2026-07-04 18:48+0900\n"
 "PO-Revision-Date: 2026-06-30 22:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -827,12 +827,12 @@ msgid "快速记录收入和支出，保留日期、分类、金额和备注。"
 msgstr "快速记录收入和支出，保留日期、分类、金额和备注。"
 
 #: templates/index.html:77
-msgid "分类与搜索"
-msgstr "分类与搜索"
+msgid "类型与月份筛选"
+msgstr "类型与月份筛选"
 
 #: templates/index.html:77
-msgid "按类型、月份和分类整理账目，回看消费更轻松。"
-msgstr "按类型、月份和分类整理账目，回看消费更轻松。"
+msgid "按收入、支出和月份筛选记录，回看账目更轻松。"
+msgstr "按收入、支出和月份筛选记录，回看账目更轻松。"
 
 #: templates/index.html:78
 msgid "数据统计与图表"
@@ -1459,26 +1459,48 @@ msgid "以下记录来自当前仓库 Git 提交记录和 README 中已有功能
 msgstr "以下记录来自当前仓库 Git 提交记录和 README 中已有功能描述。"
 
 #: templates/support.html:103
+msgid "v0.6.1"
+msgstr "v0.6.1"
+
+#: templates/support.html:104
+msgid "多货币稳定版收尾、文档与自动测试完善"
+msgstr "多货币稳定版收尾、文档与自动测试完善"
+
+#: templates/support.html:107
+msgid "v0.6.0"
+msgstr "v0.6.0"
+
+#: templates/support.html:108
+msgid "多货币记录、默认货币和汇率换算"
+msgstr "多货币记录、默认货币和汇率换算"
+
+#: templates/support.html:111
 msgid "v0.5.2"
 msgstr "v0.5.2"
 
-#: templates/support.html:104
+#: templates/support.html:112
 msgid "网页文字修改"
 msgstr "网页文字修改"
 
-#: templates/support.html:107
+#: templates/support.html:115
 msgid "v0.5.1"
 msgstr "v0.5.1"
 
-#: templates/support.html:110
+#: templates/support.html:118
 msgid "v0.5.0"
 msgstr "v0.5.0"
 
-#: templates/support.html:113
+#: templates/support.html:121
 msgid "v0.4.0"
 msgstr "v0.4.0"
 
-#: templates/support.html:114
+#: templates/support.html:122
 msgid "用户设置与会员展示版"
 msgstr "用户设置与会员展示版"
+
+#~ msgid "分类与搜索"
+#~ msgstr "分类与搜索"
+
+#~ msgid "按类型、月份和分类整理账目，回看消费更轻松。"
+#~ msgstr "按类型、月份和分类整理账目，回看消费更轻松。"
 
