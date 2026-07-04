@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-04 21:19+0900\n"
+"POT-Creation-Date: 2026-07-04 21:44+0900\n"
 "PO-Revision-Date: 2026-06-30 22:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -717,8 +717,8 @@ msgstr "予算を設定"
 msgid "分享链接"
 msgstr "共有リンク"
 
-#: templates/feedback.html:3 templates/feedback.html:8 templates/support.html:21
-#: templates/support.html:23
+#: templates/feedback.html:3 templates/feedback.html:8 templates/support.html:26
+#: templates/support.html:28
 msgid "反馈与建议"
 msgstr "ご意見・ご要望"
 
@@ -1342,193 +1342,221 @@ msgstr "支出カテゴリ比率"
 msgid "最近六个月收支趋势"
 msgstr "直近6か月の収支推移"
 
-#: templates/support.html:8
+#: templates/support.html:9
 msgid "支持 Easy Kakeibo"
 msgstr "Easy Kakeibo をサポート"
 
-#: templates/support.html:9
+#: templates/support.html:10
+msgid "当前版本 v0.6.2"
+msgstr "現在のバージョン v0.6.2"
+
+#: templates/support.html:11 templates/support.html:151
+msgid "免费测试中"
+msgstr "無料テスト公開中"
+
+#: templates/support.html:13
 msgid "Easy Kakeibo 是一个持续开发中的个人记账项目。你可以通过反馈、分享和自愿赞赏支持项目继续改进。"
 msgstr "Easy Kakeibo は継続的に開発している個人向け家計簿プロジェクトです。フィードバック、共有、任意の応援で改善を支えていただけます。"
 
-#: templates/support.html:17
+#: templates/support.html:14
+msgid "Easy Kakeibo 仍在持续开发中，页面内容和功能可能根据用户反馈进行调整。"
+msgstr "Easy Kakeibo は現在も開発中です。ページ内容や機能は、利用者からのフィードバックに応じて変更される場合があります。"
+
+#: templates/support.html:22
 msgid "支持方式"
 msgstr "サポート方法"
 
-#: templates/support.html:25
+#: templates/support.html:30
 msgid "报告使用问题，或告诉我们你希望加入的功能。"
 msgstr "使っていて困ったことや、追加してほしい機能をお知らせください。"
 
-#: templates/support.html:29 templates/support.html:31
+#: templates/support.html:34 templates/support.html:36
 msgid "分享 Easy Kakeibo"
 msgstr "Easy Kakeibo を共有"
 
-#: templates/support.html:33
-msgid "把这个记账工具推荐给有需要的朋友。"
-msgstr "この家計簿ツールを必要としている友人に紹介してください。"
+#: templates/support.html:38
+msgid "可以复制链接分享给朋友，把这个记账工具推荐给有需要的人。"
+msgstr "リンクをコピーして友人に共有し、この家計簿ツールを必要としている人に紹介できます。"
 
-#: templates/support.html:36 templates/support.html:49
+#: templates/support.html:41 templates/support.html:54
 msgid "微信赞赏"
 msgstr "WeChatで応援"
 
-#: templates/support.html:37
+#: templates/support.html:42
 msgid "通过微信赞赏支持服务器、域名和持续开发。"
 msgstr "WeChatでの応援を通じて、サーバー、ドメイン、継続的な開発を支えられます。"
 
-#: templates/support.html:41
+#: templates/support.html:46
 msgid "反馈、分享和赞赏都能帮助 Easy Kakeibo 持续改进。"
 msgstr "フィードバック、共有、応援はいずれも Easy Kakeibo の継続的な改善につながります。"
 
-#: templates/support.html:51
+#: templates/support.html:56
 msgid "如果 Easy Kakeibo 对你有帮助，可以自愿赞赏，支持服务器、域名和项目后续开发。"
 msgstr "Easy Kakeibo が役に立った場合は、任意で応援いただけます。サーバー、ドメイン、今後の開発の支えになります。"
 
-#: templates/support.html:53
+#: templates/support.html:58
 msgid "微信赞赏二维码"
 msgstr "WeChat応援QRコード"
 
-#: templates/support.html:55
+#: templates/support.html:60
 msgid "请使用微信扫一扫"
 msgstr "WeChatでQRコードを読み取ってください"
 
-#: templates/support.html:56
+#: templates/support.html:61
 msgid "当前仅支持人民币微信赞赏。手机用户可以长按图片保存后，在微信中识别二维码。"
 msgstr "現在は人民元でのWeChatによる応援のみ対応しています。スマートフォンでは画像を長押しして保存し、WeChatからQRコードを読み取ってください。"
 
-#: templates/support.html:57
+#: templates/support.html:62
 msgid "赞赏完全自愿，不影响任何现有功能，也不代表购买会员、商品或付费服务。"
 msgstr "応援は任意であり、現在の機能利用には影響しません。また、会員権・商品・有料サービスの購入を意味するものではありません。"
 
-#: templates/support.html:66
+#: templates/support.html:71
 msgid "后续更新计划"
 msgstr "今後の更新予定"
 
-#: templates/support.html:70
+#: templates/support.html:75
 msgid "正在开发"
 msgstr "開発中"
 
-#: templates/support.html:72
+#: templates/support.html:77
 msgid "手机端体验优化"
 msgstr "モバイル体験の最適化"
 
-#: templates/support.html:73
+#: templates/support.html:78
 msgid "中日双语完善"
 msgstr "中国語・日本語対応の改善"
 
-#: templates/support.html:74
+#: templates/support.html:79
 msgid "数据导出功能"
 msgstr "データエクスポート機能"
 
-#: templates/support.html:75
+#: templates/support.html:80
 msgid "记账分类和图表优化"
 msgstr "記録カテゴリとグラフの改善"
 
-#: templates/support.html:81
+#: templates/support.html:86
 msgid "计划开发"
 msgstr "開発予定"
 
-#: templates/support.html:83
+#: templates/support.html:88
 msgid "预算提醒"
 msgstr "予算リマインダー"
 
-#: templates/support.html:84
+#: templates/support.html:89
 msgid "周报和月报"
 msgstr "週次・月次レポート"
 
-#: templates/support.html:85
+#: templates/support.html:90
 msgid "数据备份与恢复"
 msgstr "データのバックアップと復元"
 
-#: templates/support.html:86
+#: templates/support.html:91
 msgid "PWA 或小程序版本"
 msgstr "PWA またはミニアプリ版"
 
-#: templates/support.html:87
+#: templates/support.html:92
 msgid "更快捷的手机记账方式"
 msgstr "より素早いスマホ記録"
 
-#: templates/support.html:93
+#: templates/support.html:98
 msgid "长期探索或正在考虑"
 msgstr "長期的に検討中"
 
-#: templates/support.html:95
+#: templates/support.html:100
 msgid "家庭共享账本"
 msgstr "家族共有家計簿"
 
-#: templates/support.html:96
+#: templates/support.html:101
 msgid "智能消费分析"
 msgstr "スマートな支出分析"
 
-#: templates/support.html:97
+#: templates/support.html:102
 msgid "高级自定义功能"
 msgstr "高度なカスタマイズ機能"
 
-#: templates/support.html:102
+#: templates/support.html:107
 msgid "以上计划会根据项目进展和用户反馈调整，暂不展示无法保证的具体上线日期。"
 msgstr "これらの予定はプロジェクトの進行状況とユーザーの声に応じて調整されるため、保証できない具体的な公開日は表示しません。"
 
-#: templates/support.html:108
+#: templates/support.html:113
 msgid "更新记录"
 msgstr "更新履歴"
 
-#: templates/support.html:109
-msgid "以下记录来自当前仓库 Git 提交记录和 README 中已有功能描述。"
-msgstr "以下の記録は、現在のリポジトリの Git コミット履歴と README の既存機能説明に基づいています。"
-
-#: templates/support.html:112
+#: templates/support.html:116 templates/support.html:150
 msgid "v0.6.2"
 msgstr "v0.6.2"
 
-#: templates/support.html:113
+#: templates/support.html:117
 msgid "支持页面优化、微信赞赏入口和用户反馈体验完善"
 msgstr "サポートページの改善、WeChat応援導線、フィードバック体験の整備"
 
-#: templates/support.html:116
+#: templates/support.html:120
 msgid "v0.6.1"
 msgstr "v0.6.1"
 
-#: templates/support.html:117
+#: templates/support.html:121
 msgid "多货币稳定版收尾、文档与自动测试完善"
 msgstr "多通貨安定版の仕上げ、ドキュメントと自動テストの整備"
 
-#: templates/support.html:120
+#: templates/support.html:124
 msgid "v0.6.0"
 msgstr "v0.6.0"
 
-#: templates/support.html:121
+#: templates/support.html:125
 msgid "多货币记录、默认货币和汇率换算"
 msgstr "多通貨記録、基準通貨、為替換算"
 
-#: templates/support.html:124
+#: templates/support.html:128
 msgid "v0.5.2"
 msgstr "v0.5.2"
 
-#: templates/support.html:125
+#: templates/support.html:129
 msgid "网页文字修改"
 msgstr "画面テキストの修正"
 
-#: templates/support.html:128
+#: templates/support.html:133
+msgid "查看更早版本"
+msgstr "以前のバージョンを見る"
+
+#: templates/support.html:136
 msgid "v0.5.1"
 msgstr "v0.5.1"
 
-#: templates/support.html:129
+#: templates/support.html:137
 msgid "安全性、运行稳定性和部署流程改进"
 msgstr "セキュリティ、稼働安定性、デプロイ手順の改善"
 
-#: templates/support.html:132
+#: templates/support.html:140
 msgid "v0.5.0"
 msgstr "v0.5.0"
 
-#: templates/support.html:133
+#: templates/support.html:141
 msgid "生产环境部署、健康检查、日志和数据库备份功能"
 msgstr "本番環境へのデプロイ、ヘルスチェック、ログ、データベースバックアップ機能"
 
-#: templates/support.html:136
+#: templates/support.html:144
 msgid "v0.4.0"
 msgstr "v0.4.0"
 
-#: templates/support.html:137
+#: templates/support.html:145
 msgid "用户设置与会员展示版"
 msgstr "ユーザー設定と会員表示版"
+
+#: templates/support.html:150
+msgid "当前版本："
+msgstr "現在のバージョン："
+
+#: templates/support.html:151
+msgid "项目状态："
+msgstr "プロジェクトの状態："
+
+#: templates/support.html:152
+msgid "最后更新："
+msgstr "最終更新："
+
+#: templates/support.html:152
+msgid "2026年7月"
+msgstr "2026年7月"
 
 #~ msgid "分类与搜索"
 #~ msgstr "カテゴリと検索"
@@ -1556,4 +1584,3 @@ msgstr "ユーザー設定と会員表示版"
 
 #~ msgid "自动记账"
 #~ msgstr "自動記録"
-

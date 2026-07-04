@@ -466,6 +466,23 @@ tbody tr:hover {
   margin-top: 8px;
 }
 
+.version-history-older {
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+}
+
+.version-history-older summary {
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.version-history-older summary:hover,
+.version-history-older summary:focus {
+  color: var(--primary-hover);
+}
+
 .landing-hero {
   padding: 40px 0 16px;
 }

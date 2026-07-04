@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-04 21:19+0900\n"
+"POT-Creation-Date: 2026-07-04 21:44+0900\n"
 "PO-Revision-Date: 2026-06-30 22:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -717,8 +717,8 @@ msgstr "设置预算"
 msgid "分享链接"
 msgstr "分享链接"
 
-#: templates/feedback.html:3 templates/feedback.html:8 templates/support.html:21
-#: templates/support.html:23
+#: templates/feedback.html:3 templates/feedback.html:8 templates/support.html:26
+#: templates/support.html:28
 msgid "反馈与建议"
 msgstr "反馈与建议"
 
@@ -1342,193 +1342,221 @@ msgstr "支出分类占比"
 msgid "最近六个月收支趋势"
 msgstr "最近六个月收支趋势"
 
-#: templates/support.html:8
+#: templates/support.html:9
 msgid "支持 Easy Kakeibo"
 msgstr "支持 Easy Kakeibo"
 
-#: templates/support.html:9
+#: templates/support.html:10
+msgid "当前版本 v0.6.2"
+msgstr "当前版本 v0.6.2"
+
+#: templates/support.html:11 templates/support.html:151
+msgid "免费测试中"
+msgstr "免费测试中"
+
+#: templates/support.html:13
 msgid "Easy Kakeibo 是一个持续开发中的个人记账项目。你可以通过反馈、分享和自愿赞赏支持项目继续改进。"
 msgstr "Easy Kakeibo 是一个持续开发中的个人记账项目。你可以通过反馈、分享和自愿赞赏支持项目继续改进。"
 
-#: templates/support.html:17
+#: templates/support.html:14
+msgid "Easy Kakeibo 仍在持续开发中，页面内容和功能可能根据用户反馈进行调整。"
+msgstr "Easy Kakeibo 仍在持续开发中，页面内容和功能可能根据用户反馈进行调整。"
+
+#: templates/support.html:22
 msgid "支持方式"
 msgstr "支持方式"
 
-#: templates/support.html:25
+#: templates/support.html:30
 msgid "报告使用问题，或告诉我们你希望加入的功能。"
 msgstr "报告使用问题，或告诉我们你希望加入的功能。"
 
-#: templates/support.html:29 templates/support.html:31
+#: templates/support.html:34 templates/support.html:36
 msgid "分享 Easy Kakeibo"
 msgstr "分享 Easy Kakeibo"
 
-#: templates/support.html:33
-msgid "把这个记账工具推荐给有需要的朋友。"
-msgstr "把这个记账工具推荐给有需要的朋友。"
+#: templates/support.html:38
+msgid "可以复制链接分享给朋友，把这个记账工具推荐给有需要的人。"
+msgstr "可以复制链接分享给朋友，把这个记账工具推荐给有需要的人。"
 
-#: templates/support.html:36 templates/support.html:49
+#: templates/support.html:41 templates/support.html:54
 msgid "微信赞赏"
 msgstr "微信赞赏"
 
-#: templates/support.html:37
+#: templates/support.html:42
 msgid "通过微信赞赏支持服务器、域名和持续开发。"
 msgstr "通过微信赞赏支持服务器、域名和持续开发。"
 
-#: templates/support.html:41
+#: templates/support.html:46
 msgid "反馈、分享和赞赏都能帮助 Easy Kakeibo 持续改进。"
 msgstr "反馈、分享和赞赏都能帮助 Easy Kakeibo 持续改进。"
 
-#: templates/support.html:51
+#: templates/support.html:56
 msgid "如果 Easy Kakeibo 对你有帮助，可以自愿赞赏，支持服务器、域名和项目后续开发。"
 msgstr "如果 Easy Kakeibo 对你有帮助，可以自愿赞赏，支持服务器、域名和项目后续开发。"
 
-#: templates/support.html:53
+#: templates/support.html:58
 msgid "微信赞赏二维码"
 msgstr "微信赞赏二维码"
 
-#: templates/support.html:55
+#: templates/support.html:60
 msgid "请使用微信扫一扫"
 msgstr "请使用微信扫一扫"
 
-#: templates/support.html:56
+#: templates/support.html:61
 msgid "当前仅支持人民币微信赞赏。手机用户可以长按图片保存后，在微信中识别二维码。"
 msgstr "当前仅支持人民币微信赞赏。手机用户可以长按图片保存后，在微信中识别二维码。"
 
-#: templates/support.html:57
+#: templates/support.html:62
 msgid "赞赏完全自愿，不影响任何现有功能，也不代表购买会员、商品或付费服务。"
 msgstr "赞赏完全自愿，不影响任何现有功能，也不代表购买会员、商品或付费服务。"
 
-#: templates/support.html:66
+#: templates/support.html:71
 msgid "后续更新计划"
 msgstr "后续更新计划"
 
-#: templates/support.html:70
+#: templates/support.html:75
 msgid "正在开发"
 msgstr "正在开发"
 
-#: templates/support.html:72
+#: templates/support.html:77
 msgid "手机端体验优化"
 msgstr "手机端体验优化"
 
-#: templates/support.html:73
+#: templates/support.html:78
 msgid "中日双语完善"
 msgstr "中日双语完善"
 
-#: templates/support.html:74
+#: templates/support.html:79
 msgid "数据导出功能"
 msgstr "数据导出功能"
 
-#: templates/support.html:75
+#: templates/support.html:80
 msgid "记账分类和图表优化"
 msgstr "记账分类和图表优化"
 
-#: templates/support.html:81
+#: templates/support.html:86
 msgid "计划开发"
 msgstr "计划开发"
 
-#: templates/support.html:83
+#: templates/support.html:88
 msgid "预算提醒"
 msgstr "预算提醒"
 
-#: templates/support.html:84
+#: templates/support.html:89
 msgid "周报和月报"
 msgstr "周报和月报"
 
-#: templates/support.html:85
+#: templates/support.html:90
 msgid "数据备份与恢复"
 msgstr "数据备份与恢复"
 
-#: templates/support.html:86
+#: templates/support.html:91
 msgid "PWA 或小程序版本"
 msgstr "PWA 或小程序版本"
 
-#: templates/support.html:87
+#: templates/support.html:92
 msgid "更快捷的手机记账方式"
 msgstr "更快捷的手机记账方式"
 
-#: templates/support.html:93
+#: templates/support.html:98
 msgid "长期探索或正在考虑"
 msgstr "长期探索或正在考虑"
 
-#: templates/support.html:95
+#: templates/support.html:100
 msgid "家庭共享账本"
 msgstr "家庭共享账本"
 
-#: templates/support.html:96
+#: templates/support.html:101
 msgid "智能消费分析"
 msgstr "智能消费分析"
 
-#: templates/support.html:97
+#: templates/support.html:102
 msgid "高级自定义功能"
 msgstr "高级自定义功能"
 
-#: templates/support.html:102
+#: templates/support.html:107
 msgid "以上计划会根据项目进展和用户反馈调整，暂不展示无法保证的具体上线日期。"
 msgstr "以上计划会根据项目进展和用户反馈调整，暂不展示无法保证的具体上线日期。"
 
-#: templates/support.html:108
+#: templates/support.html:113
 msgid "更新记录"
 msgstr "更新记录"
 
-#: templates/support.html:109
-msgid "以下记录来自当前仓库 Git 提交记录和 README 中已有功能描述。"
-msgstr "以下记录来自当前仓库 Git 提交记录和 README 中已有功能描述。"
-
-#: templates/support.html:112
+#: templates/support.html:116 templates/support.html:150
 msgid "v0.6.2"
 msgstr "v0.6.2"
 
-#: templates/support.html:113
+#: templates/support.html:117
 msgid "支持页面优化、微信赞赏入口和用户反馈体验完善"
 msgstr "支持页面优化、微信赞赏入口和用户反馈体验完善"
 
-#: templates/support.html:116
+#: templates/support.html:120
 msgid "v0.6.1"
 msgstr "v0.6.1"
 
-#: templates/support.html:117
+#: templates/support.html:121
 msgid "多货币稳定版收尾、文档与自动测试完善"
 msgstr "多货币稳定版收尾、文档与自动测试完善"
 
-#: templates/support.html:120
+#: templates/support.html:124
 msgid "v0.6.0"
 msgstr "v0.6.0"
 
-#: templates/support.html:121
+#: templates/support.html:125
 msgid "多货币记录、默认货币和汇率换算"
 msgstr "多货币记录、默认货币和汇率换算"
 
-#: templates/support.html:124
+#: templates/support.html:128
 msgid "v0.5.2"
 msgstr "v0.5.2"
 
-#: templates/support.html:125
+#: templates/support.html:129
 msgid "网页文字修改"
 msgstr "网页文字修改"
 
-#: templates/support.html:128
+#: templates/support.html:133
+msgid "查看更早版本"
+msgstr "查看更早版本"
+
+#: templates/support.html:136
 msgid "v0.5.1"
 msgstr "v0.5.1"
 
-#: templates/support.html:129
+#: templates/support.html:137
 msgid "安全性、运行稳定性和部署流程改进"
 msgstr "安全性、运行稳定性和部署流程改进"
 
-#: templates/support.html:132
+#: templates/support.html:140
 msgid "v0.5.0"
 msgstr "v0.5.0"
 
-#: templates/support.html:133
+#: templates/support.html:141
 msgid "生产环境部署、健康检查、日志和数据库备份功能"
 msgstr "生产环境部署、健康检查、日志和数据库备份功能"
 
-#: templates/support.html:136
+#: templates/support.html:144
 msgid "v0.4.0"
 msgstr "v0.4.0"
 
-#: templates/support.html:137
+#: templates/support.html:145
 msgid "用户设置与会员展示版"
 msgstr "用户设置与会员展示版"
+
+#: templates/support.html:150
+msgid "当前版本："
+msgstr "当前版本："
+
+#: templates/support.html:151
+msgid "项目状态："
+msgstr "项目状态："
+
+#: templates/support.html:152
+msgid "最后更新："
+msgstr "最后更新："
+
+#: templates/support.html:152
+msgid "2026年7月"
+msgstr "2026年7月"
 
 #~ msgid "分类与搜索"
 #~ msgstr "分类与搜索"
@@ -1556,4 +1584,3 @@ msgstr "用户设置与会员展示版"
 
 #~ msgid "自动记账"
 #~ msgstr "自动记账"
-

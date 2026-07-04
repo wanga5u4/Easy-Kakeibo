@@ -5,8 +5,13 @@
 {% block content %}
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
   <div>
-    <h1 class="h3 mb-1">{{ _('支持 Easy Kakeibo') }}</h1>
-    <p class="text-muted mb-0">{{ _('Easy Kakeibo 是一个持续开发中的个人记账项目。你可以通过反馈、分享和自愿赞赏支持项目继续改进。') }}</p>
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+      <h1 class="h3 mb-0">{{ _('支持 Easy Kakeibo') }}</h1>
+      <span class="badge text-bg-primary">{{ _('当前版本 v0.6.2') }}</span>
+      <span class="badge text-bg-success">{{ _('免费测试中') }}</span>
+    </div>
+    <p class="text-muted mb-1">{{ _('Easy Kakeibo 是一个持续开发中的个人记账项目。你可以通过反馈、分享和自愿赞赏支持项目继续改进。') }}</p>
+    <p class="text-muted small mb-0">{{ _('Easy Kakeibo 仍在持续开发中，页面内容和功能可能根据用户反馈进行调整。') }}</p>
   </div>
 </div>
 
@@ -30,7 +35,7 @@
             {% else %}
               {{ _('分享 Easy Kakeibo') }}
             {% endif %}
-            <div class="text-muted small mt-1">{{ _('把这个记账工具推荐给有需要的朋友。') }}</div>
+            <div class="text-muted small mt-1">{{ _('可以复制链接分享给朋友，把这个记账工具推荐给有需要的人。') }}</div>
           </li>
           <li class="list-group-item px-0">
             {{ _('微信赞赏') }}
@@ -106,7 +111,6 @@
 <section class="card border-0 shadow-sm">
   <div class="card-body">
     <h2 class="h5 mb-3">{{ _('更新记录') }}</h2>
-    <p class="text-muted small">{{ _('以下记录来自当前仓库 Git 提交记录和 README 中已有功能描述。') }}</p>
     <ul class="list-group list-group-flush">
       <li class="list-group-item px-0">
         <span class="fw-semibold">{{ _('v0.6.2') }}</span>
@@ -124,19 +128,29 @@
         <span class="fw-semibold">{{ _('v0.5.2') }}</span>
         <span class="text-muted">{{ _('网页文字修改') }}</span>
       </li>
-      <li class="list-group-item px-0">
-        <span class="fw-semibold">{{ _('v0.5.1') }}</span>
-        <span class="text-muted">{{ _('安全性、运行稳定性和部署流程改进') }}</span>
-      </li>
-      <li class="list-group-item px-0">
-        <span class="fw-semibold">{{ _('v0.5.0') }}</span>
-        <span class="text-muted">{{ _('生产环境部署、健康检查、日志和数据库备份功能') }}</span>
-      </li>
-      <li class="list-group-item px-0">
-        <span class="fw-semibold">{{ _('v0.4.0') }}</span>
-        <span class="text-muted">{{ _('用户设置与会员展示版') }}</span>
-      </li>
     </ul>
+    <details class="version-history-older mt-3">
+      <summary>{{ _('查看更早版本') }}</summary>
+      <ul class="list-group list-group-flush mt-2">
+        <li class="list-group-item px-0">
+          <span class="fw-semibold">{{ _('v0.5.1') }}</span>
+          <span class="text-muted">{{ _('安全性、运行稳定性和部署流程改进') }}</span>
+        </li>
+        <li class="list-group-item px-0">
+          <span class="fw-semibold">{{ _('v0.5.0') }}</span>
+          <span class="text-muted">{{ _('生产环境部署、健康检查、日志和数据库备份功能') }}</span>
+        </li>
+        <li class="list-group-item px-0">
+          <span class="fw-semibold">{{ _('v0.4.0') }}</span>
+          <span class="text-muted">{{ _('用户设置与会员展示版') }}</span>
+        </li>
+      </ul>
+    </details>
+    <div class="text-muted small mt-4">
+      <div>{{ _('当前版本：') }}{{ _('v0.6.2') }}</div>
+      <div>{{ _('项目状态：') }}{{ _('免费测试中') }}</div>
+      <div>{{ _('最后更新：') }}{{ _('2026年7月') }}</div>
+    </div>
   </div>
 </section>
 {% endblock %}
