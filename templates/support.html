@@ -6,7 +6,7 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
   <div>
     <h1 class="h3 mb-1">{{ _('支持 Easy Kakeibo') }}</h1>
-    <p class="text-muted mb-0">{{ _('Easy Kakeibo 是一个持续开发中的个人记账项目。你可以通过反馈、分享和自愿赞助支持项目继续改进。') }}</p>
+    <p class="text-muted mb-0">{{ _('Easy Kakeibo 是一个持续开发中的个人记账项目。你可以通过反馈、分享和自愿赞赏支持项目继续改进。') }}</p>
   </div>
 </div>
 
@@ -22,18 +22,23 @@
             {% else %}
               <a href="{{ url_for('login', next=url_for('feedback_page')) }}">{{ _('反馈与建议') }}</a>
             {% endif %}
+            <div class="text-muted small mt-1">{{ _('报告使用问题，或告诉我们你希望加入的功能。') }}</div>
           </li>
           <li class="list-group-item px-0">
             {% if current_user_profile %}
-              <a href="{{ url_for('share_page') }}">{{ _('分享链接') }}</a>
+              <a href="{{ url_for('share_page') }}">{{ _('分享 Easy Kakeibo') }}</a>
             {% else %}
-              {{ _('分享给朋友') }}
+              {{ _('分享 Easy Kakeibo') }}
             {% endif %}
+            <div class="text-muted small mt-1">{{ _('把这个记账工具推荐给有需要的朋友。') }}</div>
           </li>
-          <li class="list-group-item px-0">{{ _('自愿赞助') }}</li>
+          <li class="list-group-item px-0">
+            {{ _('微信赞赏') }}
+            <div class="text-muted small mt-1">{{ _('通过微信赞赏支持服务器、域名和持续开发。') }}</div>
+          </li>
         </ul>
         <div class="alert alert-light border mt-3 mb-0">
-          {{ _('赞助完全自愿，不会影响任何现有功能的使用。') }}
+          {{ _('反馈、分享和赞赏都能帮助 Easy Kakeibo 持续改进。') }}
         </div>
       </div>
     </div>
@@ -41,10 +46,15 @@
   <div class="col-lg-8">
     <div class="card border-0 shadow-sm h-100">
       <div class="card-body">
-        <h2 class="h5 mb-3">{{ _('赞助预留区域') }}</h2>
-        <div class="support-placeholder">
-          <div class="fw-semibold mb-1">{{ _('后续可在这里放置赞赏二维码或赞助链接。') }}</div>
-          <div class="text-muted small">{{ _('当前暂未接入真实支付接口，也不会显示虚假的支付按钮或支付状态。') }}</div>
+        <h2 class="h5 mb-3">{{ _('微信赞赏') }}</h2>
+        <div class="donation-section">
+          <p class="text-muted mb-3">{{ _('如果 Easy Kakeibo 对你有帮助，可以自愿赞赏，支持服务器、域名和项目后续开发。') }}</p>
+          <div class="donation-qr">
+            <img src="{{ url_for('static', filename='images/wechat-donation.jpg') }}" alt="{{ _('微信赞赏二维码') }}" loading="lazy">
+          </div>
+          <div class="fw-semibold mt-3">{{ _('请使用微信扫一扫') }}</div>
+          <p class="text-muted small mt-2 mb-2">{{ _('当前仅支持人民币微信赞赏。手机用户可以长按图片保存后，在微信中识别二维码。') }}</p>
+          <p class="text-muted small mb-0">{{ _('赞赏完全自愿，不影响任何现有功能，也不代表购买会员、商品或付费服务。') }}</p>
         </div>
       </div>
     </div>
@@ -80,11 +90,10 @@
       </div>
       <div class="col-lg-4">
         <div class="roadmap-group h-100">
-          <span class="badge text-bg-secondary mb-3">{{ _('正在考虑') }}</span>
+          <span class="badge text-bg-secondary mb-3">{{ _('长期探索或正在考虑') }}</span>
           <ul class="roadmap-list">
-            <li>{{ _('自动记账') }}</li>
             <li>{{ _('家庭共享账本') }}</li>
-            <li>{{ _('AI 消费分析') }}</li>
+            <li>{{ _('智能消费分析') }}</li>
             <li>{{ _('高级自定义功能') }}</li>
           </ul>
         </div>
@@ -100,6 +109,10 @@
     <p class="text-muted small">{{ _('以下记录来自当前仓库 Git 提交记录和 README 中已有功能描述。') }}</p>
     <ul class="list-group list-group-flush">
       <li class="list-group-item px-0">
+        <span class="fw-semibold">{{ _('v0.6.2') }}</span>
+        <span class="text-muted">{{ _('支持页面优化、微信赞赏入口和用户反馈体验完善') }}</span>
+      </li>
+      <li class="list-group-item px-0">
         <span class="fw-semibold">{{ _('v0.6.1') }}</span>
         <span class="text-muted">{{ _('多货币稳定版收尾、文档与自动测试完善') }}</span>
       </li>
@@ -113,9 +126,11 @@
       </li>
       <li class="list-group-item px-0">
         <span class="fw-semibold">{{ _('v0.5.1') }}</span>
+        <span class="text-muted">{{ _('安全性、运行稳定性和部署流程改进') }}</span>
       </li>
       <li class="list-group-item px-0">
         <span class="fw-semibold">{{ _('v0.5.0') }}</span>
+        <span class="text-muted">{{ _('生产环境部署、健康检查、日志和数据库备份功能') }}</span>
       </li>
       <li class="list-group-item px-0">
         <span class="fw-semibold">{{ _('v0.4.0') }}</span>

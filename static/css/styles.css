@@ -426,6 +426,30 @@ tbody tr:hover {
   text-align: center;
 }
 
+.donation-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.donation-qr {
+  width: min(100%, 280px);
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+.donation-qr img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
 .roadmap-group {
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -711,6 +735,10 @@ tbody tr:hover {
   .preview-chart-box-doughnut {
     height: 235px;
   }
+
+  .donation-qr {
+    width: min(100%, 240px);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -789,6 +817,11 @@ tbody tr:hover {
     background: var(--surface-secondary);
     border-color: var(--border-color);
     color: var(--text-secondary);
+  }
+
+  :root[data-theme="dark"] .donation-qr {
+    border-color: var(--border-color);
+    box-shadow: var(--shadow);
   }
 
   :root[data-theme="dark"] .landing-hero .lead,
