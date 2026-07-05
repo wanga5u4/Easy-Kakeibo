@@ -413,6 +413,81 @@ tbody tr:hover {
   margin: 0 auto;
 }
 
+.budget-header,
+.settings-header {
+  row-gap: 12px;
+}
+
+.budget-month-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.budget-month-switcher .form-control {
+  width: 170px;
+}
+
+.budget-month-btn {
+  flex: 0 0 42px;
+  min-width: 42px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.budget-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.budget-summary-item {
+  min-width: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--surface-secondary);
+  padding: 14px 16px;
+}
+
+.budget-summary-value {
+  margin-top: 4px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.budget-input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.budget-amount-group {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.budget-save-btn,
+.settings-submit-btn,
+.settings-support-link {
+  flex: 0 0 auto;
+}
+
+.budget-save-btn {
+  width: 128px;
+}
+
+.budget-daily {
+  min-height: 1.5rem;
+  font-size: 0.92rem;
+}
+
+.settings-support-link {
+  white-space: nowrap;
+}
+
 .support-placeholder {
   min-height: 180px;
   border: 1px dashed var(--border);
@@ -732,6 +807,28 @@ tbody tr:hover {
 }
 
 @media (max-width: 575.98px) {
+  .budget-month-switcher {
+    width: 100%;
+  }
+
+  .budget-month-switcher .form-control {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+  }
+
+  .budget-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .budget-save-btn {
+    width: 100%;
+  }
+
+  .settings-support-link {
+    width: 100%;
+  }
+
   .landing-preview {
     padding: 16px;
   }

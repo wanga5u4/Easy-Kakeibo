@@ -2,7 +2,16 @@ const budgetEls = {
   month: document.getElementById('budgetMonth'),
   amount: document.getElementById('budgetAmount'),
   save: document.getElementById('saveBudgetBtn'),
+  prev: document.getElementById('prevBudgetMonth'),
+  next: document.getElementById('nextBudgetMonth'),
 };
+
+function shiftBudgetMonth(offset) {
+  const [year, month] = budgetEls.month.value.split('-').map(Number);
+  if (!year || !month) return currentMonthStr();
+  const shifted = new Date(year, month - 1 + offset, 1);
+  return `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, '0')}`;
+}
 
 async function loadBudget() {
   setLoading(true);
@@ -37,4 +46,12 @@ budgetEls.save.addEventListener('click', async () => {
 
 budgetEls.month.value = currentMonthStr();
 budgetEls.month.addEventListener('change', loadBudget);
+budgetEls.prev.addEventListener('click', () => {
+  budgetEls.month.value = shiftBudgetMonth(-1);
+  loadBudget();
+});
+budgetEls.next.addEventListener('click', () => {
+  budgetEls.month.value = shiftBudgetMonth(1);
+  loadBudget();
+});
 loadBudget();

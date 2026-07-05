@@ -91,6 +91,22 @@ def amount_to_minor_units(value, currency_code):
     return minor_units
 
 
+def amount_to_minor_units_non_negative(value, currency_code):
+    currency_code = validate_currency_code(currency_code)
+    amount = parse_plain_decimal(value)
+    decimal_places = get_currency_decimal_places(currency_code)
+    exponent = Decimal(1).scaleb(-decimal_places)
+    quantized = amount.quantize(exponent, rounding=ROUND_HALF_UP)
+    if amount != quantized:
+        raise CurrencyValidationError("too many decimal places")
+    if amount < 0 or amount > MAX_AMOUNT:
+        raise CurrencyValidationError("amount out of range")
+    minor_units = int(quantized * (10**decimal_places))
+    if minor_units < 0 or minor_units > MAX_MINOR_UNITS:
+        raise CurrencyValidationError("amount out of range")
+    return minor_units
+
+
 def amount_to_minor_units_rounded(value, currency_code):
     currency_code = validate_currency_code(currency_code)
     amount = Decimal(str(value))
