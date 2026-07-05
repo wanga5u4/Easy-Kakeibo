@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-04 22:22+0900\n"
+"POT-Creation-Date: 2026-07-05 22:07+0900\n"
 "PO-Revision-Date: 2026-06-30 22:27+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -18,87 +18,87 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: server.py:161
+#: server.py:164
 msgid "简体中文"
 msgstr "简体中文"
 
-#: server.py:161
+#: server.py:164
 msgid "日本語"
 msgstr "日本語"
 
-#: server.py:166 server.py:1264
+#: server.py:169 server.py:1342
 msgid "日元 JPY"
 msgstr "日元 JPY"
 
-#: server.py:167 server.py:1265
+#: server.py:170 server.py:1343
 msgid "人民币 CNY"
 msgstr "人民币 CNY"
 
-#: server.py:173 server.py:1268
+#: server.py:176 server.py:1346
 msgid "日元"
 msgstr "日元"
 
-#: server.py:174 server.py:1269
+#: server.py:177 server.py:1347
 msgid "人民币"
 msgstr "人民币"
 
-#: server.py:596 server.py:1281
+#: server.py:599 server.py:1364
 msgid "部分记录没有可用汇率，因此未计入当前汇总。"
 msgstr "部分记录没有可用汇率，因此未计入当前汇总。"
 
-#: server.py:598
+#: server.py:601
 msgid "部分金额按你最近使用的汇率估算。"
 msgstr "部分金额按你最近使用的汇率估算。"
 
-#: server.py:616
+#: server.py:619
 msgid "日期格式无效"
 msgstr "日期格式无效"
 
-#: server.py:620
+#: server.py:623
 msgid "类型必须是 income 或 expense"
 msgstr "类型必须是 income 或 expense"
 
-#: server.py:624
+#: server.py:627
 msgid "分类不能为空"
 msgstr "分类不能为空"
 
-#: server.py:633 server.py:2221
+#: server.py:636 server.py:2289 server.py:2336
 msgid "货币代码无效"
 msgstr "货币代码无效"
 
-#: server.py:640 server.py:642
+#: server.py:643 server.py:645
 msgid "金额格式无效"
 msgstr "金额格式无效"
 
-#: server.py:662
+#: server.py:665
 msgid "汇率格式无效"
 msgstr "汇率格式无效"
 
-#: server.py:694
+#: server.py:697
 msgid "用户名不能为空"
 msgstr "用户名不能为空"
 
-#: server.py:697
+#: server.py:700
 msgid "邮箱不能为空"
 msgstr "邮箱不能为空"
 
-#: server.py:699
+#: server.py:702
 msgid "邮箱格式无效"
 msgstr "邮箱格式无效"
 
-#: server.py:702
+#: server.py:705
 msgid "密码至少需要 8 位"
 msgstr "密码至少需要 8 位"
 
-#: server.py:705
+#: server.py:708 server.py:774
 msgid "两次输入的密码不一致"
 msgstr "两次输入的密码不一致"
 
-#: server.py:720
+#: server.py:723
 msgid "用户名或邮箱不能为空"
 msgstr "用户名或邮箱不能为空"
 
-#: server.py:723
+#: server.py:726
 msgid "密码不能为空"
 msgstr "密码不能为空"
 
@@ -114,470 +114,505 @@ msgstr "语言选项无效"
 msgid "货币选项无效"
 msgstr "货币选项无效"
 
-#: server.py:754 server.py:777
+#: server.py:766 server.py:788
 msgid "请输入当前密码"
 msgstr "请输入当前密码"
 
-#: server.py:756
+#: server.py:768
+msgid "请输入新密码"
+msgstr "请输入新密码"
+
+#: server.py:770
 msgid "新密码至少需要 8 位"
 msgstr "新密码至少需要 8 位"
 
-#: server.py:758
-msgid "两次输入的新密码不一致"
-msgstr "两次输入的新密码不一致"
+#: server.py:772
+msgid "请确认新密码"
+msgstr "请确认新密码"
 
-#: server.py:779 server.py:1672
+#: server.py:790
 msgid "当前密码不正确"
 msgstr "当前密码不正确"
 
-#: server.py:782
+#: server.py:793
 msgid "确认文字错误，请输入 DELETE"
 msgstr "确认文字错误，请输入 DELETE"
 
-#: admin/routes.py:68 server.py:789
+#: admin/routes.py:68 server.py:800
 msgid "Bug 报告"
 msgstr "Bug 报告"
 
-#: admin/routes.py:69 server.py:790
+#: admin/routes.py:69 server.py:801
 msgid "功能建议"
 msgstr "功能建议"
 
-#: admin/routes.py:70 server.py:791
+#: admin/routes.py:70 server.py:802
 msgid "使用问题"
 msgstr "使用问题"
 
-#: admin/routes.py:71 server.py:792 templates/index.html:130
+#: admin/routes.py:71 server.py:803 templates/index.html:130
 msgid "其他"
 msgstr "其他"
 
-#: admin/routes.py:77 server.py:798
+#: admin/routes.py:77 server.py:809
 msgid "新建"
 msgstr "新建"
 
-#: admin/routes.py:78 server.py:799
+#: admin/routes.py:78 server.py:810
 msgid "处理中"
 msgstr "处理中"
 
-#: admin/routes.py:79 server.py:800
+#: admin/routes.py:79 server.py:811
 msgid "已解决"
 msgstr "已解决"
 
-#: admin/routes.py:80 server.py:801
+#: admin/routes.py:80 server.py:812
 msgid "已关闭"
 msgstr "已关闭"
 
-#: server.py:815
+#: server.py:826
 msgid "有效"
 msgstr "有效"
 
-#: server.py:816
+#: server.py:827
 msgid "已停用"
 msgstr "已停用"
 
-#: server.py:817
+#: server.py:828
 msgid "已过期"
 msgstr "已过期"
 
-#: server.py:841
+#: server.py:852
 msgid "反馈类型无效"
 msgstr "反馈类型无效"
 
-#: server.py:843
+#: server.py:854
 msgid "标题不能为空"
 msgstr "标题不能为空"
 
-#: server.py:845
+#: server.py:856
 msgid "标题长度需要在 2 到 100 个字符之间"
 msgstr "标题长度需要在 2 到 100 个字符之间"
 
-#: server.py:847
+#: server.py:858
 msgid "详细内容不能为空"
 msgstr "详细内容不能为空"
 
-#: server.py:849
+#: server.py:860
 msgid "详细内容长度需要在 5 到 2000 个字符之间"
 msgstr "详细内容长度需要在 5 到 2000 个字符之间"
 
-#: server.py:851
+#: server.py:862
 msgid "当前页面不能超过 200 个字符"
 msgstr "当前页面不能超过 200 个字符"
 
-#: server.py:853
+#: server.py:864
 msgid "联系方式不能超过 120 个字符"
 msgstr "联系方式不能超过 120 个字符"
 
-#: server.py:888 server.py:1997 server.py:2033 server.py:2160
+#: server.py:899 server.py:2105 server.py:2141 server.py:2271
 msgid "月份格式无效"
 msgstr "月份格式无效"
 
-#: server.py:890 templates/share.html:29
+#: server.py:901 templates/share.html:29
 #, python-format
 msgid "%(month)s 收支概览"
 msgstr "%(month)s 收支概览"
 
-#: server.py:892
+#: server.py:903
 msgid "分享标题不能为空"
 msgstr "分享标题不能为空"
 
-#: server.py:894
+#: server.py:905
 msgid "分享标题不能超过 100 个字符"
 msgstr "分享标题不能超过 100 个字符"
 
-#: server.py:896
+#: server.py:907
 msgid "分享说明不能超过 300 个字符"
 msgstr "分享说明不能超过 300 个字符"
 
-#: server.py:898
+#: server.py:909
 msgid "请至少选择一项分享内容"
 msgstr "请至少选择一项分享内容"
 
-#: server.py:900
+#: server.py:911
 msgid "有效期无效"
 msgstr "有效期无效"
 
-#: server.py:1088
+#: server.py:1099
 msgid "安全验证失败，请刷新页面后重试。"
 msgstr "安全验证失败，请刷新页面后重试。"
 
-#: server.py:1092
+#: server.py:1103
 msgid "安全验证失败"
 msgstr "安全验证失败"
 
-#: server.py:1093
+#: server.py:1104
 msgid "请求已过期或安全验证失败，请刷新页面后重试。"
 msgstr "请求已过期或安全验证失败，请刷新页面后重试。"
 
-#: server.py:1095 server.py:1108
+#: server.py:1106 server.py:1119
 msgid "返回首页"
 msgstr "返回首页"
 
-#: server.py:1105
+#: server.py:1116
 #, python-format
 msgid "%(status_code)s 错误"
 msgstr "%(status_code)s 错误"
 
-#: server.py:1114
+#: server.py:1125
 msgid "请求无效，请检查输入后重试。"
 msgstr "请求无效，请检查输入后重试。"
 
-#: server.py:1119
+#: server.py:1130
 msgid "没有权限执行此操作。"
 msgstr "没有权限执行此操作。"
 
-#: server.py:1124
+#: server.py:1135
 msgid "页面或资源不存在。"
 msgstr "页面或资源不存在。"
 
-#: server.py:1133
+#: server.py:1144
 msgid "服务器暂时无法处理请求，请稍后重试。"
 msgstr "服务器暂时无法处理请求，请稍后重试。"
 
-#: server.py:1144
+#: server.py:1155
 msgid "请求过于频繁，请稍后再试。"
 msgstr "请求过于频繁，请稍后再试。"
 
-#: server.py:1150
+#: server.py:1161
 msgid "请求过于频繁"
 msgstr "请求过于频繁"
 
-#: server.py:1153
+#: server.py:1164
 msgid "返回后重试"
 msgstr "返回后重试"
 
-#: server.py:1159
+#: server.py:1170
 msgid "请先登录"
 msgstr "请先登录"
 
-#: server.py:1199 templates/budgets.html:28 templates/dashboard.html:53
-msgid "未设置预算"
-msgstr "未设置预算"
+#: server.py:1210 templates/budgets.html:50
+msgid "本月尚未设置预算"
+msgstr "本月尚未设置预算"
 
-#: server.py:1202
+#: server.py:1213
 msgid "已超出预算"
 msgstr "已超出预算"
 
-#: server.py:1204
+#: server.py:1215
 msgid "预算即将用完"
 msgstr "预算即将用完"
 
-#: server.py:1205
-msgid "预算正常"
-msgstr "预算正常"
+#: server.py:1216
+msgid "预算使用正常"
+msgstr "预算使用正常"
 
-#: server.py:1238
+#: server.py:1316
 msgid "请求失败，请稍后重试"
 msgstr "请求失败，请稍后重试"
 
-#: server.py:1240
+#: server.py:1318
 msgid "工资"
 msgstr "工资"
 
-#: server.py:1240
+#: server.py:1318
 msgid "奖金"
 msgstr "奖金"
 
-#: server.py:1240
+#: server.py:1318
 msgid "理财"
 msgstr "理财"
 
-#: server.py:1240
+#: server.py:1318
 msgid "兼职"
 msgstr "兼职"
 
-#: server.py:1240
+#: server.py:1318
 msgid "其他收入"
 msgstr "其他收入"
 
-#: server.py:1241 templates/index.html:126
+#: server.py:1319 templates/index.html:126
 msgid "餐饮"
 msgstr "餐饮"
 
-#: server.py:1241 templates/index.html:128
+#: server.py:1319 templates/index.html:128
 msgid "交通"
 msgstr "交通"
 
-#: server.py:1241 templates/index.html:129
+#: server.py:1319 templates/index.html:129
 msgid "购物"
 msgstr "购物"
 
-#: server.py:1241
+#: server.py:1319
 msgid "住房"
 msgstr "住房"
 
-#: server.py:1241
+#: server.py:1319
 msgid "娱乐"
 msgstr "娱乐"
 
-#: server.py:1241
+#: server.py:1319
 msgid "医疗"
 msgstr "医疗"
 
-#: server.py:1241
+#: server.py:1319
 msgid "教育"
 msgstr "教育"
 
-#: server.py:1241
+#: server.py:1319
 msgid "其他支出"
 msgstr "其他支出"
 
-#: server.py:1243 server.py:1256 templates/index.html:141 templates/record_form.html:26
+#: server.py:1321 server.py:1334 templates/index.html:141 templates/record_form.html:26
 msgid "收入"
 msgstr "收入"
 
-#: server.py:1243 server.py:1257 templates/index.html:142 templates/record_form.html:25
+#: server.py:1321 server.py:1335 templates/index.html:142 templates/record_form.html:25
 msgid "支出"
 msgstr "支出"
 
-#: server.py:1244
+#: server.py:1322
 #, python-format
 msgid "%(year)s年%(month)s月%(day)s日"
 msgstr "%(year)s年%(month)s月%(day)s日"
 
-#: server.py:1245 templates/budgets.html:22 templates/dashboard.html:47
+#: server.py:1323 templates/budgets.html:44 templates/dashboard.html:47
 #, python-format
-msgid "已用 %(amount)s"
-msgstr "已用 %(amount)s"
+msgid "已使用 %(amount)s"
+msgstr "已使用 %(amount)s"
 
-#: server.py:1246
+#: server.py:1324
 #, python-format
 msgid "%(status)s，剩余 %(amount)s"
 msgstr "%(status)s，剩余 %(amount)s"
 
-#: server.py:1247
+#: server.py:1325
 msgid "编辑"
 msgstr "编辑"
 
-#: server.py:1248 templates/records.html:68 templates/share.html:119
+#: server.py:1326 templates/records.html:68 templates/share.html:119
 msgid "删除"
 msgstr "删除"
 
-#: server.py:1249
+#: server.py:1327
 msgid "—"
 msgstr "—"
 
-#: server.py:1250
+#: server.py:1328
 #, python-format
 msgid "第 %(page)s / %(total_pages)s 页，共 %(total)s 条"
 msgstr "第 %(page)s / %(total_pages)s 页，共 %(total)s 条"
 
-#: server.py:1251
+#: server.py:1329
 msgid "记录已删除"
 msgstr "记录已删除"
 
-#: server.py:1252
+#: server.py:1330
 #, python-format
 msgid "删除失败：%(message)s"
 msgstr "删除失败：%(message)s"
 
-#: server.py:1253
+#: server.py:1331
 msgid "记录已更新"
 msgstr "记录已更新"
 
-#: server.py:1254
+#: server.py:1332
 msgid "记录已添加"
 msgstr "记录已添加"
 
-#: server.py:1255
+#: server.py:1333
 msgid "预算已保存"
 msgstr "预算已保存"
 
-#: server.py:1258
+#: server.py:1336
 msgid "链接已复制"
 msgstr "链接已复制"
 
-#: server.py:1259
+#: server.py:1337
 msgid "复制失败，请手动复制链接。"
 msgstr "复制失败，请手动复制链接。"
 
-#: server.py:1260
+#: server.py:1338
 msgid "确定要删除这个分享链接吗？此操作无法撤销。"
 msgstr "确定要删除这个分享链接吗？此操作无法撤销。"
 
-#: server.py:1271 templates/record_form.html:56
+#: server.py:1349 templates/record_form.html:56
 msgid "无需换算"
 msgstr "无需换算"
 
-#: server.py:1272
+#: server.py:1350
 msgid "手动汇率"
 msgstr "手动汇率"
 
-#: server.py:1273
+#: server.py:1351
 msgid "请输入换算汇率"
 msgstr "请输入换算汇率"
 
-#: server.py:1274
+#: server.py:1352
 msgid "已自动填入你上次使用的汇率，可随时修改。"
 msgstr "已自动填入你上次使用的汇率，可随时修改。"
 
-#: server.py:1275
+#: server.py:1353
 msgid "已根据反方向汇率推算，可随时修改。"
 msgstr "已根据反方向汇率推算，可随时修改。"
 
-#: server.py:1276
+#: server.py:1354
 #, python-format
 msgid "请输入 1 %(source)s 相当于多少 %(target)s。"
 msgstr "请输入 1 %(source)s 相当于多少 %(target)s。"
 
-#: server.py:1277 templates/budgets.html:29
+#: server.py:1355 templates/budgets.html:52
 msgid "预算币种"
 msgstr "预算币种"
 
-#: server.py:1278
+#: server.py:1356
+#, python-format
+msgid "日均可用 %(amount)s"
+msgstr "日均可用 %(amount)s"
+
+#: server.py:1357
+#, python-format
+msgid "已超出预算 %(amount)s"
+msgstr "已超出预算 %(amount)s"
+
+#: server.py:1358
+msgid "剩余预算已用完"
+msgstr "剩余预算已用完"
+
+#: server.py:1359 templates/budgets.html:51
+msgid "设置预算后可查看日均可用金额。"
+msgstr "设置预算后可查看日均可用金额。"
+
+#: server.py:1360
+#, python-format
+msgid "剩余预算 %(amount)s"
+msgstr "剩余预算 %(amount)s"
+
+#: server.py:1361
 #, python-format
 msgid "约 %(amount)s"
 msgstr "约 %(amount)s"
 
-#: server.py:1279
+#: server.py:1362
 #, python-format
 msgid "%(original)s ≈ %(converted)s"
 msgstr "%(original)s ≈ %(converted)s"
 
-#: server.py:1280
+#: server.py:1363
 #, python-format
 msgid "1 %(source)s = %(rate)s %(target)s"
 msgstr "1 %(source)s = %(rate)s %(target)s"
 
-#: server.py:1353 server.py:1983 server.py:2312 server.py:2396
+#: server.py:1436 server.py:2091 server.py:2427 server.py:2511
 msgid "记录不存在"
 msgstr "记录不存在"
 
-#: server.py:1354
+#: server.py:1437
 msgid "这条记录不存在，或不属于当前登录用户。"
 msgstr "这条记录不存在，或不属于当前登录用户。"
 
-#: server.py:1356
+#: server.py:1439
 msgid "返回记录列表"
 msgstr "返回记录列表"
 
-#: server.py:1416
+#: server.py:1499
 msgid "反馈已提交，感谢你的帮助。"
 msgstr "反馈已提交，感谢你的帮助。"
 
-#: server.py:1420
+#: server.py:1503
 msgid "反馈提交失败，请稍后重试。"
 msgstr "反馈提交失败，请稍后重试。"
 
-#: server.py:1485
+#: server.py:1568
 msgid "分享链接已创建。"
 msgstr "分享链接已创建。"
 
-#: server.py:1489
+#: server.py:1572
 msgid "分享链接创建失败，请稍后重试。"
 msgstr "分享链接创建失败，请稍后重试。"
 
-#: server.py:1548
+#: server.py:1631
 msgid "分享链接已停用。"
 msgstr "分享链接已停用。"
 
-#: server.py:1550 server.py:1569 server.py:1588
+#: server.py:1633 server.py:1652 server.py:1671
 msgid "分享链接不存在。"
 msgstr "分享链接不存在。"
 
-#: server.py:1567
+#: server.py:1650
 msgid "分享链接已启用。"
 msgstr "分享链接已启用。"
 
-#: server.py:1586
+#: server.py:1669
 msgid "分享链接已删除。"
 msgstr "分享链接已删除。"
 
-#: server.py:1610
+#: server.py:1693
 msgid "链接不存在"
 msgstr "链接不存在"
 
-#: server.py:1611
+#: server.py:1694
 msgid "这个分享链接不存在或已被删除。"
 msgstr "这个分享链接不存在或已被删除。"
 
-#: server.py:1616
+#: server.py:1699
 msgid "链接已停用"
 msgstr "链接已停用"
 
-#: server.py:1617
+#: server.py:1700
 msgid "这个分享链接已停用。"
 msgstr "这个分享链接已停用。"
 
-#: server.py:1622
+#: server.py:1705
 msgid "链接已过期"
 msgstr "链接已过期"
 
-#: server.py:1623
+#: server.py:1706
 msgid "这个分享链接已过期。"
 msgstr "这个分享链接已过期。"
 
-#: server.py:1727
-msgid "设置已保存"
-msgstr "设置已保存"
+#: server.py:1796
+msgid "个人设置已保存"
+msgstr "个人设置已保存"
 
-#: server.py:1740
+#: server.py:1816
+msgid "当前密码错误"
+msgstr "当前密码错误"
+
+#: server.py:1835
+msgid "密码修改成功"
+msgstr "密码修改成功"
+
+#: server.py:1848
 msgid "请重新登录后再试"
 msgstr "请重新登录后再试"
 
-#: server.py:1754
+#: server.py:1862
 msgid "账号注销失败，请稍后重试。"
 msgstr "账号注销失败，请稍后重试。"
 
-#: server.py:1759
+#: server.py:1867
 msgid "账号已注销"
 msgstr "账号已注销"
 
-#: server.py:1803
+#: server.py:1911
 msgid "用户名已存在"
 msgstr "用户名已存在"
 
-#: server.py:1811
+#: server.py:1919
 msgid "邮箱已存在"
 msgstr "邮箱已存在"
 
-#: server.py:1863
+#: server.py:1971
 msgid "用户名/邮箱或密码错误"
 msgstr "用户名/邮箱或密码错误"
 
-#: server.py:1865
+#: server.py:1973
 msgid "账号已停用，请联系管理员。"
 msgstr "账号已停用，请联系管理员。"
 
-#: server.py:2178
+#: server.py:2292
 msgid "预算金额格式无效"
 msgstr "预算金额格式无效"
 
@@ -716,11 +751,35 @@ msgstr "为每个月设置支出预算。"
 msgid "新预算使用当前默认货币。"
 msgstr "新预算使用当前默认货币。"
 
-#: templates/budgets.html:18
+#: templates/budgets.html:11
+msgid "月份切换"
+msgstr "月份切换"
+
+#: templates/budgets.html:12
+msgid "上一个月"
+msgstr "上一个月"
+
+#: templates/budgets.html:14
+msgid "下一个月"
+msgstr "下一个月"
+
+#: templates/budgets.html:22 templates/budgets.html:38
+msgid "本月预算"
+msgstr "本月预算"
+
+#: templates/budgets.html:26
+msgid "已支出"
+msgstr "已支出"
+
+#: templates/budgets.html:30
+msgid "剩余预算"
+msgstr "剩余预算"
+
+#: templates/budgets.html:38
 msgid "设置预算金额"
 msgstr "设置预算金额"
 
-#: templates/budgets.html:19
+#: templates/budgets.html:40
 msgid "保存预算"
 msgstr "保存预算"
 
@@ -743,6 +802,10 @@ msgstr "本月结余"
 #: templates/dashboard.html:45 templates/index.html:43
 msgid "预算状态"
 msgstr "预算状态"
+
+#: templates/dashboard.html:53
+msgid "未设置预算"
+msgstr "未设置预算"
 
 #: templates/dashboard.html:55
 msgid "管理预算"
@@ -1097,7 +1160,7 @@ msgstr "修改金额、币种、日期或汇率后，系统将重新计算折算
 msgid "保存修改"
 msgstr "保存修改"
 
-#: templates/record_form.html:68 templates/records.html:67 templates/settings.html:141
+#: templates/record_form.html:68 templates/records.html:67 templates/settings.html:145
 msgid "取消"
 msgstr "取消"
 
@@ -1159,7 +1222,7 @@ msgstr "下一页"
 msgid "确认删除"
 msgstr "确认删除"
 
-#: templates/records.html:61 templates/settings.html:126
+#: templates/records.html:61 templates/settings.html:130
 msgid "关闭"
 msgstr "关闭"
 
@@ -1245,58 +1308,54 @@ msgid "默认货币"
 msgstr "默认货币"
 
 #: templates/settings.html:73
-msgid "默认货币用于仪表盘、统计和新建预算的统一展示。修改默认货币不会修改历史记录；其他币种的记录会按你最近使用的汇率进行换算。"
-msgstr "默认货币用于仪表盘、统计和新建预算的统一展示。修改默认货币不会修改历史记录；其他币种的记录会按你最近使用的汇率进行换算。"
+msgid "默认货币用于仪表盘、统计和新建预算。历史记录和已有预算不会自动修改。"
+msgstr "默认货币用于仪表盘、统计和新建预算。历史记录和已有预算不会自动修改。"
 
-#: templates/settings.html:83
+#: templates/settings.html:77
+msgid "保存个人设置"
+msgstr "保存个人设置"
+
+#: templates/settings.html:89 templates/settings.html:103
 msgid "修改密码"
 msgstr "修改密码"
 
-#: templates/settings.html:85 templates/settings.html:131
+#: templates/settings.html:91 templates/settings.html:135
 msgid "当前密码"
 msgstr "当前密码"
 
-#: templates/settings.html:89
+#: templates/settings.html:95
 msgid "新密码"
 msgstr "新密码"
 
-#: templates/settings.html:93
+#: templates/settings.html:99
 msgid "确认新密码"
 msgstr "确认新密码"
 
-#: templates/settings.html:102
-msgid "保存设置"
-msgstr "保存设置"
-
-#: templates/settings.html:103
-msgid "返回仪表盘"
-msgstr "返回仪表盘"
-
-#: templates/settings.html:110
+#: templates/settings.html:114
 msgid "危险区域"
 msgstr "危险区域"
 
-#: templates/settings.html:111
+#: templates/settings.html:115
 msgid "注销账号后，你的账户及相关记账数据将被永久删除，且无法恢复。"
 msgstr "注销账号后，你的账户及相关记账数据将被永久删除，且无法恢复。"
 
-#: templates/settings.html:113 templates/settings.html:142
+#: templates/settings.html:117 templates/settings.html:146
 msgid "注销账号"
 msgstr "注销账号"
 
-#: templates/settings.html:125
+#: templates/settings.html:129
 msgid "确认注销账号"
 msgstr "确认注销账号"
 
-#: templates/settings.html:129
+#: templates/settings.html:133
 msgid "请输入当前密码，并输入 DELETE 确认永久注销账号。"
 msgstr "请输入当前密码，并输入 DELETE 确认永久注销账号。"
 
-#: templates/settings.html:135
+#: templates/settings.html:139
 msgid "确认文字"
 msgstr "确认文字"
 
-#: templates/settings.html:137
+#: templates/settings.html:141
 msgid "请输入 DELETE"
 msgstr "请输入 DELETE"
 
@@ -1913,3 +1972,14 @@ msgstr "没有符合条件的用户。"
 
 #~ msgid "自动记账"
 #~ msgstr "自动记账"
+
+#~ msgid "两次输入的新密码不一致"
+#~ msgstr "两次输入的新密码不一致"
+
+#~ msgid "默认货币用于仪表盘、统计和新建预算的统一展示。修改默认货币不会修改历史记录；其他币种的记录会按你最近使用的汇率进行换算。"
+#~ msgstr "默认货币用于仪表盘、统计和新建预算的统一展示。修改默认货币不会修改历史记录；其他币种的记录会按你最近使用的汇率进行换算。"
+
+#~ msgid "返回仪表盘"
+#~ msgstr "返回仪表盘"
+#~ msgid "已用 %(amount)s"
+#~ msgstr "已用 %(amount)s"

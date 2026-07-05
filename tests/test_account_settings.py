@@ -1,5 +1,7 @@
 import logging
 
+from werkzeug.security import check_password_hash
+
 from conftest import (
     create_record,
     csrf_token,
@@ -20,7 +22,25 @@ def post_settings(client, nickname="", language="zh-CN", currency="CNY", extra=N
     }
     if extra:
         data.update(extra)
-    return client.post("/settings", data=data, follow_redirects=False)
+    return client.post("/settings/profile", data=data, follow_redirects=False)
+
+
+def post_password_settings(
+    client,
+    current_password="password123",
+    new_password="new-password123",
+    confirm_password="new-password123",
+):
+    return client.post(
+        "/settings/password",
+        data={
+            "csrf_token": csrf_token(client, "/settings"),
+            "current_password": current_password,
+            "new_password": new_password,
+            "confirm_password": confirm_password,
+        },
+        follow_redirects=False,
+    )
 
 
 def post_delete_account(
@@ -235,6 +255,103 @@ def test_settings_page_does_not_repeat_email_when_username_is_email(client):
     assert 'id="login_email"' in text
     assert 'id="email"' not in text
     assert "该邮箱用于登录，暂不支持在此页面修改。" in text
+
+
+def test_settings_password_fields_are_not_prefilled(app_module, client):
+    login_as_new_user(client, "alice", "alice@example.com")
+    with app_module.get_connection() as conn:
+        password_hash = conn.execute(
+            "SELECT password_hash FROM users WHERE username = 'alice'"
+        ).fetchone()["password_hash"]
+
+    text = client.get("/settings").get_data(as_text=True)
+
+    assert 'name="current_password" value=' not in text
+    assert 'name="new_password" value=' not in text
+    assert 'name="confirm_password" value=' not in text
+    assert password_hash not in text
+
+
+def test_settings_forms_submit_independent_fields(client):
+    login_as_new_user(client, "alice", "alice@example.com")
+    text = client.get("/settings").get_data(as_text=True)
+
+    profile_form = text.split('action="/settings/profile"', 1)[1].split("</form>", 1)[0]
+    password_form = text.split('action="/settings/password"', 1)[1].split("</form>", 1)[0]
+
+    assert "current_password" not in profile_form
+    assert "new_password" not in profile_form
+    assert "confirm_password" not in profile_form
+    assert 'name="nickname"' not in password_form
+    assert 'name="language"' not in password_form
+    assert 'name="currency"' not in password_form
+
+
+def test_profile_updates_do_not_require_or_change_password(app_module, client):
+    login_as_new_user(client, "alice", "alice@example.com")
+    with app_module.get_connection() as conn:
+        before_hash = conn.execute(
+            "SELECT password_hash FROM users WHERE username = 'alice'"
+        ).fetchone()["password_hash"]
+
+    assert post_settings(client, currency="CNY").status_code == 302
+    assert post_settings(client, language="ja", currency="CNY").status_code == 302
+    assert post_settings(client, nickname="小明", language="ja", currency="CNY").status_code == 302
+
+    with app_module.get_connection() as conn:
+        row = conn.execute(
+            "SELECT nickname, language, base_currency_code, password_hash FROM users WHERE username = 'alice'"
+        ).fetchone()
+
+    assert row["nickname"] == "小明"
+    assert row["language"] == "ja"
+    assert row["base_currency_code"] == "CNY"
+    assert row["password_hash"] == before_hash
+
+
+def test_password_form_validation_errors_do_not_change_hash(app_module, client):
+    login_as_new_user(client, "alice", "alice@example.com")
+    with app_module.get_connection() as conn:
+        before_hash = conn.execute(
+            "SELECT password_hash FROM users WHERE username = 'alice'"
+        ).fetchone()["password_hash"]
+
+    empty = post_password_settings(client, current_password="", new_password="", confirm_password="")
+    wrong_current = post_password_settings(client, current_password="wrong-password")
+    mismatch = post_password_settings(client, new_password="new-password123", confirm_password="another-password")
+
+    assert empty.status_code == 400
+    assert wrong_current.status_code == 400
+    assert mismatch.status_code == 400
+    assert "当前密码错误" in wrong_current.get_data(as_text=True)
+    assert "两次输入的密码不一致" in mismatch.get_data(as_text=True)
+    with app_module.get_connection() as conn:
+        after_hash = conn.execute(
+            "SELECT password_hash FROM users WHERE username = 'alice'"
+        ).fetchone()["password_hash"]
+    assert after_hash == before_hash
+
+
+def test_password_form_updates_only_password_hash(app_module, client):
+    login_as_new_user(client, "alice", "alice@example.com")
+    assert post_settings(client, nickname="小明", language="ja", currency="CNY").status_code == 302
+
+    response = post_password_settings(client)
+    assert response.status_code == 302
+
+    with app_module.get_connection() as conn:
+        row = conn.execute(
+            "SELECT nickname, language, base_currency_code, password_hash FROM users WHERE username = 'alice'"
+        ).fetchone()
+
+    assert row["nickname"] == "小明"
+    assert row["language"] == "ja"
+    assert row["base_currency_code"] == "CNY"
+    assert row["password_hash"] != "new-password123"
+    assert check_password_hash(row["password_hash"], "new-password123")
+    logout_user(client)
+    assert login_user(client, "alice", "password123").status_code == 400
+    assert login_user(client, "alice", "new-password123").status_code == 302
 
 
 def test_nickname_save_empty_fallback_and_nav_priority(app_module, client):

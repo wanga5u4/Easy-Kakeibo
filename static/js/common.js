@@ -54,6 +54,13 @@ function formatMoney(value, currencyCode) {
   })} ${code}`;
 }
 
+function formatPercent(value) {
+  const percent = Number(value);
+  if (!Number.isFinite(percent) || percent <= 0) return '0%';
+  if (Number.isInteger(percent)) return `${percent}%`;
+  return `${Number(percent.toFixed(1))}%`;
+}
+
 function formatRecordAmount(record) {
   const original = record.formatted_original_amount
     || formatMoney(record.original_amount ?? record.amount, record.currency_code);
@@ -120,22 +127,35 @@ function applyBudgetView(budget) {
   const progressEl = document.getElementById('budgetProgress');
   const statusEl = document.getElementById('budgetStatus');
   const amountEl = document.getElementById('budgetAmount');
+  const summaryAmountEl = document.getElementById('budgetSummaryAmount');
+  const summaryUsedEl = document.getElementById('budgetSummaryUsed');
+  const summaryRemainingEl = document.getElementById('budgetSummaryRemaining');
+  const dailyEl = document.getElementById('budgetDaily');
   if (!budget || !usedEl || !percentEl || !progressEl || !statusEl) return;
 
-  const percent = Number(budget.percent || 0);
-  const progress = Math.min(percent, 100);
+  const percent = Number.isFinite(Number(budget.percent)) ? Number(budget.percent) : 0;
+  const progress = Math.min(Math.max(percent, 0), 100);
   if (amountEl) amountEl.value = budget.amount ? String(budget.amount) : '';
   const budgetCurrency = budget.currency_code || T.currentBaseCurrency || 'JPY';
   const currencyLabel = document.getElementById('budgetCurrencyLabel');
   const currencyHint = document.getElementById('budgetCurrencyHint');
+  const formattedAmount = budget.formatted_amount || formatMoney(budget.amount, budgetCurrency);
+  const formattedUsed = budget.formatted_used || formatMoney(budget.used, budgetCurrency);
+  const formattedRemaining = budget.formatted_remaining || formatMoney(budget.remaining, budgetCurrency);
   if (currencyLabel) currencyLabel.textContent = budgetCurrency;
   if (currencyHint) currencyHint.textContent = `${T.budgetCurrency || '预算币种'}：${budgetCurrency}`;
-  usedEl.textContent = (T.used || 'Used %(amount)s')
-    .replace('%(amount)s', budget.formatted_used || formatMoney(budget.used, budgetCurrency));
-  percentEl.textContent = `${percent.toFixed(1)}%`;
+  if (summaryAmountEl) summaryAmountEl.textContent = formattedAmount;
+  if (summaryUsedEl) summaryUsedEl.textContent = formattedUsed;
+  if (summaryRemainingEl) {
+    summaryRemainingEl.textContent = formattedRemaining;
+    summaryRemainingEl.classList.toggle('text-danger', Number(budget.remaining || 0) < 0);
+    summaryRemainingEl.classList.toggle('text-success', Number(budget.remaining || 0) > 0);
+  }
+  usedEl.textContent = (T.used || 'Used %(amount)s').replace('%(amount)s', formattedUsed);
+  percentEl.textContent = formatPercent(percent);
   progressEl.style.width = `${progress}%`;
   progressEl.className = 'progress-bar';
-  statusEl.className = 'alert mb-0 py-2';
+  statusEl.className = 'alert mb-2 py-2';
 
   if ((budget.amount || 0) <= 0) {
     progressEl.classList.add('bg-secondary');
@@ -153,5 +173,24 @@ function applyBudgetView(budget) {
 
   statusEl.textContent = (T.remaining || '%(status)s, remaining %(amount)s')
     .replace('%(status)s', budget.status)
-    .replace('%(amount)s', budget.formatted_remaining || formatMoney(budget.remaining, budgetCurrency));
+    .replace('%(amount)s', formattedRemaining);
+
+  if (dailyEl) {
+    const amount = Number(budget.amount || 0);
+    const remaining = Number(budget.remaining || 0);
+    if (amount <= 0) {
+      dailyEl.textContent = T.budgetEmptyDaily || 'Set a budget to see daily available amount.';
+    } else if (remaining < 0) {
+      dailyEl.textContent = (T.budgetOverBy || 'Over budget by %(amount)s')
+        .replace('%(amount)s', budget.formatted_over_budget || formatMoney(Math.abs(remaining), budgetCurrency));
+    } else if (remaining === 0) {
+      dailyEl.textContent = T.budgetNoRemaining || 'No remaining budget.';
+    } else if ((budget.remaining_days || 0) <= 0) {
+      dailyEl.textContent = (T.budgetRemaining || 'Remaining budget %(amount)s')
+        .replace('%(amount)s', formattedRemaining);
+    } else {
+      dailyEl.textContent = (T.dailyAvailable || 'Daily available %(amount)s')
+        .replace('%(amount)s', budget.formatted_daily_available || formatMoney(budget.daily_available, budgetCurrency));
+    }
+  }
 }

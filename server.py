@@ -5,8 +5,9 @@ import secrets
 import math
 import re
 import logging
+import calendar
 import hashlib
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from datetime import date, datetime, timedelta, timezone
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
@@ -26,6 +27,8 @@ from currency import (
     ENABLED_CURRENCY_CODES,
     CurrencyValidationError,
     amount_to_minor_units,
+    amount_to_minor_units_non_negative,
+    amount_to_minor_units_rounded,
     convert_amount,
     currency_config_for_client,
     decimal_to_api_number,
@@ -728,16 +731,13 @@ def validate_login_payload(form):
     }, errors
 
 
-def validate_settings_payload(form):
+def validate_profile_settings_payload(form):
     errors = []
     nickname = (form.get("nickname") or "").strip()
     language = normalize_locale(form.get("language")) or "zh_CN"
     base_currency_code = (
         form.get("base_currency_code") or form.get("currency") or DEFAULT_BASE_CURRENCY
     ).strip().upper()
-    current_password = form.get("current_password") or ""
-    new_password = form.get("new_password") or ""
-    confirm_password = form.get("confirm_password") or ""
 
     if len(nickname) > 30:
         errors.append(_("昵称不能超过 30 个字符"))
@@ -748,23 +748,34 @@ def validate_settings_payload(form):
     if base_currency_code not in CURRENCY_OPTIONS:
         errors.append(_("货币选项无效"))
 
-    wants_password_change = any([current_password, new_password, confirm_password])
-    if wants_password_change:
-        if not current_password:
-            errors.append(_("请输入当前密码"))
-        if len(new_password) < 8:
-            errors.append(_("新密码至少需要 8 位"))
-        if new_password != confirm_password:
-            errors.append(_("两次输入的新密码不一致"))
-
     return {
         "nickname": nickname,
         "language": language,
         "currency": base_currency_code,
         "base_currency_code": base_currency_code,
+    }, errors
+
+
+def validate_password_settings_payload(form):
+    errors = []
+    current_password = form.get("current_password") or ""
+    new_password = form.get("new_password") or ""
+    confirm_password = form.get("confirm_password") or ""
+
+    if not current_password:
+        errors.append(_("请输入当前密码"))
+    if not new_password:
+        errors.append(_("请输入新密码"))
+    elif len(new_password) < 8:
+        errors.append(_("新密码至少需要 8 位"))
+    if not confirm_password:
+        errors.append(_("请确认新密码"))
+    elif new_password and new_password != confirm_password:
+        errors.append(_("两次输入的密码不一致"))
+
+    return {
         "current_password": current_password,
         "new_password": new_password,
-        "wants_password_change": wants_password_change,
     }, errors
 
 
@@ -1196,13 +1207,80 @@ def month_shift(month, offset):
 
 def get_budget_status(amount, used):
     if amount <= 0:
-        return _("未设置预算")
+        return _("本月尚未设置预算")
     percent = used / amount * 100
     if percent >= 100:
         return _("已超出预算")
     if percent >= 80:
         return _("预算即将用完")
-    return _("预算正常")
+    return _("预算使用正常")
+
+
+def resolve_budget_currency(budget_row, fallback_currency):
+    # Older budget rows may have an empty currency. Keep valid historical
+    # budget currencies, and only fall back when the saved value is unusable.
+    if budget_row:
+        try:
+            return validate_currency_code(budget_row["currency_code"], enabled_only=True)
+        except (CurrencyValidationError, KeyError, TypeError):
+            pass
+    return fallback_currency
+
+
+def resolve_budget_amount_minor(budget_row, budget_currency):
+    if not budget_row:
+        return 0
+    amount_minor = budget_row["amount_minor"]
+    if amount_minor is not None and amount_minor > 0:
+        return amount_minor
+    amount = budget_row["amount"]
+    if not amount:
+        return 0
+    try:
+        return amount_to_minor_units_rounded(amount, budget_currency)
+    except (CurrencyValidationError, ArithmeticError, ValueError):
+        return 0
+
+
+def get_month_remaining_days(month):
+    year = int(month[:4])
+    month_num = int(month[5:])
+    last_day = calendar.monthrange(year, month_num)[1]
+    today = date.today()
+    if today.year == year and today.month == month_num:
+        return last_day - today.day + 1
+    if (today.year, today.month) < (year, month_num):
+        return last_day
+    return 0
+
+
+def budget_daily_payload(month, remaining_minor, budget_currency):
+    if remaining_minor <= 0:
+        return {
+            "remaining_days": get_month_remaining_days(month),
+            "daily_available_minor": 0,
+            "daily_available": 0,
+            "formatted_daily_available": format_money_minor(0, budget_currency),
+            "formatted_over_budget": format_money_minor(abs(remaining_minor), budget_currency),
+        }
+
+    remaining_days = get_month_remaining_days(month)
+    if remaining_days <= 0:
+        daily_minor = 0
+    else:
+        daily_minor = int(
+            (Decimal(remaining_minor) / Decimal(remaining_days)).quantize(
+                Decimal("1"),
+                rounding=ROUND_HALF_UP,
+            )
+        )
+    return {
+        "remaining_days": remaining_days,
+        "daily_available_minor": daily_minor,
+        "daily_available": minor_units_to_api_number(daily_minor, budget_currency),
+        "formatted_daily_available": format_money_minor(daily_minor, budget_currency),
+        "formatted_over_budget": format_money_minor(abs(remaining_minor), budget_currency),
+    }
 
 
 @app.template_filter("money")
@@ -1242,7 +1320,7 @@ def inject_user_context():
             },
             "typeLabels": {"income": _("收入"), "expense": _("支出")},
             "dateFormat": _("%(year)s年%(month)s月%(day)s日"),
-            "used": _("已用 %(amount)s"),
+            "used": _("已使用 %(amount)s"),
             "remaining": _("%(status)s，剩余 %(amount)s"),
             "edit": _("编辑"),
             "delete": _("删除"),
@@ -1275,6 +1353,11 @@ def inject_user_context():
             "inverseRateSuggestion": _("已根据反方向汇率推算，可随时修改。"),
             "rateHelp": _("请输入 1 %(source)s 相当于多少 %(target)s。"),
             "budgetCurrency": _("预算币种"),
+            "dailyAvailable": _("日均可用 %(amount)s"),
+            "budgetOverBy": _("已超出预算 %(amount)s"),
+            "budgetNoRemaining": _("剩余预算已用完"),
+            "budgetEmptyDaily": _("设置预算后可查看日均可用金额。"),
+            "budgetRemaining": _("剩余预算 %(amount)s"),
             "approximately": _("约 %(amount)s"),
             "conversionPreview": _("%(original)s ≈ %(converted)s"),
             "rateDirection": _("1 %(source)s = %(rate)s %(target)s"),
@@ -1641,7 +1724,18 @@ def public_share_page(token):
     )
 
 
-@app.route("/settings", methods=["GET", "POST"])
+def render_settings(user, errors=None, status=200):
+    return render_template(
+        "settings.html",
+        active_page="settings",
+        user=user,
+        language_options=get_language_options(),
+        currency_options=get_currency_options(),
+        errors=errors or [],
+    ), status
+
+
+@app.get("/settings")
 def settings_page():
     login_redirect = require_login_page()
     if login_redirect:
@@ -1652,25 +1746,24 @@ def settings_page():
         session.clear()
         return redirect(url_for("login"))
 
-    if request.method == "GET":
-        return render_template(
-            "settings.html",
-            active_page="settings",
-            user=user,
-            language_options=get_language_options(),
-            currency_options=get_currency_options(),
-            errors=[],
-        )
+    return render_settings(user)[0]
 
-    form_data, errors = validate_settings_payload(request.form)
+
+@app.post("/settings")
+@app.post("/settings/profile")
+def update_profile_settings():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+
+    user = get_current_user()
+    if not user:
+        session.clear()
+        return redirect(url_for("login"))
+
+    form_data, errors = validate_profile_settings_payload(request.form)
 
     with get_connection() as conn:
-        if form_data["wants_password_change"] and not check_password_hash(
-            user["password_hash"],
-            form_data["current_password"],
-        ):
-            errors.append(_("当前密码不正确"))
-
         if errors:
             updated_user = dict(user)
             updated_user.update(
@@ -1681,50 +1774,65 @@ def settings_page():
                     "base_currency_code": form_data["base_currency_code"],
                 }
             )
-            return render_template(
-                "settings.html",
-                active_page="settings",
-                user=updated_user,
-                language_options=get_language_options(),
-                currency_options=get_currency_options(),
-                errors=errors,
-            ), 400
+            return render_settings(updated_user, errors, 400)
 
-        if form_data["wants_password_change"]:
-            conn.execute(
-                """
-                UPDATE users
-                SET nickname = ?, language = ?, currency = ?, base_currency_code = ?, password_hash = ?
-                WHERE id = ?
-                """,
-                (
-                    form_data["nickname"],
-                    form_data["language"],
-                    form_data["currency"],
-                    form_data["base_currency_code"],
-                    generate_password_hash(form_data["new_password"]),
-                    user["id"],
-                ),
-            )
-        else:
-            conn.execute(
-                """
-                UPDATE users
-                SET nickname = ?, language = ?, currency = ?, base_currency_code = ?
-                WHERE id = ?
-                """,
-                (
-                    form_data["nickname"],
-                    form_data["language"],
-                    form_data["currency"],
-                    form_data["base_currency_code"],
-                    user["id"],
-                ),
-            )
+        conn.execute(
+            """
+            UPDATE users
+            SET nickname = ?, language = ?, currency = ?, base_currency_code = ?
+            WHERE id = ?
+            """,
+            (
+                form_data["nickname"],
+                form_data["language"],
+                form_data["currency"],
+                form_data["base_currency_code"],
+                user["id"],
+            ),
+        )
         conn.commit()
 
     session["lang"] = form_data["language"]
-    flash(_("设置已保存"), "success")
+    flash(_("个人设置已保存"), "success")
+    return redirect(url_for("settings_page"))
+
+
+@app.post("/settings/password")
+def update_password_settings():
+    login_redirect = require_login_page()
+    if login_redirect:
+        return login_redirect
+
+    user = get_current_user()
+    if not user:
+        session.clear()
+        return redirect(url_for("login"))
+
+    form_data, errors = validate_password_settings_payload(request.form)
+    if not errors and not check_password_hash(
+        user["password_hash"],
+        form_data["current_password"],
+    ):
+        errors.append(_("当前密码错误"))
+
+    if errors:
+        return render_settings(user, errors, 400)
+
+    with get_connection() as conn:
+        conn.execute(
+            """
+            UPDATE users
+            SET password_hash = ?
+            WHERE id = ?
+            """,
+            (
+                generate_password_hash(form_data["new_password"]),
+                user["id"],
+            ),
+        )
+        conn.commit()
+
+    flash(_("密码修改成功"), "success")
     return redirect(url_for("settings_page"))
 
 
@@ -2059,10 +2167,11 @@ def get_analytics():
         ).fetchone()
         budget_usage = None
         if budget_row:
+            budget_currency = resolve_budget_currency(budget_row, base_currency_code)
             budget_usage = aggregate_records_in_currency(
                 conn,
                 user_id,
-                budget_row["currency_code"],
+                budget_currency,
                 month=month,
                 record_type="expense",
             )
@@ -2094,8 +2203,8 @@ def get_analytics():
         item["balance"] = minor_units_to_api_number(item["balance_minor"], base_currency_code)
 
     if budget_row:
-        budget_currency = budget_row["currency_code"]
-        budget_amount_minor = budget_row["amount_minor"]
+        budget_currency = resolve_budget_currency(budget_row, base_currency_code)
+        budget_amount_minor = resolve_budget_amount_minor(budget_row, budget_currency)
         budget_used_minor = budget_usage["total_expense_minor"]
         budget_meta = budget_usage["meta"]
     else:
@@ -2108,6 +2217,7 @@ def get_analytics():
     budget_used = minor_units_to_api_number(budget_used_minor, budget_currency)
     budget_remaining = minor_units_to_api_number(budget_remaining_minor, budget_currency)
     budget_percent = round(budget_used_minor / budget_amount_minor * 100, 1) if budget_amount_minor else 0
+    budget_daily = budget_daily_payload(month, budget_remaining_minor, budget_currency)
     notice_payload = aggregate_notice_payload(aggregate["meta"])
     budget_notice_payload = aggregate_notice_payload(budget_meta)
 
@@ -2138,6 +2248,7 @@ def get_analytics():
                 "formatted_used": format_money_minor(budget_used_minor, budget_currency),
                 "formatted_remaining": format_money_minor(budget_remaining_minor, budget_currency),
                 "status": get_budget_status(budget_amount, budget_used),
+                **budget_daily,
                 **{
                     f"budget{k[0].upper()}{k[1:]}": v
                     for k, v in budget_notice_payload.items()
@@ -2163,17 +2274,20 @@ def save_budget():
         base_currency_code = get_user_base_currency(conn, user_id)
         existing_budget = conn.execute(
             """
-            SELECT currency_code
+            SELECT amount, amount_minor, currency_code
             FROM budgets
             WHERE user_id = ? AND month = ?
             """,
             (user_id, month),
         ).fetchone()
-        budget_currency = (
-            existing_budget["currency_code"] if existing_budget else base_currency_code
-        )
+        budget_currency = resolve_budget_currency(existing_budget, base_currency_code)
+        requested_currency = data.get("currency_code") or data.get("currency")
         try:
-            amount_minor = amount_to_minor_units(data.get("amount"), budget_currency)
+            if requested_currency:
+                requested_currency = validate_currency_code(requested_currency, enabled_only=True)
+                if requested_currency != budget_currency:
+                    return jsonify({"error": _("货币代码无效")}), 400
+            amount_minor = amount_to_minor_units_non_negative(data.get("amount"), budget_currency)
         except CurrencyValidationError:
             return jsonify({"error": _("预算金额格式无效")}), 400
         amount = minor_units_to_api_number(amount_minor, budget_currency)
@@ -2184,6 +2298,7 @@ def save_budget():
             ON CONFLICT(user_id, month)
             DO UPDATE SET amount = excluded.amount,
                           amount_minor = excluded.amount_minor,
+                          currency_code = excluded.currency_code,
                           updated_at = CURRENT_TIMESTAMP
             """,
             (user_id, month, amount, amount_minor, budget_currency),

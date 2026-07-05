@@ -60,12 +60,9 @@ def test_password_change_invalidates_old_password(client):
     login_as_new_user(client, "alice", "alice@example.com")
     token = csrf_token(client, "/settings")
     response = client.post(
-        "/settings",
+        "/settings/password",
         data={
             "csrf_token": token,
-            "nickname": "Alice",
-            "language": "zh-CN",
-            "currency": "CNY",
             "current_password": "password123",
             "new_password": "newpassword123",
             "confirm_password": "newpassword123",
